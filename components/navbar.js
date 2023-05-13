@@ -66,8 +66,15 @@ const NavBar = props => {
                     <LinkItem href="/contacts" path={path}>
                         Contacts
                     </LinkItem>
-                    <LinkItem href="/github" path={path}>
-                        Source Code
+                    <LinkItem
+                        target="_blank"
+                        href="https://github.com/GioOzz/portfolio"
+                        path={path}
+                        display="inline-flex"
+                        alignItems="center"
+                        style={{ gap: 4 }}
+                        pl={2}
+                    > Source Code
                     </LinkItem>
                 </Stack>
                 <Box flex={1} align="right">
@@ -88,6 +95,7 @@ const NavBar = props => {
                                 <MenuItem as={MenuLink} href="https://github.com/GioOzz/portfolio/">
                                     Source Code
                                 </MenuItem>
+
                             </MenuList>
                         </Menu>
                     </Box>
