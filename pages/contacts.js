@@ -1,4 +1,4 @@
-import { Container, Box, List, ListItem, Button, Link} from '@chakra-ui/react'
+import { Container, Box, List, ListItem, Button, Link } from '@chakra-ui/react'
 import { IoLogoGithub, IoLogoInstagram, IoLogoLinkedin, IoMailSharp } from 'react-icons/io5'
 import Layout from '../components/layouts/article'
 import P from '../components/paragraph'
@@ -35,7 +35,7 @@ const Contacts = () => (
                         </Link>
                     </ListItem>
                     <ListItem>
-                        <Link href="https://www.linkedin.com/in/ozzolagiorgio/" target="_blank">
+                        <Link href="https://mailto:gio.ozzola@gmail.com/" target="_blank">
                             <Button
                                 variant="ghost"
                                 colorScheme="orange"
@@ -56,10 +56,12 @@ const Contacts = () => (
                     </ListItem>
                 </List>
             </Box>
-            <P>
-                I&apos;ll get back to you as soon as I can. <br />
-                Let&apos;s connect and see how we can work together!
-            </P>
+            <Box align="center" mb={6} p={10}>
+                <P>
+                    I&apos;ll get back to you as soon as I can. <br />
+                    Let&apos;s connect and see how we can work together!
+                </P>
+            </Box>
         </Container>
     </Layout>
 )
