@@ -18,7 +18,7 @@ const Project  = () => (
     <Layout title="Kell's Pub">
         <Container>
             <Title>
-                Kell's Pub
+                Kell&apos;s Pub
             </Title>
             <Badge>
                 April 2022  -   present

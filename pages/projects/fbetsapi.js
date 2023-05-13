@@ -27,7 +27,7 @@ const Project  = () => (
                 The FootballBetsUI is a web-based user interface built using Angular.
                 It allows users to view upcoming football games and their associated data, as well as place bets.
                 This project retrieves data from the FootballBetsAPI and displays it in a user-friendly manner,
-                it's designed to be responsive and intuitive, allowing users to easily navigate and interact with the application.
+                it&apos;s designed to be responsive and intuitive, allowing users to easily navigate and interact with the application.
             </P>
             <List ml={4} my={4}>
                 <ListItem>

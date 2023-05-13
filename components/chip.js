@@ -1,12 +1,6 @@
 import { Box } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 
-const variants = {
-    hidden: { opacity: 0, x: 0, y: 20 },
-    enter: { opacity: 1, x: 0, y: 0 },
-    exit: { opacity: 0, x: -0, y: 20 }
-}
-
 const StyledChip = styled(Box)`
     display: inline-flex;
     font-size: md;

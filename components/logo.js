@@ -30,7 +30,7 @@ const Logo = () => {
                     <Text color={useColorModeValue('gray.800', 'whiteAlpha.900')}
                         fontFamily="Roboto"
                         fontWeight="bold">
-                        Ozzo's Website
+                        Ozzo&apos;s Website
                     </Text>
                 </LogoBox>
             </Link>)

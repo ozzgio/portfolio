@@ -85,7 +85,7 @@ const NavBar = props => {
                                 <MenuItem as={MenuLink} href="/contacts">
                                     Contacts
                                 </MenuItem>
-                                <MenuItem as={MenuLink} href="https://github.com/GioOzz/devozzo-homepage/">
+                                <MenuItem as={MenuLink} href="https://github.com/GioOzz/portfolio/">
                                     Source Code
                                 </MenuItem>
                             </MenuList>
