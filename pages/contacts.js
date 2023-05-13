@@ -35,7 +35,7 @@ const Contacts = () => (
                         </Link>
                     </ListItem>
                     <ListItem>
-                        <Link href="https://mailto:gio.ozzola@gmail.com/" target="_blank">
+                        <Link href="mailto:gio.ozzola@gmail.com?subject=Mail from your portfolio" target="_blank">
                             <Button
                                 variant="ghost"
                                 colorScheme="orange"
