@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react';
+import { Box, Image } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 
 const StyledChip = styled(Box)`
@@ -23,7 +23,7 @@ const StyledChip = styled(Box)`
 const Chip = ({ label, imageSrc }) => {
     return (
         <StyledChip>
-            {imageSrc && <img src={imageSrc} alt="" />}
+            {imageSrc && <Image src={imageSrc} alt="" />}
             {label}
         </StyledChip>
     );

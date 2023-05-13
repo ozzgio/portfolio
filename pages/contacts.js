@@ -1,5 +1,5 @@
-import { Container, Box, List, ListItem, Button, Link, Heading } from '@chakra-ui/react'
-import { IoLogoGithub, IoLogoInstagram, IoLogoLinkedin, IoMailOutline, IoMailSharp, IoMailUnread } from 'react-icons/io5'
+import { Container, Box, List, ListItem, Button, Link} from '@chakra-ui/react'
+import { IoLogoGithub, IoLogoInstagram, IoLogoLinkedin, IoMailSharp } from 'react-icons/io5'
 import Layout from '../components/layouts/article'
 import P from '../components/paragraph'
 
@@ -57,8 +57,8 @@ const Contacts = () => (
                 </List>
             </Box>
             <P>
-                I'll get back to you as soon as I can. <br />
-                Let's connect and see how we can work together!
+                I&apos;ll get back to you as soon as I can. <br />
+                Let&apos;s connect and see how we can work together!
             </P>
         </Container>
     </Layout>
