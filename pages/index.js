@@ -132,18 +132,12 @@ const Home = () => {
                         I ♥
                     </Heading>
                     <Paragraph>
-                        IT, Fitness, {' '}
+                        IT, Fitness & {' '}
                         <Link 
                             as={NextLink} href="https://www.amazon.it/hz/wishlist/ls/2D166S3FBYWVQ?ref_=wl_share" 
                             target="_blank" passHref scroll={false}>
                             Books 
                         </Link>
-                        {' '} & {' '}
-                        <Link 
-                            as={NextLink} href="https://www.myanimelist.net/OzzGio" 
-                            target="_blank" passHref scroll={false}>
-                            Anime
-                        </Link> 
                     </Paragraph>
                 </Section>
 
