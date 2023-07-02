@@ -124,7 +124,7 @@ const Home = () => {
                     </BioSection>
                     <BioSection>
                         <BioYear>2023 to present</BioYear>
-                        Developing FootballBets and projects i&apos;m interested in
+                        Developing FootballBets and working full-time job @ Alten Italia
                     </BioSection>
                 </Section>
                 <Section delay={0.4}>
