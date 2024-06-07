@@ -14,24 +14,23 @@ import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { Title, WorkImage, Meta } from '../../components/project'
 import P from '../../components/paragraph'
 
-const Project  = () => (
+const Project = () => (
     <Layout title="Kell's Pub">
         <Container>
             <Title>
                 Kell&apos;s Pub
             </Title>
             <Badge>
-                April 2022  -   present
+                April 2022  - March 2024
             </Badge>
             <P>
-                As a webmaster, my duty is managing all aspects of a website built on WordPress,
-                including page creation, plugin, mail, booking integrations and custom CSS.
+                As a webmaster, I managed all aspects of a website built on WordPress,
+                including page creation, plugin installation, automatic mail setup, booking integration,
+                and custom CSS development. (
             </P>
             <P>
-                This involves ensuring that the website is running smoothly and optimally,
-                fixing any issues that may arise, and ensuring that the website is up to date with the latest security measures.
-                My role is to ensure the website runs smoothly and securely, providing the best experience for visitors.
-            </P>
+                This involved ensuring the website ran smoothly and optimally, fixing any issues that arose,
+                and keeping the website up-to-date with the latest security measures.             </P>
             <List ml={4} my={4}>
                 <ListItem>
                     <Meta>Platform</Meta>
@@ -39,7 +38,7 @@ const Project  = () => (
                 </ListItem>
                 <ListItem>
                     <Meta>Stack</Meta>
-                    <span>HTML5, CSS3, PHP, MySQL, Nginx</span>
+                    <span>HTML5, CSS3, PHP, MySQL, Nginx (WordPress)</span>
                 </ListItem>
             </List>
 
@@ -64,5 +63,5 @@ const Project  = () => (
     </Layout>
 )
 
-export default Project 
+export default Project
 export { getServerSideProps } from '../../components/chackra'

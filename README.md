@@ -1,4 +1,4 @@
-# GioOzz's Portfolio
+# Ozzo's Portfolio
 https://devozzo-portfolio.vercel.app/
 
 
@@ -25,7 +25,7 @@ You can visit the live version of the site at https://devozzo-portfolio.vercel.a
 
 If you would like to run this project locally, you can follow these steps:
 
-1. Clone the repository: `git clone https://github.com/GioOzz/portfolio.git`
+1. Clone the repository: `git clone https://github.com/ozzgio/portfolio.git`
 2. Install dependencies: `npm install`
 3. Start the development server: `npm run dev`
 

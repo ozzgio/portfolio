@@ -45,7 +45,7 @@ const Project = () => (
 
             <UnorderedList my={4}>
                 <ListItem>
-                    <Link href="https://github.com/GioOzz/devozzo-homepage" target='_blank'>
+                    <Link href="https://github.com/ozzgio/devozzo-homepage" target='_blank'>
                         <Badge mr={2}>Git Hub Repository</Badge>
                         Source Code
                         <ExternalLinkIcon mx="2px" />

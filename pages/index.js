@@ -13,7 +13,8 @@ import {
     List,
     ListItem,
     GridItem,
-    chakra
+    chakra,
+    Icon
 } from "@chakra-ui/react"
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import NextLink from 'next/link'
@@ -24,7 +25,7 @@ import Paragraph from "../components/paragraph"
 import { BioSection, BioYear } from '../components/bio'
 import Chip from "../components/chip"
 import Layout from "../components/layouts/article"
-import { IoLogoGithub, IoLogoLinkedin } from 'react-icons/io5'
+import { IoLogoGithub, IoLogoLinkedin, IoCafe, IoBook, IoBarbell, IoCode, IoFootsteps } from 'react-icons/io5'
 
 const ProfileImage = chakra(Image, {
     shouldForwardProp: prop => ['width', 'height', 'src', 'alt'].includes(prop)
@@ -35,17 +36,17 @@ const Home = () => {
         <Layout title={"HomePage"}>
             <Container>
                 <Box borderRadius="lg" bg="blue.300" mb={6} p={3} align="center">
-                    Hi! Ozzo here, i&apos;m a full stack dev based in Italy &clubs;
+                    Hi! Ozzo here, a full stack dev based in Italy &clubs;
                 </Box>
                 <Box align="center" mb={6} p={3}>
                     <List>
                         <ListItem>
-                            <Link href="https://github.com/GioOzz" target="_blank">
+                            <Link href="https://github.com/ozzgio" target="_blank">
                                 <Button
                                     variant="ghost"
                                     colorScheme="orange"
                                     leftIcon={<IoLogoGithub />}>
-                                    @OzzGio
+                                    @ozzgio
                                 </Button>
                             </Link>
                         </ListItem>
@@ -66,7 +67,15 @@ const Home = () => {
                         <Heading as="h2" variant="page-title">
                             Ozzo
                         </Heading>
-                        Code crafter & coffee addict, 22yo and always learning.
+                        <Paragraph>
+                            <Icon> <IoCode /> </Icon> Code Crafter
+                        </Paragraph>
+                        <Paragraph>
+                            <Icon> <IoCafe /> </Icon> Coffee addict
+                        </Paragraph>
+                        <Paragraph>
+                            <Icon> <IoFootsteps /> </Icon> 22yo always learning
+                        </Paragraph>
                     </Box>
                     <Box flexShrink={0} mt={{ base: 4, md: 0 }} ml={{ md: 6 }} textAlign="center">
                         <Box borderColor="whiteAlpha.800" borderWidth={2} borderStyle="solid"
@@ -116,15 +125,25 @@ const Home = () => {
                     <BioSection>
                         <BioYear>2021</BioYear>
                         Completed HS diploma in Computer Science
-                        at ISII G. Marconi
+                        at ISII Marconi
+                    </BioSection>
+                    <BioSection>
+                        <BioYear>2021</BioYear>
+                        Worked @ Getec Italia
                     </BioSection>
                     <BioSection>
                         <BioYear>2022</BioYear>
-                        Worked at Getec Italia & H&S
+                        Worked @ H&S {' '}
+                        <Link as={NextLink} href="https://www.cgm.com" target="_blank" passHref>
+                            (CGM Group)
+                        </Link>
                     </BioSection>
                     <BioSection>
                         <BioYear>2023 to present</BioYear>
-                        Developing FootballBets and working full-time job @ Alten Italia
+                        Full-time consultant @ {' '}
+                        <Link as={NextLink} href="https://alten.it" target="_blank" passHref>
+                            Alten Italia
+                        </Link> by day and building FootballBets by night
                     </BioSection>
                 </Section>
                 <Section delay={0.4}>
@@ -132,11 +151,17 @@ const Home = () => {
                         I ♥
                     </Heading>
                     <Paragraph>
-                        IT, Fitness & {' '}
-                        <Link 
-                            as={NextLink} href="https://www.amazon.it/hz/wishlist/ls/2D166S3FBYWVQ?ref_=wl_share" 
+                        <Icon> <IoCode /> </Icon> IT
+                    </Paragraph>
+                    <Paragraph>
+                        <Icon> <IoBarbell /> </Icon> Fitness
+                    </Paragraph>
+                    <Paragraph>
+                        <Icon> <IoBook /> </Icon> {' '}
+                        <Link
+                            as={NextLink} href="https://www.amazon.it/hz/wishlist/ls/2D166S3FBYWVQ?ref_=wl_share"
                             target="_blank" passHref scroll={false}>
-                            Books 
+                            Books
                         </Link>
                     </Paragraph>
                 </Section>
@@ -155,7 +180,7 @@ const Home = () => {
                                     <Tab>Other</Tab>
                                 </TabList>
                                 <TabPanels animation={"backwards"}>
-                                    <TabPanel p={2}>
+                                    <TabPanel id="frontend" p={2} >
                                         <Chip imageSrc={"/images/tecnologies/html-5.png"} label='HTML5' />
                                         <Chip imageSrc={"/images/tecnologies/css3.png"} label='CSS3' />
                                         <Chip imageSrc={"/images/tecnologies/scss.png"} label='SCSS' />
@@ -170,29 +195,42 @@ const Home = () => {
                                         <Chip imageSrc={"images/tecnologies/jqxwidgets.jpeg"} label='jQWidgets' />
                                         <Chip imageSrc={"images/tecnologies/nextjs.png"} label='Next.js' />
                                     </TabPanel>
-                                    <TabPanel>
-                                        <Chip imageSrc={"/images/tecnologies/csharp.png"} label='C#' />
+                                    <TabPanel id="backend">
+                                        <Chip imageSrc={"/images/tecnologies/dotnet.png"} label='.NET' />
+                                        <Chip imageSrc={"/images/tecnologies/ef.png"} label='Entity Framework' />
                                         <Chip imageSrc={"/images/tecnologies/restapi.png"} label='REST API' />
                                         <Chip imageSrc={"/images/tecnologies/sqlite.png"} label='SQLite' />
-                                        <Chip imageSrc={"/images/tecnologies/mssqlserver.png"} label='MS SQL Server' />
+                                        <Chip imageSrc={"/images/tecnologies/mysql.jpeg"} label='MySQL' />
+                                        <Chip imageSrc={"/images/tecnologies/mssqlserver.png"} label='SQL Server' />
                                         <Chip imageSrc={"/images/tecnologies/postgre.png"} label='Postgre' />
-                                        <Chip imageSrc={"/images/tecnologies/aspdotnet.jpeg"} label='ASP.NET' />
-                                        <Chip imageSrc={"/images/tecnologies/extdotnet.png"} label='EXT.NET' />
+                                        <Chip imageSrc={"/images/tecnologies/mongodb.png"} label='MongoDB' />
                                         <Chip imageSrc={"/images/tecnologies/nodejs.png"} label='Node.js' />
                                         <Chip imageSrc={"/images/tecnologies/docker.png"} label='Docker' />
+                                        <Chip imageSrc={"/images/tecnologies/portainer.png"} label='Portainer' />
+                                        <Chip imageSrc={"/images/tecnologies/rancher.png"} label='Rancher' />
+                                        <Chip imageSrc={"/images/tecnologies/kafka.png"} label='Kafka' />
+                                        <Chip imageSrc={"/images/tecnologies/liquibase.png"} label='Liquibase' />
+                                        <Chip imageSrc={"/images/tecnologies/dapper.jpeg"} label='Dapper' />
+                                        <Chip imageSrc={"/images/tecnologies/xunit.png"} label='XUnit' />
+                                        <Chip imageSrc={"/images/tecnologies/nsubstitute.jpeg"} label='NSubstitute' />
+                                        <Chip imageSrc={"/images/tecnologies/moq.png"} label='Moq' />
                                     </TabPanel>
-                                    <TabPanel>
+                                    <TabPanel id="pmanag">
+                                        <Chip imageSrc={"/images/tecnologies/jira.png"} label='Jira' />
                                         <Chip imageSrc={"/images/tecnologies/git.png"} label='GIT' />
-                                        <Chip imageSrc={"/images/tecnologies/github.png"} label='GitHub' />
                                         <Chip imageSrc={"/images/tecnologies/gitlab.png"} label='GitLab' />
+                                        <Chip imageSrc={"/images/tecnologies/github.png"} label='GitHub' />
                                         <Chip imageSrc={"/images/tecnologies/kanban.png"} label='Kanban' />
                                         <Chip imageSrc={"/images/tecnologies/scrum.png"} label='Scrum' />
                                     </TabPanel>
-                                    <TabPanel>
-                                        <Chip imageSrc={"/images/tecnologies/nginx.png"} label='Nginx' />
+
+                                    <TabPanel id="other">
                                         <Chip imageSrc={"/images/tecnologies/vercel.png"} label='Vercel' />
-                                        <Chip imageSrc={"/images/tecnologies/msreportingservices.png"} label='Microsoft Reporting Services' />
+                                        <Chip imageSrc={"/images/tecnologies/swagger.png"} label='Swagger' />
+                                        <Chip imageSrc={"/images/tecnologies/postman.png"} label='Postman' />
+                                        <Chip imageSrc={"/images/tecnologies/nginx.png"} label='Nginx' />
                                         <Chip imageSrc={"/images/tecnologies/wordpress.png"} label='Wordpress' />
+                                        <Chip imageSrc={"/images/tecnologies/msreportingservices.png"} label='Microsoft Reporting Services' />
                                     </TabPanel>
                                 </TabPanels>
                             </Tabs>
@@ -213,7 +251,7 @@ const Home = () => {
                     </Box>
                 </Section>
             </Container>
-        </Layout >
+        </Layout>
     )
 }
 export default Home

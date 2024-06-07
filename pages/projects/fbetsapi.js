@@ -14,7 +14,7 @@ import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { Title, Meta } from '../../components/project'
 import P from '../../components/paragraph'
 
-const Project  = () => (
+const Project = () => (
     <Layout title="FootballBets UI">
         <Container>
             <Title>
@@ -24,10 +24,8 @@ const Project  = () => (
                 Jan 2023  -   present
             </Badge>
             <P>
-                The FootballBetsUI is a web-based user interface built using Angular.
-                It allows users to view upcoming football games and their associated data, as well as place bets.
-                This project retrieves data from the FootballBetsAPI and displays it in a user-friendly manner,
-                it&apos;s designed to be responsive and intuitive, allowing users to easily navigate and interact with the application.
+            Developed in C#, the FootballBets API is a feature-rich RESTful API serving as the foundation for FootballBetsUI. 
+            It efficiently manages football game data retrieval, processing, and manipulation, along with functionalities related to betting.
             </P>
             <List ml={4} my={4}>
                 <ListItem>
@@ -36,7 +34,7 @@ const Project  = () => (
                 </ListItem>
                 <ListItem>
                     <Meta>Stack</Meta>
-                    <span>C#, Docker</span>
+                    <span>C#, Sqlite, Docker </span>
                 </ListItem>
             </List>
 
@@ -46,7 +44,7 @@ const Project  = () => (
 
             <UnorderedList my={4}>
                 <ListItem>
-                    <Link href="https://github.com/GioOzz/FootballBetsAPI" target='_blank'>
+                    <Link href="https://github.com/ozzgio/FootballBetsAPI" target='_blank'>
                         <Badge mr={2}>Git Hub Repository</Badge>
                         Source Code
                         <ExternalLinkIcon mx="2px" />
@@ -61,5 +59,5 @@ const Project  = () => (
     </Layout>
 )
 
-export default Project 
+export default Project
 export { getServerSideProps } from '../../components/chackra'

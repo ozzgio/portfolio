@@ -45,12 +45,12 @@ const Contacts = () => (
                         </Link>
                     </ListItem>
                     <ListItem>
-                        <Link href="https://github.com/GioOzz" target="_blank">
+                        <Link href="https://github.com/ozzgio" target="_blank">
                             <Button
                                 variant="ghost"
                                 colorScheme="orange"
                                 leftIcon={<IoLogoGithub />}>
-                                @OzzGio
+                                @ozzgio
                             </Button>
                         </Link>
                     </ListItem>

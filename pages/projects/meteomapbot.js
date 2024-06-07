@@ -43,7 +43,7 @@ const Project  = () => (
 
             <UnorderedList my={4}>
                 <ListItem>
-                    <Link href="https://gist.github.com/GioOzz/2a1f1d2cff1a9134a50ad5c94c451e35" target='_blank'>
+                    <Link href="https://gist.github.com/ozzgio/2a1f1d2cff1a9134a50ad5c94c451e35" target='_blank'>
                         <Badge mr={2}>Git Hub Gists</Badge>
                         Source Code
                         <ExternalLinkIcon mx="2px" />

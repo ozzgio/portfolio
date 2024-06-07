@@ -68,7 +68,7 @@ const NavBar = props => {
                     </LinkItem>
                     <LinkItem
                         target="_blank"
-                        href="https://github.com/GioOzz/portfolio"
+                        href="https://github.com/ozzgio/portfolio"
                         path={path}
                         display="inline-flex"
                         alignItems="center"
@@ -92,7 +92,7 @@ const NavBar = props => {
                                 <MenuItem as={MenuLink} href="/contacts">
                                     Contacts
                                 </MenuItem>
-                                <MenuItem as={MenuLink} href="https://github.com/GioOzz/portfolio/">
+                                <MenuItem as={MenuLink} href="https://github.com/ozzgio/portfolio/">
                                     Source Code
                                 </MenuItem>
 
