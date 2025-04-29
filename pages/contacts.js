@@ -1,5 +1,5 @@
 import { Container, Box, List, ListItem, Button, Link } from '@chakra-ui/react'
-import { IoLogoGithub, IoLogoInstagram, IoLogoLinkedin, IoMailSharp } from 'react-icons/io5'
+import { IoLogoGithub, IoLogoLinkedin, IoMailSharp } from 'react-icons/io5'
 import Layout from '../components/layouts/article'
 import P from '../components/paragraph'
 

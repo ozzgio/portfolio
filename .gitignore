@@ -792,3 +792,11 @@ node_modules
 .next/static/webpack/pages/index.f640477984117b09.hot-update.js
 .next/static/webpack/pages/index.fe9557f3d09c9695.hot-update.js
 .next/static/webpack/pages/index.ffde46e81dc75812.hot-update.js
+.next/build-manifest.json
+.next/fallback-build-manifest.json
+.next/trace
+.next/cache/webpack/client-development/0.pack
+.next/cache/webpack/client-development/4.pack
+.next/cache/webpack/client-development/5.pack
+.next/cache/webpack/client-development/6.pack
+.next/cache/webpack/client-development/7.pack
