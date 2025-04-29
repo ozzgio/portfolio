@@ -60,6 +60,9 @@ const NavBar = props => {
                     width={{ base: 'full', md: 'auto' }}
                     alignItems="center" flexGrow={1}
                     mt={{ base: 4, nmd: 0 }}>
+                    <LinkItem href="/articles" path={path}>
+                        Articles
+                    </LinkItem>
                     <LinkItem href="/projects" path={path}>
                         Projects
                     </LinkItem>
@@ -83,8 +86,8 @@ const NavBar = props => {
                         <Menu isLazy id="navbar-menu">
                             <MenuButton as={IconButton} icon={<HamburgerIcon />} variant='outline' aria-label="Options" />
                             <MenuList>
-                                <MenuItem as={MenuLink} href="/">
-                                    About
+                                <MenuItem as={MenuLink} href="/articles">
+                                    Articles
                                 </MenuItem>
                                 <MenuItem as={MenuLink} href="/projects">
                                     Projects

@@ -32,7 +32,7 @@ export const ProjectGridItem = ({ children, id, title, thumbnail }) => (
                 src={thumbnail}
                 alt={title}
                 className="grid-item-thumbnail"
-                placeholder="blur"/>
+                placeholder="blur" />
             <LinkOverlay as="div" href={`/projects/${id}`}>
                 <Text mt={2} fontSize={20}>
                     {title}
@@ -46,7 +46,7 @@ export const ProjectGridItem = ({ children, id, title, thumbnail }) => (
 export const GridItemStyle = () => (
     <Global styles={`
       .grid-item-thumbnail {
-        border-radius: 12px;
+        border-radius: 15px;
       }
-    `}/>
+    `} />
 )

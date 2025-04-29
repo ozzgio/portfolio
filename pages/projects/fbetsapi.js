@@ -21,11 +21,12 @@ const Project = () => (
                 FootballBets API
             </Title>
             <Badge>
-                Jan 2023  -   present
+                Jan 2023  -   Jun 2024
             </Badge>
             <P>
-            Developed in C#, the FootballBets API is a feature-rich RESTful API serving as the foundation for FootballBetsUI. 
-            It efficiently manages football game data retrieval, processing, and manipulation, along with functionalities related to betting.
+                Developed in C#, the FootballBets API is a feature-rich RESTful API serving as the foundation for FootballBetsUI.
+                It efficiently manages football game data retrieval, processing, and manipulation, along with functionalities related to betting.
+                Born as a mentorship project, it has evolved for apply my skills in a real-world context, such as the repository pattern, unit testing and so on.
             </P>
             <List ml={4} my={4}>
                 <ListItem>
@@ -45,7 +46,7 @@ const Project = () => (
             <UnorderedList my={4}>
                 <ListItem>
                     <Link href="https://github.com/ozzgio/FootballBetsAPI" target='_blank'>
-                        <Badge mr={2}>Git Hub Repository</Badge>
+                        <Badge mr={2}>GitHub Repository</Badge>
                         Source Code
                         <ExternalLinkIcon mx="2px" />
                     </Link>

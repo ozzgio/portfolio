@@ -23,10 +23,11 @@ const Project = () => (
                 May 2023
             </Badge>
             <P>
-                Here you&apos;ll find a collection of my latest projects, showcasing my skills in web development using various technologies. 
-                <br/>
-                From building APIs to creating user interfaces, I want to bring creativity and functionality to every project. 
+                Here you&apos;ll find a collection of my latest projects, showcasing my skills in web development using various technologies.
+                <br />
+                From building APIs to creating user interfaces, I want to bring creativity and functionality to every project.
                 Take a look around and see what I can do for you!
+                Shoutout to <Link href="https://www.youtube.com/@devaslife" target='_blank'>devaslife</Link> for the inspiration!
             </P>
             <List ml={4} my={4}>
                 <ListItem>
@@ -56,5 +57,5 @@ const Project = () => (
     </Layout>
 )
 
-export default Project 
+export default Project
 export { getServerSideProps } from '../../components/chackra'

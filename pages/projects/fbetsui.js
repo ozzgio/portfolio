@@ -14,17 +14,17 @@ import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { Title, Meta } from '../../components/project'
 import P from '../../components/paragraph'
 
-const Project  = () => (
-    <Layout title="FootballBets UI">
+const Project = () => (
+    <Layout title="FootballBets (UI)">
         <Container>
             <Title>
-                FootballBets UI
+                FootballBets (UI)
             </Title>
             <Badge>
-                Jan 2023  -   present
+                Jan 2023  -   Apr 2024
             </Badge>
             <P>
-                The FootballBetsUI is a web-based user interface built using Angular.
+                FootballBetsUI is a web-based user interface built using Angular.
                 It allows users to view upcoming football games and their associated data, as well as place bets.
                 This project retrieves data from the FootballBetsAPI and displays it in a user-friendly manner,
                 it&apos;s designed to be responsive and intuitive, allowing users to easily navigate and interact with the application.
@@ -36,7 +36,7 @@ const Project  = () => (
                 </ListItem>
                 <ListItem>
                     <Meta>Stack</Meta>
-                    <span>HTML5, CSS3, SCSS, Typescript (Angular)</span>
+                    <span>HTML5, CSS3, SCSS, Typescript, Angular 15.1.0 </span>
                 </ListItem>
             </List>
 
@@ -53,14 +53,9 @@ const Project  = () => (
                     </Link>
                 </ListItem>
             </UnorderedList>
-
-            <SimpleGrid columns={2} gap={3}>
-                {/* <WorkImage src="/images/projects/kellyspub1.png" alt="website image" /> */}
-                {/* <WorkImage src="/images/projects/kellyspub2.png" alt="website image" /> */}
-            </SimpleGrid>
         </Container>
     </Layout>
 )
 
-export default Project 
+export default Project
 export { getServerSideProps } from '../../components/chackra'

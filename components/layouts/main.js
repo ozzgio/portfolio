@@ -12,7 +12,7 @@ const Main = ({ children, router }) => {
                 <link rel="apple-touch-icon" href="apple-touch-icon.png" />
                 <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
                 <meta name="viewport" content='width=device-width, initial-scale=1'></meta>
-                <title>Dev Ozzo - Home</title>
+                <title>Ozzo - Home</title>
             </Head>
             <Navbar path={router.asPath} />
             <Container maxW="container.md" pt={14}>

@@ -6,10 +6,18 @@ import P from '../components/paragraph'
 const Contacts = () => (
     <Layout title="Contacts">
         <Container>
-            <Box borderRadius="lg" bg="orange" mb={6} p={10} align="center">
+            <Box borderRadius="lg" bg="grey" mb={6} p={10} align="center">
                 <P>
                     Thanks for visiting my website! <br />
-                    If you have any questions, comments, or just want to say hello, feel free to drop me a message using the links below.
+                    If you have a project in mind or want to discuss something, don&apos;t hesitate to reach out.
+                    I am always looking for new challenges and ways to grow.
+                    <br />
+                    I would <b> love </b> to hear from you.
+                    <br />
+                    Let&apos;s connect and see how we can work together!
+                    <br />
+                    If you have any questions, comments, or just want to say something, feel free to drop me a message using the links below.
+                    Bye!
                 </P>
             </Box>
             <Box align="center" mb={6} p={10}>
@@ -21,16 +29,6 @@ const Contacts = () => (
                                 colorScheme="orange"
                                 leftIcon={<IoLogoLinkedin />}>
                                 @Giorgio Ozzola
-                            </Button>
-                        </Link>
-                    </ListItem>
-                    <ListItem>
-                        <Link href="https://www.instagram.com/giorgiozzola/" target="_blank">
-                            <Button
-                                variant="ghost"
-                                colorScheme="orange"
-                                leftIcon={<IoLogoInstagram />}>
-                                @giorgiozzola
                             </Button>
                         </Link>
                     </ListItem>
@@ -55,12 +53,6 @@ const Contacts = () => (
                         </Link>
                     </ListItem>
                 </List>
-            </Box>
-            <Box align="center" mb={6} p={10}>
-                <P>
-                    I&apos;ll get back to you as soon as I can. <br />
-                    Let&apos;s connect and see how we can work together!
-                </P>
             </Box>
         </Container>
     </Layout>

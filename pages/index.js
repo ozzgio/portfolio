@@ -36,7 +36,7 @@ const Home = () => {
         <Layout title={"HomePage"}>
             <Container>
                 <Box borderRadius="lg" bg="blue.300" mb={6} p={3} align="center">
-                    Hi! Ozzo here, a full stack dev based in Italy &clubs;
+                    Hi! Ozzo here, nice to meet you! &clubs;
                 </Box>
                 <Box align="center" mb={6} p={3}>
                     <List>
@@ -74,7 +74,7 @@ const Home = () => {
                             <Icon> <IoCafe /> </Icon> Coffee addict
                         </Paragraph>
                         <Paragraph>
-                            <Icon> <IoFootsteps /> </Icon> 22yo always learning
+                            <Icon> <IoFootsteps /> </Icon> 23yo always learning
                         </Paragraph>
                     </Box>
                     <Box flexShrink={0} mt={{ base: 4, md: 0 }} ml={{ md: 6 }} textAlign="center">
@@ -92,7 +92,7 @@ const Home = () => {
                 </Box>
                 <Section delay={0.2}>
                     <Heading as="h3" variant="section-title">
-                        Work
+                        Purpose
                     </Heading>
                     <Paragraph>
                         As a Full Stack Developer, I am constantly seeking out new challenges and side projects to help me grow personally and professionally.
@@ -100,9 +100,18 @@ const Home = () => {
                         <Link as={NextLink} href="https://en.wikipedia.org/wiki/Kaizen" target="_blank" passHref>
                             Kaizen
                         </Link>
-                        &quot;.
+                        &quot;. I think that the best way to learn is by doing, and I am always looking for opportunities to apply my skills in real-world situations.
                     </Paragraph>
-                    <Box align="center" my={4}>
+                    <Box display="flex" justifyContent="center" gap={4} my={4}>
+                        <Button
+                            as={NextLink}
+                            href="/articles"
+                            scroll={false}
+                            rightIcon={<ChevronRightIcon />}
+                            colorScheme="orange"
+                        >
+                            My articles
+                        </Button>
                         <Button
                             as={NextLink}
                             href="/projects"
@@ -110,7 +119,7 @@ const Home = () => {
                             rightIcon={<ChevronRightIcon />}
                             colorScheme="orange"
                         >
-                            My portfolio
+                            My projects
                         </Button>
                     </Box>
                 </Section>
@@ -140,10 +149,17 @@ const Home = () => {
                     </BioSection>
                     <BioSection>
                         <BioYear>2023 to present</BioYear>
+                        Started a mentorship with my great mentor {' '}
+                        <Link as={NextLink} href="https://linkedin.com/in/davidecovato" target="_blank" passHref>
+                            devcovato
+                        </Link>
+                    </BioSection>
+                    <BioSection>
+                        <BioYear>2023 to present</BioYear>
                         Full-time consultant @ {' '}
                         <Link as={NextLink} href="https://alten.it" target="_blank" passHref>
                             Alten Italia
-                        </Link> by day and building FootballBets by night
+                        </Link>
                     </BioSection>
                 </Section>
                 <Section delay={0.4}>
@@ -209,6 +225,7 @@ const Home = () => {
                                         <Chip imageSrc={"/images/tecnologies/portainer.png"} label='Portainer' />
                                         <Chip imageSrc={"/images/tecnologies/rancher.png"} label='Rancher' />
                                         <Chip imageSrc={"/images/tecnologies/kafka.png"} label='Kafka' />
+                                        <Chip imageSrc={"/images/tecnologies/rabbitmq.jpeg"} label='Rabbit MQ' />
                                         <Chip imageSrc={"/images/tecnologies/liquibase.png"} label='Liquibase' />
                                         <Chip imageSrc={"/images/tecnologies/dapper.jpeg"} label='Dapper' />
                                         <Chip imageSrc={"/images/tecnologies/xunit.png"} label='XUnit' />
@@ -217,13 +234,15 @@ const Home = () => {
                                     </TabPanel>
                                     <TabPanel id="pmanag">
                                         <Chip imageSrc={"/images/tecnologies/jira.png"} label='Jira' />
+                                        <Chip imageSrc={"/images/tecnologies/confluence.jpeg"} label='Confluence' />
                                         <Chip imageSrc={"/images/tecnologies/git.png"} label='GIT' />
+                                        <Chip imageSrc={"/images/tecnologies/bitbucket.jpeg"} label='BitBucket' />
+                                        <Chip imageSrc={"/images/tecnologies/jenkins.png"} label='Jenkins' />
                                         <Chip imageSrc={"/images/tecnologies/gitlab.png"} label='GitLab' />
                                         <Chip imageSrc={"/images/tecnologies/github.png"} label='GitHub' />
                                         <Chip imageSrc={"/images/tecnologies/kanban.png"} label='Kanban' />
                                         <Chip imageSrc={"/images/tecnologies/scrum.png"} label='Scrum' />
                                     </TabPanel>
-
                                     <TabPanel id="other">
                                         <Chip imageSrc={"/images/tecnologies/vercel.png"} label='Vercel' />
                                         <Chip imageSrc={"/images/tecnologies/swagger.png"} label='Swagger' />

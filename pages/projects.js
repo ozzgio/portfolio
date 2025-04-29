@@ -20,27 +20,23 @@ const Projects = () => (
             <SimpleGrid columns={[2, 1, 2]} gap={8}>
                 <Section>
                     <ProjectGridItem id="portfolio" title="This Website" thumbnail={thumbportfolio}>
-                    Deep dive into the tecnologies and the code I have built for this website. 
+                        Deep dive into the tecnologies and the code I have built for this website.
                     </ProjectGridItem>
                 </Section>
                 <Section>
-                    <ProjectGridItem id="fbetsapi" title="FootballBets API" thumbnail={thumbfbetsapi}>
+                    <ProjectGridItem id="fbetsapi" title="FootballBets (API)" thumbnail={thumbfbetsapi}>
                         An API for managing and retrieving data related to football bets.
-                        It provides endpoints for creating and managing user accounts, placing and retrieving bets,
-                        and retrieving data about teams and matches.
                     </ProjectGridItem>
                 </Section>
                 <Section>
-                    <ProjectGridItem id="fbetsui" title="FootballBets UI" thumbnail={thumbfbetsui}>
+                    <ProjectGridItem id="fbetsui" title="FootballBets (UI)" thumbnail={thumbfbetsui}>
                         A user interface for managing and placing football bets.
-                        It provides a modern, responsive interface for browsing matches, placing bets, and tracking your progress.
-                        The UI is built with Angular and uses the FootballBets API as its backend.
                     </ProjectGridItem>
                 </Section>
 
                 <Section delay={0.2}>
                     <ProjectGridItem id="kellyspub" thumbnail={thumbKellys} title="Kelly's Pub">
-                        Webmaster for a local pub website using CMS (WordPress), hosted on Nginx server.
+                        Webmaster of a local pub website and hosted on Nginx server.
                     </ProjectGridItem>
                 </Section>
                 <Section delay={0.2}>
