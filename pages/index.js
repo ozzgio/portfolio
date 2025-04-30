@@ -34,9 +34,10 @@ const ProfileImage = chakra(Image, {
 const Home = () => {
     return (
         <Layout title={"HomePage"}>
+            <br />
             <Container>
                 <Box borderRadius="lg" bg="blue.300" mb={6} p={3} align="center">
-                    Hi! Ozzo here, nice to meet you! &clubs;
+                    Hi! Ozzo here, nice to meet you! 🤝
                 </Box>
                 <Box align="center" mb={6} p={3}>
                     <List>
@@ -62,7 +63,7 @@ const Home = () => {
                         </ListItem>
                     </List>
                 </Box>
-                <Box display={{ md: "flex" }}>
+                <Box display={{ md: "flex", mb: 6 }}>
                     <Box flexGrow={1}>
                         <Heading as="h2" variant="page-title">
                             Ozzo
@@ -71,7 +72,7 @@ const Home = () => {
                             <Icon> <IoCode /> </Icon> Code Crafter
                         </Paragraph>
                         <Paragraph>
-                            <Icon> <IoCafe /> </Icon> Coffee addict
+                            <Icon> <IoCafe /> </Icon> Coffee lover
                         </Paragraph>
                         <Paragraph>
                             <Icon> <IoFootsteps /> </Icon> 23yo always learning
@@ -96,11 +97,13 @@ const Home = () => {
                     </Heading>
                     <Paragraph>
                         As a Full Stack Developer, I am constantly seeking out new challenges and side projects to help me grow personally and professionally.
-                        I believe that learning is a never-ending journey, and I approach every task with a mindset of constant improvement like &quot;{' '}
+                        For me learning is a never-ending journey, and I approach every task with a mindset of constant improvement like {' '}
                         <Link as={NextLink} href="https://en.wikipedia.org/wiki/Kaizen" target="_blank" passHref>
                             Kaizen
                         </Link>
-                        &quot;. I think that the best way to learn is by doing, and I am always looking for opportunities to apply my skills in real-world situations.
+                        .
+                        I am always looking for opportunities to apply my skills in real-world situations.
+                        The best way to learn it is by doing it.
                     </Paragraph>
                     <Box display="flex" justifyContent="center" gap={4} my={4}>
                         <Button
@@ -134,11 +137,13 @@ const Home = () => {
                     <BioSection>
                         <BioYear>2021</BioYear>
                         Completed HS diploma in Computer Science
-                        at ISII Marconi
                     </BioSection>
                     <BioSection>
                         <BioYear>2021</BioYear>
-                        Worked @ Getec Italia
+                        Worked @ {' '}
+                        <Link as={NextLink} href="https://www.getec-italia.com/it/" target="_blank" passHref>
+                            Getec Italia
+                        </Link>
                     </BioSection>
                     <BioSection>
                         <BioYear>2022</BioYear>
@@ -149,16 +154,16 @@ const Home = () => {
                     </BioSection>
                     <BioSection>
                         <BioYear>2023 to present</BioYear>
-                        Started a mentorship with my great mentor {' '}
-                        <Link as={NextLink} href="https://linkedin.com/in/davidecovato" target="_blank" passHref>
-                            devcovato
+                        Full-time consultant @ {' '}
+                        <Link as={NextLink} href="https://alten.it" target="_blank" passHref>
+                            Alten Italia
                         </Link>
                     </BioSection>
                     <BioSection>
                         <BioYear>2023 to present</BioYear>
-                        Full-time consultant @ {' '}
-                        <Link as={NextLink} href="https://alten.it" target="_blank" passHref>
-                            Alten Italia
+                        Mentee of my great mentor {' '}
+                        <Link as={NextLink} href="https://linkedin.com/in/davidecovato" target="_blank" passHref>
+                            devcovato
                         </Link>
                     </BioSection>
                 </Section>
