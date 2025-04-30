@@ -8,7 +8,7 @@ import {
     Heading,
     Center
 } from '@chakra-ui/react'
-import Layout from '../../components/layouts/article'
+import Layout from '../../components/layouts/layout'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { Title, Meta } from '../../components/project'
 import P from '../../components/paragraph'

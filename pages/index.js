@@ -24,7 +24,7 @@ import Section from "../components/section"
 import Paragraph from "../components/paragraph"
 import { BioSection, BioYear } from '../components/bio'
 import Chip from "../components/chip"
-import Layout from "../components/layouts/article"
+import Layout from "../components/layouts/layout"
 import { IoLogoGithub, IoLogoLinkedin, IoCafe, IoBook, IoBarbell, IoCode, IoFootsteps } from 'react-icons/io5'
 
 const ProfileImage = chakra(Image, {
