@@ -24,7 +24,7 @@ export default async function handler(req, res) {
         const response = await notion.databases.query({
             database_id: databaseId
         })
-        const articles = response.results.map((page, index) => {
+        const articles = response.results.map((page, _index) => {
             const props = page.properties || {}
             const dateValue = props.Date?.date?.start || props.created_time;
 
