@@ -8,12 +8,12 @@ import {
     Heading,
     Center
 } from '@chakra-ui/react'
-import Layout from '../../components/layouts/article'
+import Layout from '../../components/layouts/layout'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { Title, Meta } from '../../components/project'
 import P from '../../components/paragraph'
 
-const Project  = () => (
+const Project = () => (
     <Layout title="Telegram Bot">
         <Container>
             <Title>
@@ -61,5 +61,5 @@ const Project  = () => (
     </Layout>
 )
 
-export default Project 
+export default Project
 export { getServerSideProps } from '../../components/chackra'

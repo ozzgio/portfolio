@@ -1,6 +1,6 @@
 import { Container, Box, List, ListItem, Button, Link } from '@chakra-ui/react'
 import { IoLogoGithub, IoLogoLinkedin, IoMailSharp } from 'react-icons/io5'
-import Layout from '../components/layouts/article'
+import Layout from '../components/layouts/layout'
 import P from '../components/paragraph'
 
 const Contacts = () => (

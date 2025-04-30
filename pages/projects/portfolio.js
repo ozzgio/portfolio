@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { Title, Meta } from '../../components/project'
-import Layout from '../../components/layouts/article'
+import Layout from '../../components/layouts/layout'
 import P from '../../components/paragraph'
 
 const Project = () => (
