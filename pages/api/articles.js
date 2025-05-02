@@ -17,8 +17,8 @@ function getRelativeDate(dateString) {
     return `${diff} days ago`
 }
 
-export default async function handler(req, res) {
-    const databaseId = process.env.NOTION_DATABASE_ID
+export default async function handler(_req, res) {
+    const databaseId = process.env.NOTION_ARTICLES_DATABASE_ID
 
     try {
         const response = await notion.databases.query({

@@ -1,7 +1,6 @@
 import {
     Box,
     Button,
-    Container,
     Heading,
     HStack,
     SimpleGrid,
@@ -11,7 +10,7 @@ import {
 import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import Layout from '../components/layouts/layout'
-import ArticleCard from '../components/articlecard'
+import ArticleCard from '../components/cards/articlecard'
 
 const MotionBox = motion.create(Box)
 
@@ -81,52 +80,48 @@ const ArticlesPage = () => {
 
     return (
         <Layout title="Articles">
-            <Container>
-                <MotionBox
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                >
-                    <Heading as="h1" mb={6}>
-                        ✍️ My Articles
-                    </Heading>
-
-                    {loading ? (
-                        <Spinner />
-                    ) : filteredArticles.length === 0 ? (
-                        <Text>No articles found.</Text>
-                    ) : (
-                        <>
-                            <HStack flexWrap="wrap" spacing={3} mb={4}>
+            <MotionBox
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+            >
+                <Heading as="h1" mb={6} id="articles-heading">
+                    ✍️ My Articles
+                </Heading>
+                {loading ? (
+                    <Spinner />
+                ) : filteredArticles.length === 0 ? (
+                    <Text>No articles found.</Text>
+                ) : (
+                    <>
+                        <HStack flexWrap="wrap" spacing={3} mb={4}>
+                            <Button
+                                size="sm"
+                                colorScheme={!selectedTag ? 'orange' : 'gray'}
+                                onClick={() => setSelectedTag(null)}
+                            >
+                                All
+                            </Button>
+                            {allTags.map((tag, idx) => (
                                 <Button
+                                    key={idx}
                                     size="sm"
-                                    colorScheme={!selectedTag ? 'orange' : 'gray'}
-                                    onClick={() => setSelectedTag(null)}
+                                    variant={selectedTag === tag ? 'solid' : 'outline'}
+                                    colorScheme="orange"
+                                    onClick={() => setSelectedTag(tag)}
                                 >
-                                    All
+                                    {tag}
                                 </Button>
-                                {allTags.map((tag, idx) => (
-                                    <Button
-                                        key={idx}
-                                        size="sm"
-                                        variant={selectedTag === tag ? 'solid' : 'outline'}
-                                        colorScheme="orange"
-                                        onClick={() => setSelectedTag(tag)}
-                                    >
-                                        {tag}
-                                    </Button>
-                                ))}
-                            </HStack>
+                            ))}
+                        </HStack>
 
-                            <SimpleGrid columns={[1, 1, 2]} spacing={6}>
-                                {filteredArticles.map((article, idx) => (
-                                    <ArticleCard key={idx} {...article} />
-                                ))}
-                            </SimpleGrid>
-                        </>
-                    )}
-                </MotionBox>
-            </Container>
+                        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>                               {filteredArticles.map((article, idx) => (
+                            <ArticleCard key={idx} {...article} />
+                        ))}
+                        </SimpleGrid>
+                    </>
+                )}
+            </MotionBox>
         </Layout>
     )
 }

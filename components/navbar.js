@@ -1,12 +1,13 @@
 import { forwardRef } from 'react'
 import Logo from './logo'
+import LinkItem from './linkitem'
 import NextLink from 'next/link'
 import {
     Container,
     Box,
-    Link,
     Stack,
     Heading,
+    Link,
     Flex,
     Menu,
     MenuItem,
@@ -18,50 +19,50 @@ import {
 import { HamburgerIcon } from '@chakra-ui/icons'
 import ThemeToggleButton from './themebutton'
 
-const LinkItem = ({ href, path, target, children, ...props }) => {
-    const active = path === href
-    const inactiveColor = useColorModeValue('gray.800', 'whiteAlpha.900')
-    return (
-        <Link
-            as={NextLink}
-            href={href}
-            scroll={false}
-            p={2}
-            bg={active ? 'orange' : ''}
-            color={active ? '#202023' : inactiveColor}
-            target={target}
-            {...props}
-        >
-            {children}
-        </Link>
-    )
-}
-
 const MenuLink = forwardRef((props, ref) => (
     <Link ref={ref} as={NextLink} {...props} />
 ))
 
-
 const NavBar = props => {
     const { path } = props
     return (
-        <Box position="fixed" as="nav" w="100%"
-            bg={useColorModeValue('#ffffff40', '#202023')}
+        <Box
+            position="fixed"
+            as="nav"
+            w="100%"
+            bg={useColorModeValue('#ffffff40', '#20202380')}
             style={{ backdropFilter: 'blur(10px)' }}
-            zIndex={2} {...props}>
-            <Container display="flex" p={2} maxW={'container.md'} wrap='wrap' align="center" justify='space-between'>
-                <Flex align='center' mr={5}>
+            zIndex={10}
+            top={0}
+            left={0}
+            {...props}
+        >
+            <Container
+                display="flex"
+                p={2}
+                maxW={'container.md'}
+                wrap="wrap"
+                align="center"
+                justify="space-between"
+            >
+                <Flex align="center" mr={5}>
                     <Heading as="h1" size="lg" letterSpacing={'tighter'}>
                         <Logo />
                     </Heading>
                 </Flex>
-                <Stack direction={{ base: 'column', md: 'row' }}
+                <Stack
+                    direction={{ base: 'column', md: 'row' }}
                     display={{ base: 'none', md: 'flex' }}
                     width={{ base: 'full', md: 'auto' }}
-                    alignItems="center" flexGrow={1}
-                    mt={{ base: 4, nmd: 0 }}>
+                    alignItems="center"
+                    flexGrow={1}
+                    mt={{ base: 4, md: 0 }}
+                >
                     <LinkItem href="/articles" path={path}>
                         Articles
+                    </LinkItem>
+                    <LinkItem href="/books" path={path}>
+                        Books
                     </LinkItem>
                     <LinkItem href="/projects" path={path}>
                         Projects
@@ -77,17 +78,26 @@ const NavBar = props => {
                         alignItems="center"
                         style={{ gap: 4 }}
                         pl={2}
-                    > Source Code
+                    >
+                        Source Code
                     </LinkItem>
                 </Stack>
                 <Box flex={1} align="right">
                     <ThemeToggleButton />
                     <Box ml={2} display={{ base: 'inline-block', md: 'none' }}>
                         <Menu isLazy id="navbar-menu">
-                            <MenuButton as={IconButton} icon={<HamburgerIcon />} variant='outline' aria-label="Options" />
+                            <MenuButton
+                                as={IconButton}
+                                icon={<HamburgerIcon />}
+                                variant="outline"
+                                aria-label="Options"
+                            />
                             <MenuList>
                                 <MenuItem as={MenuLink} href="/articles">
                                     Articles
+                                </MenuItem>
+                                <MenuItem as={MenuLink} href="/books">
+                                    Books
                                 </MenuItem>
                                 <MenuItem as={MenuLink} href="/projects">
                                     Projects
@@ -98,7 +108,6 @@ const NavBar = props => {
                                 <MenuItem as={MenuLink} href="https://github.com/ozzgio/portfolio/">
                                     Source Code
                                 </MenuItem>
-
                             </MenuList>
                         </Menu>
                     </Box>

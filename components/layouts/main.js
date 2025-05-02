@@ -11,8 +11,7 @@ const Main = ({ children, router }) => {
                 <meta name="author" content="Giorgio Ozzola" />
                 <link rel="apple-touch-icon" href="apple-touch-icon.png" />
                 <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-                <meta name="viewport" content='width=device-width, initial-scale=1'></meta>
-                <title>Ozzo - Home</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no" />                <title>Ozzo - Home</title>
             </Head>
             <Navbar path={router.asPath} />
             <Container maxW="container.md" pt={14}>

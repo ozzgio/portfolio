@@ -69,7 +69,7 @@ const Home = () => {
                             Ozzo
                         </Heading>
                         <Paragraph>
-                            <Icon> <IoCode /> </Icon> Code Crafter
+                            <Icon> <IoCode /> </Icon> Code crafter
                         </Paragraph>
                         <Paragraph>
                             <Icon> <IoCafe /> </Icon> Coffee lover
@@ -108,12 +108,21 @@ const Home = () => {
                     <Box display="flex" justifyContent="center" gap={4} my={4}>
                         <Button
                             as={NextLink}
-                            href="/articles"
+                            href="/articles#articles-heading"
+                            rightIcon={<ChevronRightIcon />}
+                            scroll={false}
+                            colorScheme="orange"
+                        >
+                            Articles
+                        </Button>
+                        <Button
+                            as={NextLink}
+                            href="/books"
                             scroll={false}
                             rightIcon={<ChevronRightIcon />}
                             colorScheme="orange"
                         >
-                            My articles
+                            Books
                         </Button>
                         <Button
                             as={NextLink}
@@ -122,7 +131,7 @@ const Home = () => {
                             rightIcon={<ChevronRightIcon />}
                             colorScheme="orange"
                         >
-                            My projects
+                            Projects
                         </Button>
                     </Box>
                 </Section>
@@ -178,12 +187,7 @@ const Home = () => {
                         <Icon> <IoBarbell /> </Icon> Fitness
                     </Paragraph>
                     <Paragraph>
-                        <Icon> <IoBook /> </Icon> {' '}
-                        <Link
-                            as={NextLink} href="https://www.amazon.it/hz/wishlist/ls/2D166S3FBYWVQ?ref_=wl_share"
-                            target="_blank" passHref scroll={false}>
-                            Books
-                        </Link>
+                        <Icon> <IoBook /> </Icon> Books
                     </Paragraph>
                 </Section>
 
