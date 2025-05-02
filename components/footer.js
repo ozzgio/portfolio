@@ -1,4 +1,5 @@
 import { Box } from '@chakra-ui/react'
+import packageJson from '../package.json'
 
 const Footer = () => {
   return (
@@ -11,6 +12,7 @@ const Footer = () => {
       opacity={0.4} fontSize="sm">
       &copy; {new Date().getFullYear()} Giorgio Ozzola. All Rights Reserved.<br />
       Inspired by <a href='https://www.craftz.dog/' target='_blank'>Takuya Matsuyama</a>
+      Version: {packageJson.version}
     </Box>
   )
 }
