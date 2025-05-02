@@ -1,5 +1,5 @@
 # Ozzo's Portfolio
-https://devozzo-portfolio.vercel.app/
+https://ozzo.blog
 
 
 Welcome to my portfolio! 
@@ -19,7 +19,7 @@ This project was built using the following technologies:
 ## Deployment
 
 The website is currently deployed using [Vercel](https://vercel.com/). 
-You can visit the live version of the site at https://devozzo-portfolio.vercel.app/.
+You can visit the live version of the site at https://ozzo.blog.
 
 ## Getting Started
 
@@ -37,8 +37,8 @@ I thought it would be a great way to showcase my own work and skills as a develo
 
 ## Links
 
-- [Production](https://devozzo-portfolio.vercel.app/)
+- [Production](https://ozzo.blog/)
 - [Devaslife](https://youtube.com/@devaslife)
 
 ## Contact
-If you have any questions or would like to get in touch, feel free to contact me using the contacts on my website or by emailing me at [gio.ozzola@gmail.com].
+If you have any questions or would like to get in touch, feel free to contact me using the contacts on my website or by emailing me [here](mailto:gio.ozzola@gmail.com).
