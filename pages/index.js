@@ -9,29 +9,36 @@ import {
     Tab,
     TabPanels,
     TabPanel,
-    SimpleGrid,
     List,
     ListItem,
-    GridItem,
     chakra,
-    Icon
+    Icon,
+    VStack,
+    HStack,
+    Text,
+    Image,
+    Flex
 } from "@chakra-ui/react"
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import NextLink from 'next/link'
-import Image from 'next/image'
+import { useState } from 'react'
+import { motion } from 'framer-motion'
 
-import Section from "../components/section"
+import Section from '../components/section'
+import EnhancedChip from '../components/enhancedchip'
 import Paragraph from "../components/paragraph"
 import { BioSection, BioYear } from '../components/bio'
-import Chip from "../components/chip"
 import Layout from "../components/layouts/layout"
 import { IoLogoGithub, IoLogoLinkedin, IoCafe, IoBook, IoBarbell, IoCode, IoFootsteps } from 'react-icons/io5'
+import technologyData from '../libs/technologyData'
 
 const ProfileImage = chakra(Image, {
     shouldForwardProp: prop => ['width', 'height', 'src', 'alt'].includes(prop)
 })
 
 const Home = () => {
+    const [selectedCategory, setSelectedCategory] = useState('frontend')
+
     return (
         <Layout title={"HomePage"}>
             <br />
@@ -191,96 +198,73 @@ const Home = () => {
                     </Paragraph>
                 </Section>
 
-                <Section delay={0.4}>
-                    <SimpleGrid columns={[1, 1]} gap={6}>
-                        <GridItem>
-                            <Heading as="h3" variant="section-title">
-                                My technologies
+                <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.5 }}
+                >
+                    <VStack spacing={6} align="stretch">
+                        <Box>
+                            <Heading as="h3" variant="section-title" mb={2}>
+                                My Technologies
                             </Heading>
-                            <Tabs isFitted >
-                                <TabList>
-                                    <Tab>Frontend</Tab>
-                                    <Tab>Backend</Tab>
-                                    <Tab>Project Management</Tab>
-                                    <Tab>Other</Tab>
+                        </Box>
+
+                        <Box borderRadius="xl" p={6} shadow="sm">
+                            <Tabs
+                                variant="soft-rounded"
+                                index={Object.keys(technologyData).indexOf(selectedCategory)}
+                                onChange={(index) => setSelectedCategory(Object.keys(technologyData)[index])}
+                            >
+                                <TabList justifyContent="center" flexWrap="wrap" gap={2}>
+                                    {Object.entries(technologyData).map(([key, category]) => (
+                                        <Tab key={key} fontWeight="semibold">
+                                            <HStack spacing={2}>
+                                                <Text>{category.icon}</Text>
+                                                <Text>{category.title}</Text>
+                                            </HStack>
+                                        </Tab>
+                                    ))}
                                 </TabList>
-                                <TabPanels animation={"backwards"}>
-                                    <TabPanel id="frontend" p={2} >
-                                        <Chip imageSrc={"/images/tecnologies/html-5.png"} label='HTML5' />
-                                        <Chip imageSrc={"/images/tecnologies/css3.png"} label='CSS3' />
-                                        <Chip imageSrc={"/images/tecnologies/scss.png"} label='SCSS' />
-                                        <Chip imageSrc={"images/tecnologies/js.png"} label='Javascript' />
-                                        <Chip imageSrc={"images/tecnologies/typescript.png"} label='TypeScript' />
-                                        <Chip imageSrc={"images/tecnologies/angular.png"} label='Angular' />
-                                        <Chip imageSrc={"images/tecnologies/react.png"} label='React' />
-                                        <Chip imageSrc={"images/tecnologies/chakra-ui.png"} label='Chakra-UI' />
-                                        <Chip imageSrc={"images/tecnologies/syncfusion.png"} label='Syncfusion' />
-                                        <Chip imageSrc={"images/tecnologies/bootstrap.png"} label='Bootstrap' />
-                                        <Chip imageSrc={"images/tecnologies/angularmaterial.png"} label='Angular Material' />
-                                        <Chip imageSrc={"images/tecnologies/jqxwidgets.jpeg"} label='jQWidgets' />
-                                        <Chip imageSrc={"images/tecnologies/nextjs.png"} label='Next.js' />
-                                    </TabPanel>
-                                    <TabPanel id="backend">
-                                        <Chip imageSrc={"/images/tecnologies/dotnet.png"} label='.NET' />
-                                        <Chip imageSrc={"/images/tecnologies/ef.png"} label='Entity Framework' />
-                                        <Chip imageSrc={"/images/tecnologies/restapi.png"} label='REST API' />
-                                        <Chip imageSrc={"/images/tecnologies/sqlite.png"} label='SQLite' />
-                                        <Chip imageSrc={"/images/tecnologies/mysql.jpeg"} label='MySQL' />
-                                        <Chip imageSrc={"/images/tecnologies/mssqlserver.png"} label='SQL Server' />
-                                        <Chip imageSrc={"/images/tecnologies/postgre.png"} label='Postgre' />
-                                        <Chip imageSrc={"/images/tecnologies/mongodb.png"} label='MongoDB' />
-                                        <Chip imageSrc={"/images/tecnologies/nodejs.png"} label='Node.js' />
-                                        <Chip imageSrc={"/images/tecnologies/docker.png"} label='Docker' />
-                                        <Chip imageSrc={"/images/tecnologies/portainer.png"} label='Portainer' />
-                                        <Chip imageSrc={"/images/tecnologies/rancher.png"} label='Rancher' />
-                                        <Chip imageSrc={"/images/tecnologies/kafka.png"} label='Kafka' />
-                                        <Chip imageSrc={"/images/tecnologies/rabbitmq.jpeg"} label='Rabbit MQ' />
-                                        <Chip imageSrc={"/images/tecnologies/liquibase.png"} label='Liquibase' />
-                                        <Chip imageSrc={"/images/tecnologies/dapper.jpeg"} label='Dapper' />
-                                        <Chip imageSrc={"/images/tecnologies/xunit.png"} label='XUnit' />
-                                        <Chip imageSrc={"/images/tecnologies/nsubstitute.jpeg"} label='NSubstitute' />
-                                        <Chip imageSrc={"/images/tecnologies/moq.png"} label='Moq' />
-                                    </TabPanel>
-                                    <TabPanel id="pmanag">
-                                        <Chip imageSrc={"/images/tecnologies/jira.png"} label='Jira' />
-                                        <Chip imageSrc={"/images/tecnologies/confluence.jpeg"} label='Confluence' />
-                                        <Chip imageSrc={"/images/tecnologies/git.png"} label='GIT' />
-                                        <Chip imageSrc={"/images/tecnologies/bitbucket.jpeg"} label='BitBucket' />
-                                        <Chip imageSrc={"/images/tecnologies/jenkins.png"} label='Jenkins' />
-                                        <Chip imageSrc={"/images/tecnologies/gitlab.png"} label='GitLab' />
-                                        <Chip imageSrc={"/images/tecnologies/github.png"} label='GitHub' />
-                                        <Chip imageSrc={"/images/tecnologies/kanban.png"} label='Kanban' />
-                                        <Chip imageSrc={"/images/tecnologies/scrum.png"} label='Scrum' />
-                                    </TabPanel>
-                                    <TabPanel id="other">
-                                        <Chip imageSrc={"/images/tecnologies/vercel.png"} label='Vercel' />
-                                        <Chip imageSrc={"/images/tecnologies/swagger.png"} label='Swagger' />
-                                        <Chip imageSrc={"/images/tecnologies/postman.png"} label='Postman' />
-                                        <Chip imageSrc={"/images/tecnologies/nginx.png"} label='Nginx' />
-                                        <Chip imageSrc={"/images/tecnologies/wordpress.png"} label='Wordpress' />
-                                        <Chip imageSrc={"/images/tecnologies/msreportingservices.png"} label='Microsoft Reporting Services' />
-                                    </TabPanel>
+
+                                <TabPanels>
+                                    {Object.entries(technologyData).map(([key, category]) => (
+                                        <TabPanel key={key} px={6}>
+                                            <Box textAlign="center" py={4}>
+                                                <HStack justify="center" spacing={3} mb={2}>
+                                                    <Text fontSize="2l">{category.icon}</Text>
+                                                    <Heading size="lg">{category.title}</Heading>
+                                                </HStack>
+                                                <Text color="gray.500">
+                                                    {category.technologies.length} technologies
+                                                </Text>
+                                            </Box>
+
+                                            <Flex
+                                                flexWrap="wrap"
+                                                justifyContent="center"
+                                                gap={4}
+                                            >
+                                                {category.technologies.map((tech, index) => (
+                                                    <EnhancedChip
+                                                        key={tech.name}
+                                                        tech={tech}
+                                                        delay={index * 0.05}
+                                                    />
+                                                ))}
+                                            </Flex>
+
+                                        </TabPanel>
+                                    ))}
                                 </TabPanels>
                             </Tabs>
-                        </GridItem>
-                    </SimpleGrid>
-                </Section>
-
-                <Section mt={{ base: 4, md: 0 }} p={5}>
-                    <Box align="center" my={4} mt={4}>
-                        How to reach me: <br />
-                        <Button
-                            as={NextLink}
-                            href="/contacts"
-                            scroll={false}
-                            colorScheme="orange">
-                            Contacts page
-                        </Button>
-                    </Box>
-                </Section>
+                        </Box>
+                    </VStack>
+                </motion.div>
             </Container>
         </Layout>
     )
 }
+
 export default Home
 export { getServerSideProps } from '../components/chackra'

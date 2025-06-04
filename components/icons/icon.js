@@ -26,7 +26,7 @@ const ZIcon = props => {
                 fill="white"
                 stroke="#FFFFFF"
                 strokeWidth="4"
-            >Z</text>
+            ></text>
         </svg>
     )
 }

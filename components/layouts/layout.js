@@ -9,7 +9,7 @@ const variants = {
     exit: { opacity: 0, x: 0, y: 20 }
 }
 
-const MotionBox = motion(Box)
+const MotionBox = motion.create(Box)
 
 const Layout = ({ children, title }) => {
     const t = `${title} - Ozzo`

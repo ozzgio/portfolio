@@ -10,7 +10,8 @@ const StyledChip = styled(Box)`
     border-width: 2px;
     border-style: solid;
     border-color: gray;
-    float: left;
+    align-items: center;
+    box-sizing: border-box;
 
     img {
         margin-right: 0.5rem;
