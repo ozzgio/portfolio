@@ -1,55 +1,53 @@
-import { Container, Heading, SimpleGrid } from '@chakra-ui/react'
-import Layout from '../components/layouts/layout'
-import Section from '../components/section'
-import { ProjectGridItem } from '../components/grid-item'
+import {
+  Container,
+  Heading,
+  SimpleGrid,
+  useColorModeValue,
+} from "@chakra-ui/react";
+import Layout from "../components/layouts/layout";
+import Section from "../components/section";
+import ProjectCard from "../components/cards/projectcard";
+import projectData from "../libs/projectData";
 
-import thumbfbetsapi from '../public/thumbs/fbetsapi.png'
-import thumbfbetsui from '../public/thumbs/fbetsui.png'
-import thumbKellys from '../public/thumbs/kellyspub.png'
-import thumbtelegrambot from '../public/thumbs/meteomapbot.png'
-import thumbportfolio from '../public/thumbs/portfolio.png'
-
-
-const Projects = () => (
+const Projects = () => {
+  const cardTitle = useColorModeValue(
+    "headingText.default",
+    "headingText._dark"
+  );
+  return (
     <Layout title="Projects">
-        <Container>
-            <Heading as="h3" fontSize={20} mb={4}>
-                Projects
-            </Heading>
-
-            <SimpleGrid columns={[2, 1, 2]} gap={8}>
-                <Section>
-                    <ProjectGridItem id="portfolio" title="This Website" thumbnail={thumbportfolio}>
-                        Deep dive into the tecnologies and the code I have built for this website.
-                    </ProjectGridItem>
-                </Section>
-                <Section>
-                    <ProjectGridItem id="fbetsapi" title="FootballBets (API)" thumbnail={thumbfbetsapi}>
-                        An API for managing and retrieving data related to football bets.
-                    </ProjectGridItem>
-                </Section>
-                <Section>
-                    <ProjectGridItem id="fbetsui" title="FootballBets (UI)" thumbnail={thumbfbetsui}>
-                        A user interface for managing and placing football bets.
-                    </ProjectGridItem>
-                </Section>
-
-                <Section delay={0.2}>
-                    <ProjectGridItem id="kellyspub" thumbnail={thumbKellys} title="Kelly's Pub">
-                        Webmaster of a local pub website and hosted on Nginx server.
-                    </ProjectGridItem>
-                </Section>
-                <Section delay={0.2}>
-                    <ProjectGridItem id="meteomapbot" thumbnail={thumbtelegrambot} title="Telegram BOT">
-                        Telegram bot (no longer active) &quot;@Meteomapbot&quot;,
-                        that provided weather information for Italian regional capitals.
-                    </ProjectGridItem>
-                </Section>
-            </SimpleGrid>
-
-        </Container>
+      <Container maxW="container.lg" px={[2, 4, 8]}>
+        <Heading
+          as="h2"
+          fontSize={["2xl", "2xl", 28]}
+          mb={8}
+          textAlign="center"
+          color={cardTitle}
+          fontWeight="extrabold"
+          letterSpacing="tight"
+          _dark={{ color: "headingText._dark" }}
+        >
+          Projects
+        </Heading>
+        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={[6, 8, 10]}>
+          {projectData.map((project) => (
+            <Section key={project.id}>
+              <ProjectCard
+                id={project.id}
+                title={project.title}
+                thumbnail={project.thumbnail}
+                stack={project.stack}
+                github={project.github}
+                demo={project.demo}
+              >
+                {project.description}
+              </ProjectCard>
+            </Section>
+          ))}
+        </SimpleGrid>
+      </Container>
     </Layout>
-)
+  );
+};
 
-export default Projects
-export { getServerSideProps } from '../components/chackra'
+export default Projects;

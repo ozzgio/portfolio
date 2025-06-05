@@ -1,123 +1,155 @@
 import {
-    Box,
-    Heading,
-    Text,
-    Image,
-    Icon,
-    Link,
-    Tag,
-    Wrap,
-    WrapItem,
-    Button,
-    Flex,
-    Stack,
-    useColorModeValue,
-    useTheme,
-} from '@chakra-ui/react';
-import { ExternalLinkIcon } from '@chakra-ui/icons';
-import { FiBookOpen } from 'react-icons/fi';
+  Box,
+  Heading,
+  Text,
+  Image,
+  Icon,
+  Tag,
+  Wrap,
+  WrapItem,
+  Flex,
+  HStack,
+  useColorModeValue,
+  useTheme,
+} from "@chakra-ui/react";
+import { FiBookOpen } from "react-icons/fi";
+import { FaQuoteLeft } from "react-icons/fa";
+import RatingStar from "../ratingstar";
+import BaseCard from "../basecard";
 
 function formatDate(rawDate) {
-    if (!rawDate) return '';
-    const date = new Date(rawDate);
-    return date.toLocaleString('default', { month: 'short', year: 'numeric' });
+  if (!rawDate) return "";
+  const date = new Date(rawDate);
+  return date.toLocaleString("default", { month: "short", year: "numeric" });
 }
 
-const BookCard = ({ title, author, rating, tags, cover, lesson, link, date }) => {
-    const { colors } = useTheme();
-    const cardBg = useColorModeValue(colors.cardBg.default, colors.cardBg._dark);
-    const cardBorder = useColorModeValue(colors.cardBorder.default, colors.cardBorder._dark);
-    const headingTextColor = useColorModeValue(colors.headingText.default, colors.headingText._dark);
-    const bodyTextColor = useColorModeValue(colors.bodyText.default, colors.bodyText._dark);
-    const tagBgColor = useColorModeValue(colors.tagBg.default, colors.tagBg._dark);
-    const tagTextColor = useColorModeValue(colors.tagText.default, colors.tagText._dark);
-    const iconColor = useColorModeValue('gray.500', 'gray.400');
-    const lessonBgColor = useColorModeValue(colors.tagBg.default, colors.tagBg._dark);
-    const lessonTextColor = useColorModeValue(colors.tagText.default, colors.tagText._dark);
+const BookCard = ({ title, author, rating, tags, cover, lesson, date }) => {
+  const { colors } = useTheme();
+  const headingTextColor = useColorModeValue(
+    colors.headingText.default,
+    colors.headingText._dark
+  );
+  const bodyTextColor = useColorModeValue(
+    colors.bodyText.default,
+    colors.bodyText._dark
+  );
+  const tagBgColor = useColorModeValue(
+    colors.tagBg.default,
+    colors.tagBg._dark
+  );
+  const tagTextColor = useColorModeValue(
+    colors.tagText.default,
+    colors.tagText._dark
+  );
+  const iconColor = useColorModeValue("gray.500", "gray.400");
+  const lessonBgColor = useColorModeValue("orange.50", "orange.900");
+  const lessonTextColor = useColorModeValue("orange.800", "orange.100");
+  const cardBorder = useColorModeValue(
+    colors.cardBorder.default,
+    colors.cardBorder._dark
+  );
 
-    return (
-        <Box
-            bg={cardBg}
-            borderWidth="1px"
+  return (
+    <BaseCard p={5}>
+      <Flex direction="column" height="100%">
+        {cover && (
+          <Box mb={4} align="center">
+            <Image
+              src={cover}
+              alt={title}
+              borderRadius="lg"
+              maxH="180px"
+              objectFit="cover"
+              boxShadow="xl"
+              border="4px solid"
+              borderColor={cardBorder}
+            />
+          </Box>
+        )}
+        <Heading
+          fontSize="xl"
+          fontWeight="bold"
+          textAlign="center"
+          color={headingTextColor}
+          mb={1}
+          letterSpacing="tight"
+        >
+          {title}
+        </Heading>
+        <Text
+          fontSize="md"
+          textAlign="center"
+          color={bodyTextColor}
+          mb={1}
+          fontWeight="medium"
+        >
+          <Icon as={FiBookOpen} mr={1} color={iconColor} />
+          {author}
+        </Text>
+        {date && (
+          <Text fontSize="xs" color={bodyTextColor} mb={3} textAlign="center">
+            Finished: {formatDate(date)}
+          </Text>
+        )}
+
+        {lesson && (
+          <Box
+            bg={lessonBgColor}
             borderRadius="md"
             p={3}
-            shadow="sm"
-            maxW="360px"
-            w="100%"
-            mx="auto"
-            borderColor={cardBorder}
+            mb={3}
+            display="flex"
+            alignItems="center"
+            boxShadow="sm"
+          >
+            <Icon as={FaQuoteLeft} color={lessonTextColor} boxSize={4} mr={2} />
+            <Text fontSize="sm" fontStyle="italic" color={lessonTextColor}>
+              {lesson}
+            </Text>
+          </Box>
+        )}
+
+        <HStack
+          spacing={2}
+          alignItems="center"
+          justifyContent="center"
+          mt={2}
+          mb={2}
         >
-            <Flex direction="column" height="100%">
-                <Stack spacing={3}>
-                    {cover && (
-                        <Flex justify="center">
-                            <Image src={cover} alt={title} borderRadius="md" maxH="200px" objectFit="contain" />
-                        </Flex>
-                    )}
-                    <Heading fontSize="md" fontWeight="bold" textAlign="center" color={headingTextColor}>
-                        {title}
-                    </Heading>
-                    <Text fontSize="sm" textAlign="center" color={bodyTextColor}>
-                        {author}
-                    </Text>
-                    <Flex alignItems="center" justifyContent="center">
-                        <Icon as={FiBookOpen} mr={1} color={iconColor} />
-                        <Text fontSize="xs" color={iconColor}>
-                            {rating}
-                        </Text>
-                    </Flex>
+          <RatingStar rating={rating} />
+          <Text
+            fontSize="md"
+            color="orange.500"
+            fontWeight="bold"
+            lineHeight={1}
+          >
+            {rating}
+          </Text>
+        </HStack>
 
-                    {date && (
-                        <Text fontSize="xs" color={bodyTextColor}>
-                            Finished: {formatDate(date)}
-                        </Text>
-                    )}
-
-                    {lesson && (
-                        <Box
-                            bg={lessonBgColor}
-                            borderRadius="md"
-                            mt={2}
-                            p={2}
-                        >
-                            <Text
-                                fontSize="sm"
-                                fontStyle="italic"
-                                color={lessonTextColor}
-                            >
-                                Key takeaway: “{lesson}”
-                            </Text>
-                        </Box>
-                    )}
-
-                    {tags.length > 0 && (
-                        <Wrap spacing={1}>
-                            {tags.map((tag, idx) => (
-                                <WrapItem key={idx}>
-                                    <Tag size="sm" colorScheme="orange" bg={tagBgColor} color={tagTextColor}>
-                                        {tag}
-                                    </Tag>
-                                </WrapItem>
-                            ))}
-                        </Wrap>
-                    )}
-
-                    {link && (
-                        <Link href={link} isExternal _hover={{ textDecoration: 'none' }}>
-                            <Button
-                                size="xs"
-                                variant="ghost"
-                                colorScheme="orange"
-                                rightIcon={<ExternalLinkIcon />}
-                            >
-                                View
-                            </Button>
-                        </Link>
-                    )}
-                </Stack>
-            </Flex>
-        </Box>
-    );
+        {tags.length > 0 && (
+          <Wrap spacing={2} mb={2} justify="center">
+            {tags.map((tag, idx) => (
+              <WrapItem key={idx}>
+                <Tag
+                  size="md"
+                  colorScheme="orange"
+                  bg={tagBgColor}
+                  color={tagTextColor}
+                  borderRadius="full"
+                  px={3}
+                  py={1}
+                  fontWeight="semibold"
+                >
+                  {tag}
+                </Tag>
+              </WrapItem>
+            ))}
+          </Wrap>
+        )}
+      </Flex>
+    </BaseCard>
+  );
 };
 
 export default BookCard;

@@ -19,13 +19,13 @@ const Project = ({ project }) => {
       projectTitle={title}
       imageUrl={project.thumbnail}
       imageAlt={title}
-      dateInfo={{ display: true, value: "2021" }}
+      dateInfo={{ display: true, value: "2025" }}
     >
       <P>{description}</P>
       <List ml={4} my={4}>
         <ListItem display="flex" alignItems="center" mb={2}>
           <Meta>Platform</Meta>
-          <span>Telegram</span>
+          <span>Console</span>
         </ListItem>
         <ListItem display="flex" alignItems="center" mb={2}>
           <Meta>Stack</Meta>
@@ -44,18 +44,23 @@ const Project = ({ project }) => {
           <ListItem display="flex" alignItems="center" mb={2}>
             <Link href={demo} target="_blank">
               <Meta>Demo</Meta>
-              View Disabled Bot
+              View Live Site
               <ExternalLinkIcon mx="2px" />
             </Link>
           </ListItem>
         )}
+        <ListItem display="flex" alignItems="center" mb={2}>
+          <Meta>Features</Meta>
+          Move validation, Game state management, AiPlayer, yml and PGN file
+          save and more.
+        </ListItem>
       </List>
     </ProjectDetailsLayout>
   );
 };
 
 export async function getStaticProps() {
-  const project = projectData.find((p) => p.id === "meteomapbot");
+  const project = projectData.find((p) => p.id === "rubychess");
   return {
     props: {
       project,

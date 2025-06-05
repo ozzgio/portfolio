@@ -1,24 +1,24 @@
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, localStorageManager } from "@chakra-ui/react";
 import { AnimatePresence } from "framer-motion";
-import Layout from '../components/layouts/main'
-import Fonts from '../components/fonts'
-import theme from '../libs/theme'
+import Layout from "../components/layouts/main";
+import Fonts from "../components/fonts";
+import theme from "../libs/theme";
 
-if (typeof window !== 'undefined') {
-    window.history.scrollRestoration = 'manual'
+if (typeof window !== "undefined") {
+  window.history.scrollRestoration = "manual";
 }
 
 function Website({ Component, pageProps, router }) {
-    return (
-        <ChakraProvider theme={theme}>
-            <Fonts />
-            <Layout router={router}>
-                <AnimatePresence mode='wait' initial={true}>
-                    <Component {...pageProps} key={router.route} />
-                </AnimatePresence>
-            </Layout>
-        </ChakraProvider>
-    )
+  return (
+    <ChakraProvider theme={theme} colorModeManager={localStorageManager}>
+      <Fonts />
+      <Layout router={router}>
+        <AnimatePresence mode="wait" initial={true}>
+          <Component {...pageProps} key={router.route} />
+        </AnimatePresence>
+      </Layout>
+    </ChakraProvider>
+  );
 }
 
-export default Website
+export default Website;

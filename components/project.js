@@ -1,27 +1,53 @@
-import NextLink from 'next/link'
-import { Heading, Box, Image, Link, Badge } from '@chakra-ui/react'
-import { ChevronRightIcon } from '@chakra-ui/icons'
+import NextLink from "next/link";
+import { Heading, Box, Image, Link, Badge, Text } from "@chakra-ui/react";
+import { ChevronRightIcon } from "@chakra-ui/icons";
 
-export const Title = ({ children }) => (
+export const Title = ({ children }) => {
+  // Use theme token for heading color
+  return (
     <Box>
-        <Link as={NextLink} href="/projects">
-            Projects
-        </Link>
-        <span> 
-            {' '} <ChevronRightIcon />{' '}
-        </span>
-        <Heading display="inline-block" as="h3" fontSize={20} mb={4}>
-            {children}
-        </Heading>
+      <Link as={NextLink} href="/projects">
+        Projects
+      </Link>
+      <span>
+        {" "}
+        <ChevronRightIcon />{" "}
+      </span>
+      <Heading
+        display="inline-block"
+        as="h3"
+        fontSize={["xl", 24]}
+        mb={4}
+        color="headingText.default"
+        _dark={{ color: "headingText._dark" }}
+        fontWeight="extrabold"
+      >
+        {children}
+      </Heading>
     </Box>
-)
+  );
+};
 
 export const WorkImage = ({ src, alt }) => (
-    <Image borderRadius="lg" w="full" src={src} alt={alt} mb={4} />
-)
+  <Box w="100%" position="relative" aspectRatio={["4/3", "16/7"]}>
+    <Image
+      borderRadius="lg"
+      w="100%"
+      h="auto"
+      maxH="320px"
+      objectFit="cover"
+      src={src}
+      alt={alt}
+      mb={8}
+      fallbackSrc="/thumbs/portfolio.png"
+    />
+  </Box>
+);
 
 export const Meta = ({ children }) => (
-    <Badge colorScheme="green" mr={2}>
-        {children}
-    </Badge>
-)
+  <Badge colorScheme="green" mr={2}>
+    <Text display="inline" fontWeight="bold">
+      {children}
+    </Text>
+  </Badge>
+);
