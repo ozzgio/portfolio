@@ -1,12 +1,12 @@
-import NextLink from 'next/link'
+import NextLink from "next/link";
 import {
   Box,
   Heading,
   Text,
   Container,
   Divider,
-  Button
-} from '@chakra-ui/react'
+  Button,
+} from "@chakra-ui/react";
 
 const ErrorPage = () => {
   return (
@@ -20,7 +20,7 @@ const ErrorPage = () => {
         </Button>
       </Box>
     </Container>
-  )
-}
+  );
+};
 
-export default ErrorPage
+export default ErrorPage;

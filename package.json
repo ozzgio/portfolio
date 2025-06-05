@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "prettier": "prettier -write .",
+    "prettier": "prettier --write .",
     "lint": "next lint"
   },
   "keywords": [],
