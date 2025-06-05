@@ -1,6 +1,6 @@
 {
-    "name": "Ozzo's Blog",
-    "short_name": "Ozzo",
-    "start_url": "/",
-    "display": "standalone"
+  "name": "Ozzo's Blog",
+  "short_name": "Ozzo",
+  "start_url": "/",
+  "display": "standalone"
 }

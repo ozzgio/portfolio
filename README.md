@@ -1,9 +1,9 @@
 # 🧑‍💻 Ozzo's Developer Portfolio
+
 [![Production - ozzo.blog](https://img.shields.io/badge/Production-Live-00C58E?logo=vercel&logoColor=white)](https://ozzo.blog)
 [![Preview - Vercel](https://img.shields.io/badge/Preview-Available-999999?logo=vercel&logoColor=white)](https://devozzo-portfolio.vercel.app)
 
 Welcome to my portfolio website — a modern, responsive web app showcasing my background, skills, and projects as a web developer. Built with cutting-edge tools and designed to evolve alongside my work.
-
 
 ---
 
@@ -18,7 +18,6 @@ Welcome to my portfolio website — a modern, responsive web app showcasing my b
 [![Vercel](https://img.shields.io/badge/Vercel-000000?logo=vercel&logoColor=white)](https://vercel.com/)
 [![ESLint](https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=white)](https://eslint.org/)
 [![Prettier](https://img.shields.io/badge/Prettier-F7B93E?logo=prettier&logoColor=black)](https://prettier.io/)
-
 
 ---
 
@@ -43,7 +42,7 @@ git clone https://github.com/ozzgio/portfolio.git
 cd portfolio
 npm install
 npm run dev
-````
+```
 
 Then open [http://localhost:3000](http://localhost:3000) in your browser.
 
@@ -64,7 +63,6 @@ NOTION_DATABASE_ID=your_notion_db_id
 
 This project is licensed under the [MIT License](./LICENSE).
 
-
 ---
 
 ## 🙌 Inspiration
@@ -75,7 +73,7 @@ This site was inspired by the aesthetic and simplicity of [Devaslife](https://yo
 
 ## 📬 Contact
 
-Got feedback or want to connect? 
+Got feedback or want to connect?
 Please reach out via the contact page of the site.
----
 
+---
