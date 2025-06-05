@@ -1,4 +1,3 @@
-/** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
     images: {
@@ -6,7 +5,7 @@ const nextConfig = {
             new URL('https://cdn.simpleicons.org/**'),
             new URL('https://cdn.jsdelivr.net/gh/devicons/devicon@latest/**')
         ],
-        dangerouslyAllowSVG: true,
+        dangerouslyAllowSVG: true
     }
 };
 

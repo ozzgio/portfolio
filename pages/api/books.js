@@ -15,11 +15,10 @@ export default async function handler(_req, res) {
             return {
                 title: props.Title?.title[0]?.plain_text || '',
                 author: props.Author?.rich_text?.[0]?.plain_text || '',
-                rating: props.Rating?.select?.name || '',
+                rating: props.Rating?.number,
                 tags: props.Tags?.multi_select?.map(tag => tag.name) || [],
                 cover: props.Cover?.url || '',
                 lesson: props.Lesson?.rich_text?.[0]?.plain_text || '',
-                link: props.Link?.url || '',
                 date: props.Finished?.date?.start || ''
             }
         })

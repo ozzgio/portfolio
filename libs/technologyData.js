@@ -1,7 +1,9 @@
+import { IoBrush, IoServer, IoCog, IoConstruct } from 'react-icons/io5'
+
 const technologyData = {
     frontend: {
-        title: "Frontend Development",
-        icon: "🎨",
+        title: "Frontend",
+        icon: <IoBrush />,
         technologies: [
             { name: 'HTML5', image: "https://cdn.simpleicons.org/html5/E34F26" },
             { name: 'CSS3', image: "https://cdn.simpleicons.org/css3/1572B6" },
@@ -19,8 +21,8 @@ const technologyData = {
         ]
     },
     backend: {
-        title: "Backend Development",
-        icon: "⚙️",
+        title: "Backend",
+        icon: <IoServer />,
         technologies: [
             { name: '.NET', image: "https://cdn.simpleicons.org/dotnet/512BD4" },
             { name: 'Entity Framework', image: "https://cdn.simpleicons.org/dotnet/512BD4" },
@@ -42,7 +44,7 @@ const technologyData = {
     },
     devops: {
         title: "DevOps & Project Management",
-        icon: "🚀",
+        icon: <IoCog />,
         technologies: [
             { name: 'Git', image: "https://cdn.simpleicons.org/git/F05032" },
             { name: 'GitHub', image: "https://cdn.simpleicons.org/github/181717" },
@@ -59,7 +61,7 @@ const technologyData = {
     },
     tools: {
         title: "Tools & Platforms",
-        icon: "🛠️",
+        icon: <IoConstruct />,
         technologies: [
             { name: 'Vercel', image: "https://cdn.simpleicons.org/vercel/000000" },
             { name: 'Swagger', image: "https://cdn.simpleicons.org/swagger/85EA2D" },

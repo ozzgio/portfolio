@@ -4,41 +4,29 @@ import {
     Button,
     Heading,
     Link,
-    TabList,
-    Tabs,
-    Tab,
-    TabPanels,
-    TabPanel,
     List,
     ListItem,
     chakra,
     Icon,
     VStack,
-    HStack,
-    Text,
-    Image,
-    Flex
+    Image
 } from "@chakra-ui/react"
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import NextLink from 'next/link'
-import { useState } from 'react'
-import { motion } from 'framer-motion'
 
 import Section from '../components/section'
-import EnhancedChip from '../components/enhancedchip'
 import Paragraph from "../components/paragraph"
 import { BioSection, BioYear } from '../components/bio'
 import Layout from "../components/layouts/layout"
 import { IoLogoGithub, IoLogoLinkedin, IoCafe, IoBook, IoBarbell, IoCode, IoFootsteps } from 'react-icons/io5'
 import technologyData from '../libs/technologyData'
+import TechnologyRow from '../components/techrow'
 
 const ProfileImage = chakra(Image, {
     shouldForwardProp: prop => ['width', 'height', 'src', 'alt'].includes(prop)
 })
 
 const Home = () => {
-    const [selectedCategory, setSelectedCategory] = useState('frontend')
-
     return (
         <Layout title={"HomePage"}>
             <br />
@@ -198,11 +186,7 @@ const Home = () => {
                     </Paragraph>
                 </Section>
 
-                <motion.div
-                    initial={{ opacity: 0, y: 50 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.5 }}
-                >
+                <Section delay={0.5}>
                     <VStack spacing={6} align="stretch">
                         <Box>
                             <Heading as="h3" variant="section-title" mb={2}>
@@ -210,57 +194,18 @@ const Home = () => {
                             </Heading>
                         </Box>
 
-                        <Box borderRadius="xl" p={6} shadow="sm">
-                            <Tabs
-                                variant="soft-rounded"
-                                index={Object.keys(technologyData).indexOf(selectedCategory)}
-                                onChange={(index) => setSelectedCategory(Object.keys(technologyData)[index])}
-                            >
-                                <TabList justifyContent="center" flexWrap="wrap" gap={2}>
-                                    {Object.entries(technologyData).map(([key, category]) => (
-                                        <Tab key={key} fontWeight="semibold">
-                                            <HStack spacing={2}>
-                                                <Text>{category.icon}</Text>
-                                                <Text>{category.title}</Text>
-                                            </HStack>
-                                        </Tab>
-                                    ))}
-                                </TabList>
-
-                                <TabPanels>
-                                    {Object.entries(technologyData).map(([key, category]) => (
-                                        <TabPanel key={key} px={6}>
-                                            <Box textAlign="center" py={4}>
-                                                <HStack justify="center" spacing={3} mb={2}>
-                                                    <Text fontSize="2l">{category.icon}</Text>
-                                                    <Heading size="lg">{category.title}</Heading>
-                                                </HStack>
-                                                <Text color="gray.500">
-                                                    {category.technologies.length} technologies
-                                                </Text>
-                                            </Box>
-
-                                            <Flex
-                                                flexWrap="wrap"
-                                                justifyContent="center"
-                                                gap={4}
-                                            >
-                                                {category.technologies.map((tech, index) => (
-                                                    <EnhancedChip
-                                                        key={tech.name}
-                                                        tech={tech}
-                                                        delay={index * 0.05}
-                                                    />
-                                                ))}
-                                            </Flex>
-
-                                        </TabPanel>
-                                    ))}
-                                </TabPanels>
-                            </Tabs>
-                        </Box>
+                        <VStack spacing={8} align="stretch">
+                            {Object.entries(technologyData).map(([key, category]) => (
+                                <TechnologyRow
+                                    key={key}
+                                    category={category}
+                                    enableAnimation={true}
+                                />
+                            ))}
+                        </VStack>
                     </VStack>
-                </motion.div>
+                </Section>
+
             </Container>
         </Layout>
     )

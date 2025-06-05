@@ -1,4 +1,4 @@
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, cookieStorageManagerSSR, localStorageManager } from '@chakra-ui/react';
 import { AnimatePresence } from "framer-motion";
 import Layout from '../components/layouts/main'
 import Fonts from '../components/fonts'
@@ -8,9 +8,16 @@ if (typeof window !== 'undefined') {
     window.history.scrollRestoration = 'manual'
 }
 
-function Website({ Component, pageProps, router }) {
+function Website({ Component, pageProps, router, cookies }) {
     return (
-        <ChakraProvider theme={theme}>
+        <ChakraProvider
+            theme={theme}
+            colorModeManager={
+                typeof cookies === 'string'
+                    ? cookieStorageManagerSSR(cookies)
+                    : localStorageManager
+            }
+        >
             <Fonts />
             <Layout router={router}>
                 <AnimatePresence mode='wait' initial={true}>
@@ -21,4 +28,10 @@ function Website({ Component, pageProps, router }) {
     )
 }
 
-export default Website
+Website.getInitialProps = async ({ ctx }) => {
+    return {
+        cookies: ctx.req?.headers.cookie ?? '',
+    };
+};
+
+export default Website;

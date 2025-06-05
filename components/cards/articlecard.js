@@ -15,73 +15,88 @@ import { ExternalLinkIcon } from '@chakra-ui/icons';
 
 const ArticleCard = ({ title, formattedDate, description, url, thumbnail, tags }) => {
     const { colors } = useTheme();
-    const cardBg = useColorModeValue(colors.cardBg.default, colors.cardBg._dark);
-    const cardBorder = useColorModeValue(colors.cardBorder.default, colors.cardBorder._dark);
+    const cardBg = useColorModeValue(
+        'linear-gradient(135deg, #fff7ed 0%, #ffe5d0 100%)', // light theme
+        'linear-gradient(135deg, #23272f 0%, #2d3748 100%)'  // dark theme
+    );
+    const cardBorder = useColorModeValue('orange.200', 'orange.400');
     const headingTextColor = useColorModeValue(colors.headingText.default, colors.headingText._dark);
     const bodyTextColor = useColorModeValue(colors.bodyText.default, colors.bodyText._dark);
     const tagBgColor = useColorModeValue(colors.tagBg.default, colors.tagBg._dark);
     const tagTextColor = useColorModeValue(colors.tagText.default, colors.tagText._dark);
-    const shadow = useColorModeValue("md", "sm");
-    const hoverShadow = useColorModeValue('lg', 'md');
 
     if (!url) return null;
 
     return (
         <Box
-            borderWidth="1px"
-            borderRadius="lg"
-            overflow="hidden"
-            p={4}
-            shadow={shadow}
-            _hover={{ shadow: hoverShadow, transform: 'scale(1.01)' }}
-            transition="all 0.2s ease-in-out"
             bg={cardBg}
+            borderWidth="2px"
+            borderRadius="2xl"
+            p={5}
+            shadow="lg"
+            maxW="350px"
+            w="100%"
+            mx="auto"
             borderColor={cardBorder}
+            transition="transform 0.2s, box-shadow 0.2s"
+            _hover={{
+                transform: 'translateY(-10px) scale(1.04)',
+                boxShadow: '2xl',
+                borderColor: 'orange.400',
+            }}
         >
             {thumbnail && (
-                <Image src={thumbnail} alt={title} borderRadius="md" mb={4} objectFit="cover" />
+                <Box mb={4} align="center">
+                    <Image
+                        src={thumbnail}
+                        alt={title}
+                        borderRadius="lg"
+                        maxH="140px"
+                        objectFit="cover"
+                        boxShadow="xl"
+                        border="4px solid"
+                        borderColor={cardBorder}
+                    />
+                </Box>
             )}
-
-            <Heading fontSize="lg" mb={1} color={headingTextColor}>
+            <Heading fontSize="xl" fontWeight="bold" textAlign="center" color={headingTextColor} mb={1} letterSpacing="tight">
                 {title}
             </Heading>
-
             {formattedDate && (
-                <Text fontSize="sm" color={bodyTextColor} mb={2}>
-                    {new Date(formattedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                <Text fontSize="xs" color={bodyTextColor} mb={2} textAlign="center">
+                    {formattedDate}
                 </Text>
             )}
-
             {description && (
-                <Text fontSize="sm" color={bodyTextColor} mt={2} mb={4}>
+                <Text fontSize="sm" mb={3} color={bodyTextColor} textAlign="center">
                     {description.length > 100 ? `${description.slice(0, 100)}...` : description}
                 </Text>
             )}
-
             {tags.length > 0 && (
-                <Wrap mb={4}>
+                <Wrap spacing={2} mb={3} justify="center">
                     {tags.map((tag, idx) => (
                         <WrapItem key={idx}>
-                            <Tag colorScheme="orange" size="sm" bg={tagBgColor} color={tagTextColor}>
+                            <Tag size="md" colorScheme="orange" bg={tagBgColor} color={tagTextColor} borderRadius="full" px={3} py={1} fontWeight="semibold">
                                 {tag}
                             </Tag>
                         </WrapItem>
                     ))}
                 </Wrap>
             )}
-
-            <Link href={url} isExternal>
-                <Button
-                    rightIcon={<ExternalLinkIcon />}
-                    colorScheme="orange"
-                    variant="solid"
-                    size="sm"
-                    _hover={{ transform: 'scale(1.05)' }}
-                    transition="all 0.2s ease-in-out"
-                >
-                    Read on LinkedIn
-                </Button>
-            </Link>
+            <Box textAlign="center">
+                <Link href={url} isExternal _hover={{ textDecoration: 'none' }}>
+                    <Button
+                        rightIcon={<ExternalLinkIcon />}
+                        colorScheme="orange"
+                        variant="solid"
+                        size="sm"
+                        _hover={{ transform: 'scale(1.05)', boxShadow: 'md' }}
+                        transition="all 0.2s ease-in-out"
+                    >
+                        Read on LinkedIn
+                    </Button>
+                </Link>
+            </Box>
         </Box>
     );
 };

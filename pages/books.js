@@ -1,47 +1,66 @@
 import {
     Heading,
     SimpleGrid,
-    Spinner,
     Text,
     HStack,
     Button,
-    Box
+    Box,
+    Icon,
+    Select,
+    VStack
 } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
+import { IoBook } from 'react-icons/io5'
+import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import Layout from '../components/layouts/layout'
 import BookCard from '../components/cards/bookcard'
 
-const MotionBox = motion(Box)
+const MotionBox = motion.create(Box)
 
-const BooksPage = () => {
-    const [books, setBooks] = useState([])
-    const [loading, setLoading] = useState(true)
+const BooksPage = ({ books, error }) => {
     const [selectedTag, setSelectedTag] = useState(null)
+    const [sortOption, setSortOption] = useState('highest_rating')
 
-    useEffect(() => {
-        const fetchBooks = async () => {
-            try {
-                const res = await fetch('/api/books')
-                const data = await res.json()
-                setBooks(data)
-            } catch (err) {
-                console.error('Failed to fetch books:', err)
-                setBooks([])
-            } finally {
-                setLoading(false)
-            }
-        }
-        fetchBooks()
-    }, [])
-
-    const allTags = Array.from(
-        new Set(
-            Array.isArray(books)
-                ? books.flatMap(book => book.tags || [])
-                : []
+    const allTags = useMemo(() => (
+        Array.from(
+            new Set(
+                Array.isArray(books)
+                    ? books.flatMap(book => book.tags || [])
+                    : []
+            )
         )
-    );
+            .filter(Boolean)
+            .sort((a, b) => a.localeCompare(b))
+    ), [books]);
+
+    const sortedAndFilteredBooks = useMemo(() => {
+        let currentBooks = Array.isArray(books) ? books : [];
+
+        if (selectedTag) {
+            currentBooks = currentBooks.filter(book => book.tags.includes(selectedTag));
+        }
+
+        switch (sortOption) {
+            case 'highest_rating':
+                currentBooks.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+                break;
+            case 'lowest_rating':
+                currentBooks.sort((a, b) => (a.rating ?? 0) - (b.rating ?? 0));
+                break;
+            case 'alphabetical':
+                currentBooks.sort((a, b) => a.title.localeCompare(b.title));
+                break;
+            default:
+                break;
+        }
+
+        currentBooks = currentBooks.map(book => ({
+            ...book,
+            tags: book.tags ? [...book.tags].sort() : []
+        }));
+
+        return currentBooks;
+    }, [books, selectedTag, sortOption]);
 
     return (
         <Layout title="Books">
@@ -50,19 +69,25 @@ const BooksPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
             >
-                <Heading as="h1" mb={6}>📖 My Books Library</Heading>
+                <Heading as="h1" mb={6}>
+                    My Books Library
+                    <Icon ml={2} fontSize="2xl">
+                        <IoBook />
+                    </Icon>
+                </Heading>
 
-                {loading ? (
-                    <Spinner />
-                ) : books.length === 0 ? (
+                {error ? (
+                    <Text color="red.500">{error}</Text>
+                ) : sortedAndFilteredBooks.length === 0 ? (
                     <Text>No books found.</Text>
                 ) : (
-                    <>
-                        <HStack flexWrap="wrap" spacing={3} mb={4}>
+                    <VStack spacing={4} align="stretch">
+                        <HStack flexWrap="wrap" spacing={3}>
                             <Button
                                 size="sm"
                                 colorScheme={!selectedTag ? 'orange' : 'gray'}
                                 onClick={() => setSelectedTag(null)}
+                                variant={!selectedTag ? 'solid' : 'outline'}
                             >
                                 All
                             </Button>
@@ -78,19 +103,52 @@ const BooksPage = () => {
                                 </Button>
                             ))}
                         </HStack>
+                        <Select
+                            placeholder="Sort by"
+                            value={sortOption}
+                            onChange={(e) => setSortOption(e.target.value)}
+                            width="fit-content"
+                            mb={4}
+                        >
+                            <option value="highest_rating">Highest Rating</option>
+                            <option value="lowest_rating">Lowest Rating</option>
+                            <option value="alphabetical">Alphabetical</option>
+                        </Select>
 
-                        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
-                            {(Array.isArray(books) ? books : [])
-                                .filter(book => !selectedTag || book.tags.includes(selectedTag))
-                                .map((book, idx) => (
-                                    <BookCard key={idx} {...book} />
-                                ))}
+                        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6} gridAutoRows="1fr">
+                            {sortedAndFilteredBooks.map((book, idx) => (
+                                <BookCard key={idx} {...book} />
+                            ))}
                         </SimpleGrid>
-                    </>
+                    </VStack>
                 )}
             </MotionBox>
         </Layout>
     )
 }
+
+export const getStaticProps = async () => {
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/books`);
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        const books = await res.json();
+        return {
+            props: {
+                books: Array.isArray(books) ? books : [],
+            },
+            revalidate: 60,
+        };
+    } catch (error) {
+        console.error('Failed to fetch books in getStaticProps:', error);
+        return {
+            props: {
+                books: [],
+                error: 'Failed to load books.',
+            },
+        };
+    }
+};
 
 export default BooksPage

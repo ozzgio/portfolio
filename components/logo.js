@@ -29,7 +29,10 @@ const Logo = () => {
                     <ZIcon />
                     <Text color={useColorModeValue('gray.800', 'whiteAlpha.900')}
                         fontFamily="Roboto"
-                        fontWeight="bold">
+                        fontWeight="bold"
+                        as="span"
+                        ml={4}
+                    >
                         Ozzo&apos;s blog
                     </Text>
                 </LogoBox>

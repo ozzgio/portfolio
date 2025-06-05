@@ -3,14 +3,17 @@ import {
     Button,
     Heading,
     HStack,
+    Icon,
     SimpleGrid,
-    Spinner,
-    Text
+    Text,
+    Select,
+    VStack
 } from '@chakra-ui/react'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import Layout from '../components/layouts/layout'
 import ArticleCard from '../components/cards/articlecard'
+import { IoDocumentText } from 'react-icons/io5'
 
 const MotionBox = motion.create(Box)
 
@@ -35,29 +38,12 @@ const formatDate = (dateStr) => {
     }
 }
 
-const ArticlesPage = () => {
-    const [rawArticles, setRawArticles] = useState([])
-    const [loading, setLoading] = useState(true)
+const ArticlesPage = ({ articles, error }) => {
     const [selectedTag, setSelectedTag] = useState(null)
+    const [sortOption, setSortOption] = useState('newest')
 
-    useEffect(() => {
-        const fetchArticles = async () => {
-            try {
-                const res = await fetch('/api/articles')
-                const data = await res.json()
-                setRawArticles(Array.isArray(data) ? data : [])
-            } catch (err) {
-                console.error('Fetch failed:', err)
-                setRawArticles([])
-            } finally {
-                setLoading(false)
-            }
-        }
-        fetchArticles()
-    }, [])
-
-    const articles = useMemo(() => {
-        return rawArticles
+    const sortedArticles = useMemo(() => {
+        let currentArticles = articles
             .filter(article => article.date)
             .map(article => {
                 const formattedDate = formatDate(article.date)
@@ -65,18 +51,28 @@ const ArticlesPage = () => {
                     ? { ...article, formattedDate }
                     : null
             })
-            .filter(Boolean)
-    }, [rawArticles])
+            .filter(Boolean);
+
+        if (sortOption === 'newest') {
+            currentArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
+        } else if (sortOption === 'oldest') {
+            currentArticles.sort((a, b) => new Date(a.date) - new Date(b.date));
+        } else if (sortOption === 'alphabetical') {
+            currentArticles.sort((a, b) => a.title.localeCompare(b.title));
+        }
+
+        return currentArticles;
+    }, [articles, sortOption])
 
     const allTags = useMemo(() => {
-        return Array.from(new Set(articles.flatMap(a => a.tags || [])))
-    }, [articles])
+        return Array.from(new Set(sortedArticles.flatMap(a => a.tags || [])))
+    }, [sortedArticles])
 
     const filteredArticles = useMemo(() => {
         return selectedTag
-            ? articles.filter(a => a.tags?.includes(selectedTag))
-            : articles
-    }, [articles, selectedTag])
+            ? sortedArticles.filter(a => a.tags?.includes(selectedTag))
+            : sortedArticles
+    }, [sortedArticles, selectedTag])
 
     return (
         <Layout title="Articles">
@@ -86,19 +82,23 @@ const ArticlesPage = () => {
                 transition={{ duration: 0.6 }}
             >
                 <Heading as="h1" mb={6} id="articles-heading">
-                    ✍️ My Articles
+                    My Articles
+                    <Icon ml={2} fontSize="2xl">
+                        <IoDocumentText />
+                    </Icon>
                 </Heading>
-                {loading ? (
-                    <Spinner />
+                {error ? (
+                    <Text color="red.500">{error}</Text>
                 ) : filteredArticles.length === 0 ? (
                     <Text>No articles found.</Text>
                 ) : (
-                    <>
-                        <HStack flexWrap="wrap" spacing={3} mb={4}>
+                    <VStack spacing={4} align="stretch">
+                        <HStack flexWrap="wrap" spacing={3}>
                             <Button
                                 size="sm"
                                 colorScheme={!selectedTag ? 'orange' : 'gray'}
                                 onClick={() => setSelectedTag(null)}
+                                variant={!selectedTag ? 'solid' : 'outline'}
                             >
                                 All
                             </Button>
@@ -114,16 +114,52 @@ const ArticlesPage = () => {
                                 </Button>
                             ))}
                         </HStack>
+                        <Select
+                            placeholder="Sort by"
+                            value={sortOption}
+                            onChange={(e) => setSortOption(e.target.value)}
+                            width="fit-content"
+                            mb={4}
+                        >
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="alphabetical">Alphabetical</option>
+                        </Select>
 
-                        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>                               {filteredArticles.map((article, idx) => (
-                            <ArticleCard key={idx} {...article} />
-                        ))}
+                        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
+                            {filteredArticles.map((article, idx) => (
+                                <ArticleCard key={idx} {...article} />
+                            ))}
                         </SimpleGrid>
-                    </>
+                    </VStack>
                 )}
             </MotionBox>
         </Layout>
     )
 }
+
+export const getStaticProps = async () => {
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/articles`);
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        const articles = await res.json();
+        return {
+            props: {
+                articles: Array.isArray(articles) ? articles : [],
+            },
+            revalidate: 60,
+        };
+    } catch (error) {
+        console.error('Failed to fetch articles in getStaticProps:', error);
+        return {
+            props: {
+                articles: [],
+                error: 'Failed to load articles.',
+            },
+        };
+    }
+};
 
 export default ArticlesPage

@@ -4,18 +4,17 @@ import {
     Text,
     Image,
     Icon,
-    Link,
     Tag,
     Wrap,
     WrapItem,
-    Button,
     Flex,
-    Stack,
+    HStack,
     useColorModeValue,
-    useTheme,
+    useTheme
 } from '@chakra-ui/react';
-import { ExternalLinkIcon } from '@chakra-ui/icons';
 import { FiBookOpen } from 'react-icons/fi';
+import { FaQuoteLeft } from 'react-icons/fa';
+import RatingStar from '../ratingstar';
 
 function formatDate(rawDate) {
     if (!rawDate) return '';
@@ -23,98 +22,104 @@ function formatDate(rawDate) {
     return date.toLocaleString('default', { month: 'short', year: 'numeric' });
 }
 
-const BookCard = ({ title, author, rating, tags, cover, lesson, link, date }) => {
+const BookCard = ({ title, author, rating, tags, cover, lesson, date }) => {
     const { colors } = useTheme();
-    const cardBg = useColorModeValue(colors.cardBg.default, colors.cardBg._dark);
-    const cardBorder = useColorModeValue(colors.cardBorder.default, colors.cardBorder._dark);
+    const cardBg = useColorModeValue(
+        'linear-gradient(135deg, #fff7ed 0%, #ffe5d0 100%)',
+        'linear-gradient(135deg, #23272f 0%, #2d3748 100%)'
+    );
+    const cardBorder = useColorModeValue('orange.200', 'orange.400');
     const headingTextColor = useColorModeValue(colors.headingText.default, colors.headingText._dark);
     const bodyTextColor = useColorModeValue(colors.bodyText.default, colors.bodyText._dark);
     const tagBgColor = useColorModeValue(colors.tagBg.default, colors.tagBg._dark);
     const tagTextColor = useColorModeValue(colors.tagText.default, colors.tagText._dark);
     const iconColor = useColorModeValue('gray.500', 'gray.400');
-    const lessonBgColor = useColorModeValue(colors.tagBg.default, colors.tagBg._dark);
-    const lessonTextColor = useColorModeValue(colors.tagText.default, colors.tagText._dark);
+    const lessonBgColor = useColorModeValue('orange.50', 'orange.900');
+    const lessonTextColor = useColorModeValue('orange.800', 'orange.100');
 
     return (
         <Box
             bg={cardBg}
-            borderWidth="1px"
-            borderRadius="md"
-            p={3}
-            shadow="sm"
-            maxW="360px"
+            borderWidth="2px"
+            borderRadius="2xl"
+            p={5}
+            shadow="lg"
+            maxW="350px"
             w="100%"
             mx="auto"
             borderColor={cardBorder}
+            transition="transform 0.2s, box-shadow 0.2s"
+            _hover={{
+                transform: 'translateY(-10px) scale(1.04)',
+                boxShadow: '2xl',
+                borderColor: 'orange.400',
+            }}
         >
             <Flex direction="column" height="100%">
-                <Stack spacing={3}>
-                    {cover && (
-                        <Flex justify="center">
-                            <Image src={cover} alt={title} borderRadius="md" maxH="200px" objectFit="contain" />
-                        </Flex>
-                    )}
-                    <Heading fontSize="md" fontWeight="bold" textAlign="center" color={headingTextColor}>
-                        {title}
-                    </Heading>
-                    <Text fontSize="sm" textAlign="center" color={bodyTextColor}>
-                        {author}
+                {cover && (
+                    <Box mb={4} align="center">
+                        <Image
+                            src={cover}
+                            alt={title}
+                            borderRadius="lg"
+                            maxH="180px"
+                            objectFit="cover"
+                            boxShadow="xl"
+                            border="4px solid"
+                            borderColor={cardBorder}
+                        />
+                    </Box>
+                )}
+                <Heading fontSize="xl" fontWeight="bold" textAlign="center" color={headingTextColor} mb={1} letterSpacing="tight">
+                    {title}
+                </Heading>
+                <Text fontSize="md" textAlign="center" color={bodyTextColor} mb={1} fontWeight="medium">
+                    <Icon as={FiBookOpen} mr={1} color={iconColor} />
+                    {author}
+                </Text>
+                {date && (
+                    <Text fontSize="xs" color={bodyTextColor} mb={3} textAlign="center">
+                        Finished: {formatDate(date)}
                     </Text>
-                    <Flex alignItems="center" justifyContent="center">
-                        <Icon as={FiBookOpen} mr={1} color={iconColor} />
-                        <Text fontSize="xs" color={iconColor}>
-                            {rating}
-                        </Text>
-                    </Flex>
+                )}
 
-                    {date && (
-                        <Text fontSize="xs" color={bodyTextColor}>
-                            Finished: {formatDate(date)}
-                        </Text>
-                    )}
-
-                    {lesson && (
-                        <Box
-                            bg={lessonBgColor}
-                            borderRadius="md"
-                            mt={2}
-                            p={2}
+                {lesson && (
+                    <Box
+                        bg={lessonBgColor}
+                        borderRadius="md"
+                        p={3}
+                        mb={3}
+                        display="flex"
+                        alignItems="center"
+                        boxShadow="sm"
+                    >
+                        <Icon as={FaQuoteLeft} color={lessonTextColor} boxSize={4} mr={2} />
+                        <Text
+                            fontSize="sm"
+                            fontStyle="italic"
+                            color={lessonTextColor}
                         >
-                            <Text
-                                fontSize="sm"
-                                fontStyle="italic"
-                                color={lessonTextColor}
-                            >
-                                Key takeaway: “{lesson}”
-                            </Text>
-                        </Box>
-                    )}
+                            {lesson}
+                        </Text>
+                    </Box>
+                )}
 
-                    {tags.length > 0 && (
-                        <Wrap spacing={1}>
-                            {tags.map((tag, idx) => (
-                                <WrapItem key={idx}>
-                                    <Tag size="sm" colorScheme="orange" bg={tagBgColor} color={tagTextColor}>
-                                        {tag}
-                                    </Tag>
-                                </WrapItem>
-                            ))}
-                        </Wrap>
-                    )}
+                <HStack spacing={2} alignItems="center" justifyContent="center" mt={2} mb={2}>
+                    <RatingStar rating={rating} />
+                    <Text fontSize="md" color="orange.500" fontWeight="bold" lineHeight={1}>{rating}</Text>
+                </HStack>
 
-                    {link && (
-                        <Link href={link} isExternal _hover={{ textDecoration: 'none' }}>
-                            <Button
-                                size="xs"
-                                variant="ghost"
-                                colorScheme="orange"
-                                rightIcon={<ExternalLinkIcon />}
-                            >
-                                View
-                            </Button>
-                        </Link>
-                    )}
-                </Stack>
+                {tags.length > 0 && (
+                    <Wrap spacing={2} mb={2} justify="center">
+                        {tags.map((tag, idx) => (
+                            <WrapItem key={idx}>
+                                <Tag size="md" colorScheme="orange" bg={tagBgColor} color={tagTextColor} borderRadius="full" px={3} py={1} fontWeight="semibold">
+                                    {tag}
+                                </Tag>
+                            </WrapItem>
+                        ))}
+                    </Wrap>
+                )}
             </Flex>
         </Box>
     );

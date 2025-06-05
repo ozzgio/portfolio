@@ -15,7 +15,7 @@ const Layout = ({ children, title }) => {
     const t = `${title} - Ozzo`
 
     return (
-        <Flex direction="column" minHeight="100vh">
+        <Flex direction="column">
             <MotionBox
                 as={Flex}
                 direction="column"
@@ -25,6 +25,7 @@ const Layout = ({ children, title }) => {
                 variants={variants}
                 transition={{ duration: 0.4, type: 'easeInOut' }}
                 position="relative"
+                flex="1"
             >
                 {title && (
                     <Head>
