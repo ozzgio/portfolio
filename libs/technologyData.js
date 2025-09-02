@@ -6,7 +6,7 @@ const technologyData = {
     icon: <IoBrush />,
     technologies: [
       { name: "HTML5", image: "https://cdn.simpleicons.org/html5/E34F26" },
-      { name: "CSS3", image: "https://cdn.simpleicons.org/css3/1572B6" },
+      { name: "CSS3", image: "https://cdn.simpleicons.org/css/1572B6" },
       { name: "SCSS", image: "https://cdn.simpleicons.org/sass/CC6699" },
       {
         name: "JavaScript",
