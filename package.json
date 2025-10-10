@@ -1,6 +1,6 @@
 {
   "name": "devozzo-homepage",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": " portfolio",
   "scripts": {
     "dev": "next dev --turbopack",
