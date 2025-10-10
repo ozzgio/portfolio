@@ -26,6 +26,7 @@ import {
   IoBarbell,
   IoCode,
   IoFootsteps,
+  IoLogoTwitter,
 } from "react-icons/io5";
 import technologyData from "../libs/technologyData";
 import TechnologyRow from "../components/techrow";
@@ -39,8 +40,10 @@ const Home = () => {
     <Layout title={"HomePage"}>
       <br />
       <Container>
-        <Box borderRadius="lg" bg="blue.300" mb={6} p={3} align="center">
-          Hi! Ozzo here, nice to meet you! 🤝
+        <Box borderRadius="lg" bg="whiteAlpha.500" mb={6} p={3} align="center">
+          Solo Dev building Synergym, documenting my path.
+          <br />
+          Follow the journey on these buttons below!
         </Box>
         <Box align="center" mb={6} p={3}>
           <List>
@@ -66,6 +69,17 @@ const Home = () => {
                   leftIcon={<IoLogoLinkedin />}
                 >
                   @Giorgio Ozzola
+                </Button>
+              </Link>
+            </ListItem>
+            <ListItem>
+              <Link href="https://x.com/giorgio_ozzola" target="_blank">
+                <Button
+                  variant="ghost"
+                  colorScheme="orange"
+                  leftIcon={<IoLogoTwitter />}
+                >
+                  @giorgio_ozzola
                 </Button>
               </Link>
             </ListItem>
@@ -95,7 +109,7 @@ const Home = () => {
                 {" "}
                 <IoFootsteps />{" "}
               </Icon>{" "}
-              23yo always learning
+              24yo always learning
             </Paragraph>
           </Box>
           <Box

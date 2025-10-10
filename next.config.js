@@ -2,8 +2,16 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     remotePatterns: [
-      new URL("https://cdn.simpleicons.org/**"),
-      new URL("https://cdn.jsdelivr.net/gh/devicons/devicon@latest/**"),
+      {
+        protocol: 'https',
+        hostname: 'cdn.simpleicons.org',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.jsdelivr.net',
+        pathname: '/gh/devicons/devicon@latest/**',
+      },
     ],
     dangerouslyAllowSVG: true,
   },
