@@ -146,7 +146,7 @@ function getRelativeDate(dateString) {
   return `${diff} days ago`;
 }
 
-function convertImgurUrl(url) {
+async function convertImgurUrl(url) {
   if (!url || typeof url !== 'string') return url;
   
   // If already a direct image URL (i.imgur.com), return as-is
@@ -154,25 +154,41 @@ function convertImgurUrl(url) {
     return url;
   }
   
-  // Convert imgur.com/a/ID or imgur.com/g/ID to i.imgur.com/ID.jpg
-  // Note: This works for single-image albums/galleries
-  const albumMatch = url.match(/imgur\.com\/a\/([a-zA-Z0-9]+)/);
-  const galleryMatch = url.match(/imgur\.com\/g\/([a-zA-Z0-9]+)/);
-  const directMatch = url.match(/imgur\.com\/([a-zA-Z0-9]+)/);
+  // Check if it's an Imgur album or gallery URL that needs conversion
+  const isAlbumOrGallery = /imgur\.com\/(a|g)\//.test(url);
   
-  if (albumMatch) {
-    return `https://i.imgur.com/${albumMatch[1]}.jpg`;
+  if (isAlbumOrGallery) {
+    try {
+      // Use Imgur's oEmbed API to get the actual image URL
+      const oembedUrl = `https://api.imgur.com/oembed?url=${encodeURIComponent(url)}`;
+      const response = await fetch(oembedUrl);
+      
+      if (response.ok) {
+        const data = await response.json();
+        // oEmbed returns the image URL in the 'url' field
+        if (data.url) {
+          return data.url;
+        }
+        // Sometimes it's in 'thumbnail_url' or we need to extract from HTML
+        if (data.html) {
+          const imgMatch = data.html.match(/src="([^"]+)"/);
+          if (imgMatch && imgMatch[1]) {
+            return imgMatch[1];
+          }
+        }
+      }
+    } catch (error) {
+      console.warn(`Failed to resolve Imgur URL ${url}:`, error);
+    }
   }
   
-  if (galleryMatch) {
-    return `https://i.imgur.com/${galleryMatch[1]}.jpg`;
-  }
-  
-  if (directMatch && !url.includes('i.imgur.com')) {
+  // Fallback: try to convert direct imgur.com links (without /a/ or /g/)
+  const directMatch = url.match(/imgur\.com\/([a-zA-Z0-9]+)$/);
+  if (directMatch) {
     return `https://i.imgur.com/${directMatch[1]}.jpg`;
   }
   
-  // Return original URL if no match
+  // Return original URL if no conversion possible
   return url;
 }
 
@@ -196,18 +212,25 @@ export const getStaticProps = async () => {
 
     // Map the GitHub JSON data to match the expected format
     // The GitHub JSON already matches the Notion format, but we ensure all fields are present
-    const articles = articlesData.map((article) => {
-      const dateValue = article.date || '';
-      return {
-        title: article.title || '',
-        description: article.description || '',
-        url: article.url || '',
-        date: dateValue,
-        formattedDate: dateValue ? getRelativeDate(dateValue) : null,
-        thumbnail: convertImgurUrl(article.thumbnail || ''),
-        tags: Array.isArray(article.tags) ? article.tags : [],
-      };
-    });
+    // Convert Imgur URLs to direct image URLs
+    const articles = await Promise.all(
+      articlesData.map(async (article) => {
+        const dateValue = article.date || '';
+        const thumbnail = article.thumbnail 
+          ? await convertImgurUrl(article.thumbnail) 
+          : '';
+        
+        return {
+          title: article.title || '',
+          description: article.description || '',
+          url: article.url || '',
+          date: dateValue,
+          formattedDate: dateValue ? getRelativeDate(dateValue) : null,
+          thumbnail: thumbnail,
+          tags: Array.isArray(article.tags) ? article.tags : [],
+        };
+      })
+    );
 
     return {
       props: {
