@@ -18,30 +18,36 @@ import { IoDocumentText } from "react-icons/io5";
 const MotionBox = motion.create(Box);
 
 const formatDate = (dateStr) => {
-  if (!dateStr) return null;
+  if (!dateStr) return '';
+  
+  try {
+    const articleDate = new Date(dateStr);
+    if (isNaN(articleDate.getTime())) return dateStr; // Invalid date, return original
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    articleDate.setHours(0, 0, 0, 0);
 
-  const articleDate = new Date(dateStr);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  articleDate.setHours(0, 0, 0, 0);
+    const diffTime = today - articleDate;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-  const diffTime = today - articleDate;
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    // Handle future dates
+    if (diffDays < 0) {
+      const absDays = Math.abs(diffDays);
+      if (absDays === 1) return "Tomorrow";
+      return `In ${absDays} days`;
+    }
 
-  // Handle future dates
-  if (diffDays < 0) {
-    const absDays = Math.abs(diffDays);
-    if (absDays === 1) return "Tomorrow";
-    return `In ${absDays} days`;
-  }
-
-  switch (diffDays) {
-    case 0:
-      return "Today";
-    case 1:
-      return "Yesterday";
-    default:
-      return `${diffDays} days ago`;
+    switch (diffDays) {
+      case 0:
+        return "Today";
+      case 1:
+        return "Yesterday";
+      default:
+        return `${diffDays} days ago`;
+    }
+  } catch (e) {
+    return dateStr; // Return original if parsing fails
   }
 };
 
@@ -210,7 +216,7 @@ export const getStaticProps = async () => {
           description: String(article.description || ''),
           url: String(article.url || ''),
           date: dateValue,
-          formattedDate: dateValue ? getRelativeDate(dateValue) : dateValue || '',
+          formattedDate: dateValue ? formatDate(dateValue) : '',
           thumbnail: thumbnail ? resolveImageUrl(thumbnail) : '',
           tags: Array.isArray(article.tags) ? article.tags.filter(Boolean) : [],
         };
