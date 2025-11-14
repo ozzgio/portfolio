@@ -150,7 +150,7 @@ export const getStaticProps = async () => {
   try {
     // Fetch articles from GitHub raw content
     const response = await fetch(
-      'https://raw.githubusercontent.com/ozzgio/portfolio/preview/data/articles.json'
+      'https://raw.githubusercontent.com/ozzgio/portfolio-data/main/articles.json'
     );
 
     if (!response.ok) {
