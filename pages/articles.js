@@ -146,66 +146,27 @@ function getRelativeDate(dateString) {
   return `${diff} days ago`;
 }
 
-async function convertImgurUrl(url) {
+// Simple function to clean up Imgur URLs
+// Returns empty string for album/gallery URLs (they need to be converted to direct image URLs in source)
+function cleanImgurUrl(url) {
   if (!url || typeof url !== 'string') return url;
   
-  // If already a direct image URL (i.imgur.com), return as-is
+  // Direct image URLs work fine
   if (url.includes('i.imgur.com')) {
     return url;
   }
   
-  // Check if it's an Imgur album or gallery URL that needs conversion
-  const albumMatch = url.match(/imgur\.com\/a\/([a-zA-Z0-9]+)/);
-  const galleryMatch = url.match(/imgur\.com\/g\/([a-zA-Z0-9]+)/);
-  
-  if (albumMatch || galleryMatch) {
-    try {
-      // Try to fetch the album/gallery page and extract the first image
-      // Imgur albums have the image data in a JSON script tag
-      const pageUrl = albumMatch 
-        ? `https://imgur.com/a/${albumMatch[1]}`
-        : `https://imgur.com/g/${galleryMatch[1]}`;
-      
-      const response = await fetch(pageUrl);
-      if (response.ok) {
-        const html = await response.text();
-        
-        // Try to find the image hash in the page data
-        // Imgur stores image data in window.postDataJSON or similar
-        const jsonMatch = html.match(/window\._sharedData\s*=\s*({.+?});/);
-        if (jsonMatch) {
-          try {
-            const data = JSON.parse(jsonMatch[1]);
-            // Navigate through the data structure to find the first image
-            if (data.post && data.post.images && data.post.images[0]) {
-              const imageHash = data.post.images[0].hash;
-              const imageExt = data.post.images[0].ext || '.jpg';
-              return `https://i.imgur.com/${imageHash}${imageExt}`;
-            }
-          } catch (e) {
-            // JSON parse failed, try alternative method
-          }
-        }
-        
-        // Alternative: look for image hash in meta tags or data attributes
-        const hashMatch = html.match(/data-id="([a-zA-Z0-9]+)"/) || 
-                         html.match(/imageHash["']:\s*["']([a-zA-Z0-9]+)["']/);
-        if (hashMatch) {
-          return `https://i.imgur.com/${hashMatch[1]}.jpg`;
-        }
-      }
-    } catch (error) {
-      console.warn(`Failed to resolve Imgur URL ${url}:`, error);
-    }
+  // Album/gallery URLs don't work as image sources - return empty to hide broken images
+  if (url.includes('imgur.com/a/') || url.includes('imgur.com/g/')) {
+    return '';
   }
   
-  // Fallback: try to convert direct imgur.com links (without /a/ or /g/)
-  const directMatch = url.match(/imgur\.com\/([a-zA-Z0-9]+)$/);
-  if (directMatch) {
-    return `https://i.imgur.com/${directMatch[1]}.jpg`;
+  // Try to convert simple imgur.com/ID links to direct format
+  const simpleMatch = url.match(/imgur\.com\/([a-zA-Z0-9]+)$/);
+  if (simpleMatch) {
+    return `https://i.imgur.com/${simpleMatch[1]}.jpg`;
   }
   
-  // Return original URL if no conversion possible
   return url;
 }
 
@@ -228,26 +189,19 @@ export const getStaticProps = async () => {
     }
 
     // Map the GitHub JSON data to match the expected format
-    // The GitHub JSON already matches the Notion format, but we ensure all fields are present
-    // Convert Imgur URLs to direct image URLs
-    const articles = await Promise.all(
-      articlesData.map(async (article) => {
-        const dateValue = article.date || '';
-        const thumbnail = article.thumbnail 
-          ? await convertImgurUrl(article.thumbnail) 
-          : '';
-        
-        return {
-          title: article.title || '',
-          description: article.description || '',
-          url: article.url || '',
-          date: dateValue,
-          formattedDate: dateValue ? getRelativeDate(dateValue) : null,
-          thumbnail: thumbnail,
-          tags: Array.isArray(article.tags) ? article.tags : [],
-        };
-      })
-    );
+    const articles = articlesData.map((article) => {
+      const dateValue = article.date || '';
+      
+      return {
+        title: article.title || '',
+        description: article.description || '',
+        url: article.url || '',
+        date: dateValue,
+        formattedDate: dateValue ? getRelativeDate(dateValue) : null,
+        thumbnail: cleanImgurUrl(article.thumbnail || ''),
+        tags: Array.isArray(article.tags) ? article.tags : [],
+      };
+    });
 
     return {
       props: {
