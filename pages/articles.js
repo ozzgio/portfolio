@@ -54,13 +54,19 @@ const formatDate = (dateStr) => {
 const ArticlesPage = ({ articles, error }) => {
   const [selectedTag, setSelectedTag] = useState(null);
   const [sortOption, setSortOption] = useState("newest");
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Only format dates after component mounts to avoid hydration mismatches
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const sortedArticles = useMemo(() => {
     let currentArticles = articles
       .filter((article) => article.date)
       .map((article) => {
-        // Format date on client side to avoid hydration mismatches
-        const formattedDate = article.date ? formatDate(article.date) : '';
+        // Only format dates after mount to avoid hydration mismatches
+        const formattedDate = isMounted && article.date ? formatDate(article.date) : (article.date || '');
         return { ...article, formattedDate: formattedDate || article.date || '' };
       });
 
@@ -73,7 +79,7 @@ const ArticlesPage = ({ articles, error }) => {
     }
 
     return currentArticles;
-  }, [articles, sortOption]);
+  }, [articles, sortOption, isMounted]);
 
   const allTags = useMemo(() => {
     return Array.from(new Set(sortedArticles.flatMap((a) => a.tags || [])));
