@@ -161,12 +161,12 @@ function resolveImageUrl(url) {
     return url;
   }
   
-  // If it's just a filename, serve from Obsidian vault via GitHub raw content
-  // Images are stored in blog/articles/images/ folder
+  // If it's just a filename, serve from portfolio data repo
+  // Images are automatically copied from Obsidian vault to portfolio-data repo
   if (!url.includes('/') && !url.includes('http')) {
-    const obsidianRepo = 'ozzgio/obsidian-vault';
-    const branch = 'preview'; // or 'main' depending on your setup
-    return `https://raw.githubusercontent.com/${obsidianRepo}/${branch}/blog/articles/images/${url}`;
+    const dataRepo = 'ozzgio/portfolio-data';
+    const branch = 'main';
+    return `https://raw.githubusercontent.com/${dataRepo}/${branch}/images/${url}`;
   }
   
   return url;
