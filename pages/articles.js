@@ -147,24 +147,12 @@ function getRelativeDate(dateString) {
 }
 
 // Function to resolve image URLs
-// Supports: local public folder, direct Imgur URLs, and GitHub raw content
+// Images are stored in Obsidian vault and served via GitHub raw content
 function resolveImageUrl(url) {
   if (!url || typeof url !== 'string') return url;
   
   // If it's already a full URL (http/https), return as-is
   if (url.startsWith('http://') || url.startsWith('https://')) {
-    // Direct Imgur image URLs work fine
-    if (url.includes('i.imgur.com')) {
-      return url;
-    }
-    
-    // Try to convert simple imgur.com/ID links to direct format
-    const simpleMatch = url.match(/imgur\.com\/([a-zA-Z0-9]+)$/);
-    if (simpleMatch) {
-      return `https://i.imgur.com/${simpleMatch[1]}.jpg`;
-    }
-    
-    // Return other full URLs as-is (GitHub raw, etc.)
     return url;
   }
   
@@ -173,9 +161,12 @@ function resolveImageUrl(url) {
     return url;
   }
   
-  // If it's just a filename, assume it's in /images/articles/
+  // If it's just a filename, serve from Obsidian vault via GitHub raw content
+  // This way images are stored in Obsidian and automatically available
   if (!url.includes('/') && !url.includes('http')) {
-    return `/images/articles/${url}`;
+    const obsidianRepo = 'ozzgio/obsidian-vault';
+    const branch = 'preview'; // or 'main' depending on your setup
+    return `https://raw.githubusercontent.com/${obsidianRepo}/${branch}/images/articles/${url}`;
   }
   
   return url;
