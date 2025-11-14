@@ -28,13 +28,20 @@ const formatDate = (dateStr) => {
   const diffTime = today - articleDate;
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
+  // Handle future dates
+  if (diffDays < 0) {
+    const absDays = Math.abs(diffDays);
+    if (absDays === 1) return "Tomorrow";
+    return `In ${absDays} days`;
+  }
+
   switch (diffDays) {
     case 0:
       return "Today";
     case 1:
       return "Yesterday";
     default:
-      return diffDays > 1 ? `${diffDays} days ago` : null;
+      return `${diffDays} days ago`;
   }
 };
 
@@ -47,9 +54,8 @@ const ArticlesPage = ({ articles, error }) => {
       .filter((article) => article.date)
       .map((article) => {
         const formattedDate = formatDate(article.date);
-        return formattedDate ? { ...article, formattedDate } : null;
-      })
-      .filter(Boolean);
+        return { ...article, formattedDate: formattedDate || article.date };
+      });
 
     if (sortOption === "newest") {
       currentArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
