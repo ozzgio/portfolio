@@ -146,6 +146,36 @@ function getRelativeDate(dateString) {
   return `${diff} days ago`;
 }
 
+function convertImgurUrl(url) {
+  if (!url || typeof url !== 'string') return url;
+  
+  // If already a direct image URL (i.imgur.com), return as-is
+  if (url.includes('i.imgur.com')) {
+    return url;
+  }
+  
+  // Convert imgur.com/a/ID or imgur.com/g/ID to i.imgur.com/ID.jpg
+  // Note: This works for single-image albums/galleries
+  const albumMatch = url.match(/imgur\.com\/a\/([a-zA-Z0-9]+)/);
+  const galleryMatch = url.match(/imgur\.com\/g\/([a-zA-Z0-9]+)/);
+  const directMatch = url.match(/imgur\.com\/([a-zA-Z0-9]+)/);
+  
+  if (albumMatch) {
+    return `https://i.imgur.com/${albumMatch[1]}.jpg`;
+  }
+  
+  if (galleryMatch) {
+    return `https://i.imgur.com/${galleryMatch[1]}.jpg`;
+  }
+  
+  if (directMatch && !url.includes('i.imgur.com')) {
+    return `https://i.imgur.com/${directMatch[1]}.jpg`;
+  }
+  
+  // Return original URL if no match
+  return url;
+}
+
 export const getStaticProps = async () => {
   try {
     // Fetch articles from GitHub raw content
@@ -174,7 +204,7 @@ export const getStaticProps = async () => {
         url: article.url || '',
         date: dateValue,
         formattedDate: dateValue ? getRelativeDate(dateValue) : null,
-        thumbnail: article.thumbnail || '',
+        thumbnail: convertImgurUrl(article.thumbnail || ''),
         tags: Array.isArray(article.tags) ? article.tags : [],
       };
     });
