@@ -9,7 +9,7 @@ import {
   Select,
   VStack,
 } from "@chakra-ui/react";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Layout from "../components/layouts/layout";
 import ArticleCard from "../components/cards/articlecard";
