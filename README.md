@@ -13,7 +13,7 @@ Welcome to my portfolio website — a modern, responsive web app showcasing my b
 [![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![Chakra UI](https://img.shields.io/badge/Chakra--UI-319795?logo=chakraui&logoColor=white)](https://chakra-ui.com/)
 [![Framer Motion](https://img.shields.io/badge/Framer--Motion-0055FF?logo=framer&logoColor=white)](https://www.framer.com/motion/)
-[![Notion API](https://img.shields.io/badge/Notion%20API-000000?logo=notion&logoColor=white)](https://developers.notion.com/)
+[![GitHub](https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white)](https://github.com/)
 [![React Icons](https://img.shields.io/badge/React%20Icons-EFD81D?logo=react&logoColor=black)](https://react-icons.github.io/react-icons/)
 [![Vercel](https://img.shields.io/badge/Vercel-000000?logo=vercel&logoColor=white)](https://vercel.com/)
 [![ESLint](https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=white)](https://eslint.org/)
@@ -25,7 +25,7 @@ Welcome to my portfolio website — a modern, responsive web app showcasing my b
 
 - Fully responsive, mobile-first layout
 - Dark mode support
-- Dynamic content from Notion
+- Dynamic content from Obsidian vault (via GitHub)
 - SEO-friendly metadata
 - Animated transitions
 - Clean and consistent component structure
@@ -48,14 +48,28 @@ Then open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-## ⚙️ Environment Setup
+## 📊 Content Management
 
-Create a `.env.local` file at the root and include:
+This portfolio dynamically fetches articles and books from a GitHub repository:
 
-```env
-NOTION_SECRET=your_notion_secret
-NOTION_DATABASE_ID=your_notion_db_id
-```
+- **Articles**: `https://raw.githubusercontent.com/ozzgio/portfolio-data/main/articles.json`
+- **Books**: `https://raw.githubusercontent.com/ozzgio/portfolio-data/main/books.json`
+
+Content is managed in a private Obsidian vault and automatically synced to the public data repository via GitHub Actions. This allows for:
+- Writing content in Obsidian (markdown)
+- Automatic JSON generation on content updates
+- No API keys or external services required
+- Full control over content and versioning
+
+See the [portfolio-data repository](https://github.com/ozzgio/portfolio-data) for the public JSON files.
+
+---
+
+## 🌿 Branches
+
+- **`main`**: Production-ready code (deployed to ozzo.blog)
+- **`preview`**: Preview/staging branch for testing
+- **`notion-posts-integ`**: Archived branch with the previous Notion API implementation (for reference)
 
 ---
 
