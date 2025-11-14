@@ -148,15 +148,6 @@ const ArticlesPage = ({ articles, error }) => {
   );
 };
 
-function getRelativeDate(dateString) {
-  const now = new Date();
-  const then = new Date(dateString);
-  const diff = Math.floor((now - then) / (1000 * 60 * 60 * 24));
-
-  if (diff === 0) return "Today";
-  if (diff === 1) return "Yesterday";
-  return `${diff} days ago`;
-}
 
 // Function to resolve image URLs
 // Images are stored in Obsidian vault and served via GitHub raw content
