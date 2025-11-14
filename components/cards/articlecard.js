@@ -7,11 +7,11 @@ import {
   Tag,
   Link,
   Button,
+  Image,
   useColorModeValue,
   useTheme,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
-import Image from "next/image";
 import BaseCard from "../basecard";
 
 const ArticleCard = ({
@@ -46,25 +46,17 @@ const ArticleCard = ({
   return (
     <BaseCard p={5}>
       {thumbnail && (
-        <Box 
-          mb={4} 
-          align="center" 
-          position="relative"
-          width="100%" 
-          height="140px" 
-          borderRadius="lg" 
-          overflow="hidden" 
-          boxShadow="xl" 
-          border="4px solid" 
-          borderColor={cardBorder}
-        >
+        <Box mb={4} align="center">
           <Image
             src={thumbnail}
             alt={title}
-            fill
-            style={{ objectFit: 'cover', borderRadius: '8px' }}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            unoptimized={!thumbnail.startsWith('/')}
+            borderRadius="lg"
+            maxH="140px"
+            width="100%"
+            objectFit="cover"
+            boxShadow="xl"
+            border="4px solid"
+            borderColor={cardBorder}
           />
         </Box>
       )}
