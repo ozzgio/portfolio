@@ -12,6 +12,16 @@ const nextConfig = {
         hostname: 'cdn.jsdelivr.net',
         pathname: '/gh/devicons/devicon@latest/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'i.imgur.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'raw.githubusercontent.com',
+        pathname: '/**',
+      },
     ],
     dangerouslyAllowSVG: true,
   },

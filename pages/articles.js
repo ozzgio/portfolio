@@ -146,25 +146,36 @@ function getRelativeDate(dateString) {
   return `${diff} days ago`;
 }
 
-// Simple function to clean up Imgur URLs
-// Returns empty string for album/gallery URLs (they need to be converted to direct image URLs in source)
-function cleanImgurUrl(url) {
+// Function to resolve image URLs
+// Supports: local public folder, direct Imgur URLs, and GitHub raw content
+function resolveImageUrl(url) {
   if (!url || typeof url !== 'string') return url;
   
-  // Direct image URLs work fine
-  if (url.includes('i.imgur.com')) {
+  // If it's already a full URL (http/https), return as-is
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    // Direct Imgur image URLs work fine
+    if (url.includes('i.imgur.com')) {
+      return url;
+    }
+    
+    // Try to convert simple imgur.com/ID links to direct format
+    const simpleMatch = url.match(/imgur\.com\/([a-zA-Z0-9]+)$/);
+    if (simpleMatch) {
+      return `https://i.imgur.com/${simpleMatch[1]}.jpg`;
+    }
+    
+    // Return other full URLs as-is (GitHub raw, etc.)
     return url;
   }
   
-  // Album/gallery URLs don't work as image sources - return empty to hide broken images
-  if (url.includes('imgur.com/a/') || url.includes('imgur.com/g/')) {
-    return '';
+  // If it's a relative path (starts with /), it's a local image in public folder
+  if (url.startsWith('/')) {
+    return url;
   }
   
-  // Try to convert simple imgur.com/ID links to direct format
-  const simpleMatch = url.match(/imgur\.com\/([a-zA-Z0-9]+)$/);
-  if (simpleMatch) {
-    return `https://i.imgur.com/${simpleMatch[1]}.jpg`;
+  // If it's just a filename, assume it's in /images/articles/
+  if (!url.includes('/') && !url.includes('http')) {
+    return `/images/articles/${url}`;
   }
   
   return url;
@@ -198,7 +209,7 @@ export const getStaticProps = async () => {
         url: article.url || '',
         date: dateValue,
         formattedDate: dateValue ? getRelativeDate(dateValue) : null,
-        thumbnail: cleanImgurUrl(article.thumbnail || ''),
+        thumbnail: resolveImageUrl(article.thumbnail || ''),
         tags: Array.isArray(article.tags) ? article.tags : [],
       };
     });
