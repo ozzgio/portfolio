@@ -24,6 +24,11 @@ const nextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'cdn.jsdelivr.net',
+        pathname: '/gh/**',
+      },
+      {
+        protocol: 'https',
         hostname: 'media.licdn.com',
         pathname: '/**',
       },

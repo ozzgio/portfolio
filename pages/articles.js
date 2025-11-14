@@ -156,25 +156,26 @@ function getRelativeDate(dateString) {
 // Images are stored in Obsidian vault and served via GitHub raw content
 function resolveImageUrl(url) {
   if (!url || typeof url !== 'string') return url;
-  
+
   // If it's already a full URL (http/https), return as-is
   if (url.startsWith('http://') || url.startsWith('https://')) {
     return url;
   }
-  
+
   // If it's a relative path (starts with /), it's a local image in public folder
   if (url.startsWith('/')) {
     return url;
   }
-  
-  // If it's just a filename, serve from portfolio data repo
-  // Images are automatically copied from Obsidian vault to portfolio-data repo
+
+  // If it's just a filename, serve from portfolio data repo via jsDelivr CDN
+  // jsDelivr is free, fast, and reliable - serves from GitHub repos
   if (!url.includes('/') && !url.includes('http')) {
     const dataRepo = 'ozzgio/portfolio-data';
     const branch = 'main';
-    return `https://raw.githubusercontent.com/${dataRepo}/${branch}/images/${url}`;
+    // Use jsDelivr CDN instead of raw.githubusercontent.com - faster and more reliable
+    return `https://cdn.jsdelivr.net/gh/${dataRepo}@${branch}/images/${url}`;
   }
-  
+
   return url;
 }
 
@@ -199,7 +200,7 @@ export const getStaticProps = async () => {
     // Map the GitHub JSON data to match the expected format
     const articles = articlesData.map((article) => {
       const dateValue = article.date || '';
-      
+
       return {
         title: article.title || '',
         description: article.description || '',
