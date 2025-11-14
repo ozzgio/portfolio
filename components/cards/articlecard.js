@@ -41,7 +41,8 @@ const ArticleCard = ({
     colors.tagText._dark,
   );
 
-  if (!url) return null;
+  // Validate required props
+  if (!url || !title) return null;
 
   return (
     <BaseCard p={5}>
@@ -82,7 +83,7 @@ const ArticleCard = ({
             : description}
         </Text>
       )}
-      {tags.length > 0 && (
+      {tags && Array.isArray(tags) && tags.length > 0 && (
         <Wrap spacing={2} mb={3} justify="center">
           {tags.map((tag, idx) => (
             <WrapItem key={idx}>

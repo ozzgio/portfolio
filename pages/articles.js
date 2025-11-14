@@ -198,19 +198,24 @@ export const getStaticProps = async () => {
     }
 
     // Map the GitHub JSON data to match the expected format
-    const articles = articlesData.map((article) => {
-      const dateValue = article.date || '';
-
-      return {
-        title: article.title || '',
-        description: article.description || '',
-        url: article.url || '',
-        date: dateValue,
-        formattedDate: dateValue ? getRelativeDate(dateValue) : null,
-        thumbnail: resolveImageUrl(article.thumbnail || ''),
-        tags: Array.isArray(article.tags) ? article.tags : [],
-      };
-    });
+    // Filter out any invalid articles and ensure all fields are properly set
+    const articles = articlesData
+      .filter((article) => article && article.title && article.url) // Only include valid articles
+      .map((article) => {
+        const dateValue = article.date || '';
+        const thumbnail = article.thumbnail || '';
+        
+        return {
+          title: String(article.title || ''),
+          description: String(article.description || ''),
+          url: String(article.url || ''),
+          date: dateValue,
+          formattedDate: dateValue ? getRelativeDate(dateValue) : dateValue || '',
+          thumbnail: thumbnail ? resolveImageUrl(thumbnail) : '',
+          tags: Array.isArray(article.tags) ? article.tags.filter(Boolean) : [],
+        };
+      })
+      .filter((article) => article.title && article.url); // Double-check after mapping
 
     return {
       props: {
