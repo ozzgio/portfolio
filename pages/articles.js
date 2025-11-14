@@ -162,11 +162,11 @@ function resolveImageUrl(url) {
   }
   
   // If it's just a filename, serve from Obsidian vault via GitHub raw content
-  // Images are stored in articles/images/ folder
+  // Images are stored in blog/articles/images/ folder
   if (!url.includes('/') && !url.includes('http')) {
     const obsidianRepo = 'ozzgio/obsidian-vault';
     const branch = 'preview'; // or 'main' depending on your setup
-    return `https://raw.githubusercontent.com/${obsidianRepo}/${branch}/articles/images/${url}`;
+    return `https://raw.githubusercontent.com/${obsidianRepo}/${branch}/blog/articles/images/${url}`;
   }
   
   return url;
