@@ -59,8 +59,9 @@ const ArticlesPage = ({ articles, error }) => {
     let currentArticles = articles
       .filter((article) => article.date)
       .map((article) => {
-        const formattedDate = formatDate(article.date);
-        return { ...article, formattedDate: formattedDate || article.date };
+        // Format date on client side to avoid hydration mismatches
+        const formattedDate = article.date ? formatDate(article.date) : '';
+        return { ...article, formattedDate: formattedDate || article.date || '' };
       });
 
     if (sortOption === "newest") {
@@ -196,6 +197,8 @@ export const getStaticProps = async () => {
 
     // Map the GitHub JSON data to match the expected format
     // Filter out any invalid articles and ensure all fields are properly set
+    // NOTE: Don't format dates in getStaticProps to avoid hydration mismatches
+    // Format dates on the client side instead
     const articles = articlesData
       .filter((article) => article && article.title && article.url) // Only include valid articles
       .map((article) => {
@@ -207,7 +210,7 @@ export const getStaticProps = async () => {
           description: String(article.description || ''),
           url: String(article.url || ''),
           date: dateValue,
-          formattedDate: dateValue ? formatDate(dateValue) : '',
+          formattedDate: null, // Will be formatted on client to avoid hydration issues
           thumbnail: thumbnail ? resolveImageUrl(thumbnail) : '',
           tags: Array.isArray(article.tags) ? article.tags.filter(Boolean) : [],
         };
