@@ -72,7 +72,7 @@ const ArticleCard = ({
         {title}
       </Heading>
       {formattedDate && (
-        <Text fontSize="xs" color={bodyTextColor} mb={2} textAlign="center">
+        <Text fontSize="xs" color={bodyTextColor} mb={2} textAlign="center" suppressHydrationWarning>
           {formattedDate}
         </Text>
       )}
