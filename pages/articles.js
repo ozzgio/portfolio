@@ -216,7 +216,7 @@ export const getStaticProps = async () => {
       props: {
         articles: Array.isArray(articles) ? articles : [],
       },
-      revalidate: 60,
+      revalidate: 10, // Revalidate every 10 seconds for faster updates
     };
   } catch (error) {
     console.error("Failed to fetch articles in getStaticProps:", error);
