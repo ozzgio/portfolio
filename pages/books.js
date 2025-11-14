@@ -14,14 +14,6 @@ import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import Layout from "../components/layouts/layout";
 import BookCard from "../components/cards/bookcard";
-import { Client } from "@notionhq/client";
-import dotenv from "dotenv";
-
-dotenv.config();
-
-const notion = new Client({
-  auth: process.env.NOTION_TOKEN,
-});
 
 const MotionBox = motion.create(Box);
 
@@ -143,24 +135,37 @@ const BooksPage = ({ books, error }) => {
 
 export const getStaticProps = async () => {
   try {
-    const databaseId = process.env.NOTION_BOOKS_DATABASE_ID;
-    const response = await notion.databases.query({
-      database_id: databaseId,
-      sorts: [{ property: "Rating", direction: "descending" }],
-    });
+    // Fetch books from GitHub raw content
+    const response = await fetch(
+      'https://raw.githubusercontent.com/ozzgio/portfolio/preview/data/books.json'
+    );
 
-    const books = response.results.map((page) => {
-      const props = page.properties;
-      return {
-        title: props.Title?.title[0]?.plain_text || "",
-        author: props.Author?.rich_text?.[0]?.plain_text || "",
-        rating: props.Rating?.number,
-        tags: props.Tags?.multi_select?.map((tag) => tag.name) || [],
-        cover: props.Cover?.url || "",
-        lesson: props.Lesson?.rich_text?.[0]?.plain_text || "",
-        date: props.Finished?.date?.start || "",
-      };
-    });
+    if (!response.ok) {
+      throw new Error(`Failed to fetch books: ${response.status} ${response.statusText}`);
+    }
+
+    const booksData = await response.json();
+
+    // Validate that we received an array
+    if (!Array.isArray(booksData)) {
+      throw new Error('Invalid JSON format: expected an array');
+    }
+
+    // Map the GitHub JSON data to match the expected format
+    // The GitHub JSON already matches the Notion format, but we ensure all fields are present
+    const books = booksData.map((book) => ({
+      title: book.title || '',
+      author: book.author || '',
+      rating: typeof book.rating === 'number' ? book.rating : null,
+      tags: Array.isArray(book.tags) ? book.tags : [],
+      cover: book.cover || '',
+      lesson: book.lesson || '',
+      date: book.date || '',
+    }));
+
+    // Sort by rating (highest first) to match previous behavior
+    books.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+
     return {
       props: {
         books: Array.isArray(books) ? books : [],
@@ -172,7 +177,7 @@ export const getStaticProps = async () => {
     return {
       props: {
         books: [],
-        error: "Failed to load books.",
+        error: "Failed to load books. Please try again later.",
       },
     };
   }

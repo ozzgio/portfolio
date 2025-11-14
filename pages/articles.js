@@ -14,14 +14,6 @@ import { motion } from "framer-motion";
 import Layout from "../components/layouts/layout";
 import ArticleCard from "../components/cards/articlecard";
 import { IoDocumentText } from "react-icons/io5";
-import { Client } from "@notionhq/client";
-import dotenv from "dotenv";
-
-dotenv.config();
-
-const notion = new Client({
-  auth: process.env.NOTION_TOKEN,
-});
 
 const MotionBox = motion.create(Box);
 
@@ -156,26 +148,37 @@ function getRelativeDate(dateString) {
 
 export const getStaticProps = async () => {
   try {
-    const databaseId = process.env.NOTION_ARTICLES_DATABASE_ID;
-    const response = await notion.databases.query({
-      database_id: databaseId,
-    });
-    const articles = response.results.map((page, _index) => {
-      const props = page.properties || {};
-      const dateValue = props.Date?.date?.start || props.created_time;
+    // Fetch articles from GitHub raw content
+    const response = await fetch(
+      'https://raw.githubusercontent.com/ozzgio/portfolio/preview/data/articles.json'
+    );
 
+    if (!response.ok) {
+      throw new Error(`Failed to fetch articles: ${response.status} ${response.statusText}`);
+    }
+
+    const articlesData = await response.json();
+
+    // Validate that we received an array
+    if (!Array.isArray(articlesData)) {
+      throw new Error('Invalid JSON format: expected an array');
+    }
+
+    // Map the GitHub JSON data to match the expected format
+    // The GitHub JSON already matches the Notion format, but we ensure all fields are present
+    const articles = articlesData.map((article) => {
+      const dateValue = article.date || '';
       return {
-        title: props.Title.title[0]?.text?.content || "",
-        description: props.Description.rich_text[0]?.text?.content || "",
-        url: props.url.url || "",
+        title: article.title || '',
+        description: article.description || '',
+        url: article.url || '',
         date: dateValue,
-        formattedDate: dateValue
-          ? getRelativeDate(dateValue)
-          : getRelativeDate(props.created_time),
-        thumbnail: props.Thumbnail?.url || "",
-        tags: props.Tags.multi_select.map((tag) => tag.name) || [],
+        formattedDate: dateValue ? getRelativeDate(dateValue) : null,
+        thumbnail: article.thumbnail || '',
+        tags: Array.isArray(article.tags) ? article.tags : [],
       };
     });
+
     return {
       props: {
         articles: Array.isArray(articles) ? articles : [],
@@ -187,7 +190,7 @@ export const getStaticProps = async () => {
     return {
       props: {
         articles: [],
-        error: "Failed to load articles.",
+        error: "Failed to load articles. Please try again later.",
       },
     };
   }
