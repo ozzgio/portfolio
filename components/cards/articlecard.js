@@ -46,17 +46,26 @@ const ArticleCard = ({
   return (
     <BaseCard p={5}>
       {thumbnail && (
-        <Box mb={4} align="center" width="100%" height="140px" borderRadius="lg" overflow="hidden" boxShadow="xl" border="4px solid" borderColor={cardBorder}>
-          <Box position="relative" width="100%" height="100%">
-            <Image
-              src={thumbnail}
-              alt={title}
-              fill
-              style={{ objectFit: 'cover' }}
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              unoptimized={!thumbnail.startsWith('/')}
-            />
-          </Box>
+        <Box 
+          mb={4} 
+          align="center" 
+          position="relative"
+          width="100%" 
+          height="140px" 
+          borderRadius="lg" 
+          overflow="hidden" 
+          boxShadow="xl" 
+          border="4px solid" 
+          borderColor={cardBorder}
+        >
+          <Image
+            src={thumbnail}
+            alt={title}
+            fill
+            style={{ objectFit: 'cover', borderRadius: '8px' }}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            unoptimized={!thumbnail.startsWith('/')}
+          />
         </Box>
       )}
       <Heading
