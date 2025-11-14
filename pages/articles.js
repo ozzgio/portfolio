@@ -9,7 +9,7 @@ import {
   Select,
   VStack,
 } from "@chakra-ui/react";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Layout from "../components/layouts/layout";
 import ArticleCard from "../components/cards/articlecard";
@@ -18,43 +18,56 @@ import { IoDocumentText } from "react-icons/io5";
 const MotionBox = motion.create(Box);
 
 const formatDate = (dateStr) => {
-  if (!dateStr) return null;
+  if (!dateStr) return '';
+  
+  try {
+    const articleDate = new Date(dateStr);
+    if (isNaN(articleDate.getTime())) return dateStr; // Invalid date, return original
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    articleDate.setHours(0, 0, 0, 0);
 
-  const articleDate = new Date(dateStr);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  articleDate.setHours(0, 0, 0, 0);
+    const diffTime = today - articleDate;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-  const diffTime = today - articleDate;
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    // Handle future dates
+    if (diffDays < 0) {
+      const absDays = Math.abs(diffDays);
+      if (absDays === 1) return "Tomorrow";
+      return `In ${absDays} days`;
+    }
 
-  // Handle future dates
-  if (diffDays < 0) {
-    const absDays = Math.abs(diffDays);
-    if (absDays === 1) return "Tomorrow";
-    return `In ${absDays} days`;
-  }
-
-  switch (diffDays) {
-    case 0:
-      return "Today";
-    case 1:
-      return "Yesterday";
-    default:
-      return `${diffDays} days ago`;
+    switch (diffDays) {
+      case 0:
+        return "Today";
+      case 1:
+        return "Yesterday";
+      default:
+        return `${diffDays} days ago`;
+    }
+  } catch (e) {
+    return dateStr; // Return original if parsing fails
   }
 };
 
 const ArticlesPage = ({ articles, error }) => {
   const [selectedTag, setSelectedTag] = useState(null);
   const [sortOption, setSortOption] = useState("newest");
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Only format dates after component mounts to avoid hydration mismatches
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const sortedArticles = useMemo(() => {
     let currentArticles = articles
       .filter((article) => article.date)
       .map((article) => {
-        const formattedDate = formatDate(article.date);
-        return { ...article, formattedDate: formattedDate || article.date };
+        // Only format dates after mount to avoid hydration mismatches
+        const formattedDate = isMounted && article.date ? formatDate(article.date) : (article.date || '');
+        return { ...article, formattedDate: formattedDate || article.date || '' };
       });
 
     if (sortOption === "newest") {
@@ -66,7 +79,7 @@ const ArticlesPage = ({ articles, error }) => {
     }
 
     return currentArticles;
-  }, [articles, sortOption]);
+  }, [articles, sortOption, isMounted]);
 
   const allTags = useMemo(() => {
     return Array.from(new Set(sortedArticles.flatMap((a) => a.tags || [])));
@@ -142,15 +155,6 @@ const ArticlesPage = ({ articles, error }) => {
   );
 };
 
-function getRelativeDate(dateString) {
-  const now = new Date();
-  const then = new Date(dateString);
-  const diff = Math.floor((now - then) / (1000 * 60 * 60 * 24));
-
-  if (diff === 0) return "Today";
-  if (diff === 1) return "Yesterday";
-  return `${diff} days ago`;
-}
 
 // Function to resolve image URLs
 // Images are stored in Obsidian vault and served via GitHub raw content
@@ -199,6 +203,8 @@ export const getStaticProps = async () => {
 
     // Map the GitHub JSON data to match the expected format
     // Filter out any invalid articles and ensure all fields are properly set
+    // NOTE: Don't format dates in getStaticProps to avoid hydration mismatches
+    // Format dates on the client side instead
     const articles = articlesData
       .filter((article) => article && article.title && article.url) // Only include valid articles
       .map((article) => {
@@ -210,7 +216,7 @@ export const getStaticProps = async () => {
           description: String(article.description || ''),
           url: String(article.url || ''),
           date: dateValue,
-          formattedDate: dateValue ? getRelativeDate(dateValue) : dateValue || '',
+          formattedDate: null, // Will be formatted on client to avoid hydration issues
           thumbnail: thumbnail ? resolveImageUrl(thumbnail) : '',
           tags: Array.isArray(article.tags) ? article.tags.filter(Boolean) : [],
         };
