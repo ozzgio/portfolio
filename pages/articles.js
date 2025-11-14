@@ -155,26 +155,43 @@ async function convertImgurUrl(url) {
   }
   
   // Check if it's an Imgur album or gallery URL that needs conversion
-  const isAlbumOrGallery = /imgur\.com\/(a|g)\//.test(url);
+  const albumMatch = url.match(/imgur\.com\/a\/([a-zA-Z0-9]+)/);
+  const galleryMatch = url.match(/imgur\.com\/g\/([a-zA-Z0-9]+)/);
   
-  if (isAlbumOrGallery) {
+  if (albumMatch || galleryMatch) {
     try {
-      // Use Imgur's oEmbed API to get the actual image URL
-      const oembedUrl = `https://api.imgur.com/oembed?url=${encodeURIComponent(url)}`;
-      const response = await fetch(oembedUrl);
+      // Try to fetch the album/gallery page and extract the first image
+      // Imgur albums have the image data in a JSON script tag
+      const pageUrl = albumMatch 
+        ? `https://imgur.com/a/${albumMatch[1]}`
+        : `https://imgur.com/g/${galleryMatch[1]}`;
       
+      const response = await fetch(pageUrl);
       if (response.ok) {
-        const data = await response.json();
-        // oEmbed returns the image URL in the 'url' field
-        if (data.url) {
-          return data.url;
-        }
-        // Sometimes it's in 'thumbnail_url' or we need to extract from HTML
-        if (data.html) {
-          const imgMatch = data.html.match(/src="([^"]+)"/);
-          if (imgMatch && imgMatch[1]) {
-            return imgMatch[1];
+        const html = await response.text();
+        
+        // Try to find the image hash in the page data
+        // Imgur stores image data in window.postDataJSON or similar
+        const jsonMatch = html.match(/window\._sharedData\s*=\s*({.+?});/);
+        if (jsonMatch) {
+          try {
+            const data = JSON.parse(jsonMatch[1]);
+            // Navigate through the data structure to find the first image
+            if (data.post && data.post.images && data.post.images[0]) {
+              const imageHash = data.post.images[0].hash;
+              const imageExt = data.post.images[0].ext || '.jpg';
+              return `https://i.imgur.com/${imageHash}${imageExt}`;
+            }
+          } catch (e) {
+            // JSON parse failed, try alternative method
           }
+        }
+        
+        // Alternative: look for image hash in meta tags or data attributes
+        const hashMatch = html.match(/data-id="([a-zA-Z0-9]+)"/) || 
+                         html.match(/imageHash["']:\s*["']([a-zA-Z0-9]+)["']/);
+        if (hashMatch) {
+          return `https://i.imgur.com/${hashMatch[1]}.jpg`;
         }
       }
     } catch (error) {
