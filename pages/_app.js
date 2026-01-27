@@ -1,5 +1,4 @@
-import { ChakraProvider, localStorageManager } from "@chakra-ui/react";
-import { AnimatePresence } from "framer-motion";
+import { ChakraProvider } from "@chakra-ui/react";
 import Layout from "../components/layouts/main";
 import Fonts from "../components/fonts";
 import theme from "../libs/theme";
@@ -10,12 +9,10 @@ if (typeof window !== "undefined") {
 
 function Website({ Component, pageProps, router }) {
   return (
-    <ChakraProvider theme={theme} colorModeManager={localStorageManager}>
+    <ChakraProvider theme={theme}>
       <Fonts />
       <Layout router={router}>
-        <AnimatePresence mode="wait" initial={true}>
-          <Component {...pageProps} key={router.route} />
-        </AnimatePresence>
+        <Component {...pageProps} />
       </Layout>
     </ChakraProvider>
   );

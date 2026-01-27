@@ -10,6 +10,8 @@ import {
   Icon,
   VStack,
   Image,
+  HStack,
+  Text,
 } from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import NextLink from "next/link";
@@ -40,100 +42,149 @@ const Home = () => {
     <Layout title={"HomePage"}>
       <br />
       <Container>
-        <Box borderRadius="lg" bg="whiteAlpha.500" mb={6} p={3} align="center">
-          Solo Dev building Synergym, documenting my path.
-          <br />
-          Follow the journey on these buttons below!
+        <Box
+          borderRadius="xl"
+          bgGradient="linear(to-r, orange.50, orange.100)"
+          _dark={{ bgGradient: "linear(to-r, orange.900, orange.800)" }}
+          mb={8}
+          p={6}
+          textAlign="center"
+          boxShadow="lg"
+          borderWidth="1px"
+          borderColor="orange.200"
+          _dark={{ borderColor: "orange.700" }}
+        >
+          <Text
+            fontSize="lg"
+            fontWeight="semibold"
+            color="orange.800"
+            _dark={{ color: "orange.100" }}
+            mb={2}
+          >
+            Solo Dev building Synergym, documenting my path.
+          </Text>
+          <Text fontSize="sm" color="gray.600" _dark={{ color: "gray.300" }}>
+            Follow the journey on these buttons below!
+          </Text>
         </Box>
-        <Box align="center" mb={6} p={3}>
-          <List>
-            <ListItem>
-              <Link href="https://github.com/ozzgio" target="_blank">
-                <Button
-                  variant="ghost"
-                  colorScheme="orange"
-                  leftIcon={<IoLogoGithub />}
-                >
-                  @ozzgio
-                </Button>
-              </Link>
-            </ListItem>
-            <ListItem>
-              <Link
-                href="https://www.linkedin.com/in/ozzolagiorgio/"
-                target="_blank"
+        <Box align="center" mb={8}>
+          <HStack spacing={3} flexWrap="wrap" justify="center">
+            <Link href="https://github.com/ozzgio" target="_blank">
+              <Button
+                variant="solid"
+                colorScheme="orange"
+                leftIcon={<IoLogoGithub />}
+                size="md"
+                _hover={{ transform: "translateY(-2px)", boxShadow: "lg" }}
+                transition="all 0.2s"
               >
-                <Button
-                  variant="ghost"
-                  colorScheme="orange"
-                  leftIcon={<IoLogoLinkedin />}
-                >
-                  @Giorgio Ozzola
-                </Button>
-              </Link>
-            </ListItem>
-            <ListItem>
-              <Link href="https://x.com/giorgio_ozzola" target="_blank">
-                <Button
-                  variant="ghost"
-                  colorScheme="orange"
-                  leftIcon={<IoLogoTwitter />}
-                >
-                  @giorgio_ozzola
-                </Button>
-              </Link>
-            </ListItem>
-          </List>
+                @ozzgio
+              </Button>
+            </Link>
+            <Link
+              href="https://www.linkedin.com/in/ozzolagiorgio/"
+              target="_blank"
+            >
+              <Button
+                variant="solid"
+                colorScheme="orange"
+                leftIcon={<IoLogoLinkedin />}
+                size="md"
+                _hover={{ transform: "translateY(-2px)", boxShadow: "lg" }}
+                transition="all 0.2s"
+              >
+                @Giorgio Ozzola
+              </Button>
+            </Link>
+            <Link href="https://x.com/giorgio_ozzola" target="_blank">
+              <Button
+                variant="solid"
+                colorScheme="orange"
+                leftIcon={<IoLogoTwitter />}
+                size="md"
+                _hover={{ transform: "translateY(-2px)", boxShadow: "lg" }}
+                transition="all 0.2s"
+              >
+                @giorgio_ozzola
+              </Button>
+            </Link>
+          </HStack>
         </Box>
-        <Box display={{ md: "flex", mb: 6 }}>
+        <Box
+          display={{ md: "flex" }}
+          mb={10}
+          p={6}
+          borderRadius="xl"
+          bgGradient="linear(to-br, whiteAlpha.50, whiteAlpha.100)"
+          _dark={{ bgGradient: "linear(to-br, whiteAlpha.50, whiteAlpha.100)" }}
+          boxShadow="md"
+          alignItems="center"
+        >
           <Box flexGrow={1}>
-            <Heading as="h2" variant="page-title">
+            <Heading
+              as="h2"
+              variant="page-title"
+              fontSize={{ base: "3xl", md: "4xl" }}
+              mb={4}
+              bgGradient="linear(to-r, orange.400, orange.600)"
+              _dark={{ bgGradient: "linear(to-r, orange.300, orange.500)" }}
+              bgClip="text"
+            >
               Ozzo
             </Heading>
-            <Paragraph>
-              <Icon>
-                {" "}
-                <IoCode />{" "}
-              </Icon>{" "}
-              Code crafter
-            </Paragraph>
-            <Paragraph>
-              <Icon>
-                {" "}
-                <IoCafe />{" "}
-              </Icon>{" "}
-              Coffee lover
-            </Paragraph>
-            <Paragraph>
-              <Icon>
-                {" "}
-                <IoFootsteps />{" "}
-              </Icon>{" "}
-              24yo always learning
-            </Paragraph>
+            <VStack align="start" spacing={3}>
+              <HStack>
+                <Icon as={IoCode} color="orange.500" boxSize={5} />
+                <Text fontSize="lg" fontWeight="medium">
+                  Code crafter
+                </Text>
+              </HStack>
+              <HStack>
+                <Icon as={IoCafe} color="orange.500" boxSize={5} />
+                <Text fontSize="lg" fontWeight="medium">
+                  Coffee lover
+                </Text>
+              </HStack>
+              <HStack>
+                <Icon as={IoFootsteps} color="orange.500" boxSize={5} />
+                <Text fontSize="lg" fontWeight="medium">
+                  24yo always learning
+                </Text>
+              </HStack>
+            </VStack>
           </Box>
           <Box
             flexShrink={0}
-            mt={{ base: 4, md: 0 }}
-            ml={{ md: 6 }}
+            mt={{ base: 6, md: 0 }}
+            ml={{ md: 8 }}
             textAlign="center"
           >
             <Box
-              borderColor="whiteAlpha.800"
-              borderWidth={2}
+              borderColor="orange.300"
+              _dark={{ borderColor: "orange.600" }}
+              borderWidth={3}
               borderStyle="solid"
-              w="100px"
-              h="100px"
+              w="120px"
+              h="120px"
               display="inline-block"
               borderRadius="full"
               overflow="hidden"
+              boxShadow="xl"
+              _hover={{
+                transform: "scale(1.05)",
+                borderColor: "orange.400",
+                _dark: { borderColor: "orange.500" },
+              }}
+              transition="all 0.3s"
             >
               <ProfileImage
                 src="/images/propic.jpg"
                 alt="Profile image"
                 borderRadius="full"
-                width={110}
-                height={110}
+                width={120}
+                height={120}
+                objectFit="cover"
+                style={{ aspectRatio: "1 / 1" }}
               />
             </Box>
           </Box>
@@ -158,13 +209,16 @@ const Home = () => {
             . I am always looking for opportunities to apply my skills in
             real-world situations. The best way to learn it is by doing it.
           </Paragraph>
-          <Box display="flex" justifyContent="center" gap={4} my={4}>
+          <Box display="flex" justifyContent="center" gap={4} my={6} flexWrap="wrap">
             <Button
               as={NextLink}
               href="/articles#articles-heading"
               rightIcon={<ChevronRightIcon />}
               scroll={false}
               colorScheme="orange"
+              size="lg"
+              _hover={{ transform: "translateY(-2px)", boxShadow: "xl" }}
+              transition="all 0.2s"
             >
               Articles
             </Button>
@@ -174,6 +228,9 @@ const Home = () => {
               scroll={false}
               rightIcon={<ChevronRightIcon />}
               colorScheme="orange"
+              size="lg"
+              _hover={{ transform: "translateY(-2px)", boxShadow: "xl" }}
+              transition="all 0.2s"
             >
               Books
             </Button>
@@ -183,6 +240,9 @@ const Home = () => {
               scroll={false}
               rightIcon={<ChevronRightIcon />}
               colorScheme="orange"
+              size="lg"
+              _hover={{ transform: "translateY(-2px)", boxShadow: "xl" }}
+              transition="all 0.2s"
             >
               Projects
             </Button>
@@ -253,27 +313,26 @@ const Home = () => {
           <Heading as="h3" variant="section-title">
             I ♥
           </Heading>
-          <Paragraph>
-            <Icon>
-              {" "}
-              <IoCode />{" "}
-            </Icon>{" "}
-            IT
-          </Paragraph>
-          <Paragraph>
-            <Icon>
-              {" "}
-              <IoBarbell />{" "}
-            </Icon>{" "}
-            Fitness
-          </Paragraph>
-          <Paragraph>
-            <Icon>
-              {" "}
-              <IoBook />{" "}
-            </Icon>{" "}
-            Books
-          </Paragraph>
+          <VStack align="start" spacing={4} mt={4}>
+            <HStack spacing={3}>
+              <Icon as={IoCode} color="orange.500" boxSize={6} />
+              <Text fontSize="lg" fontWeight="medium">
+                IT
+              </Text>
+            </HStack>
+            <HStack spacing={3}>
+              <Icon as={IoBarbell} color="orange.500" boxSize={6} />
+              <Text fontSize="lg" fontWeight="medium">
+                Fitness
+              </Text>
+            </HStack>
+            <HStack spacing={3}>
+              <Icon as={IoBook} color="orange.500" boxSize={6} />
+              <Text fontSize="lg" fontWeight="medium">
+                Books
+              </Text>
+            </HStack>
+          </VStack>
         </Section>
 
         <Section delay={0.5}>

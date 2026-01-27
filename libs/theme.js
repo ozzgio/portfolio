@@ -9,7 +9,14 @@ const theme = extendTheme({
   styles: {
     global: (props) => ({
       body: {
-        bg: mode("#f0e7db", "#202023")(props),
+        bg: mode("#fafafa", "#1a1a1e")(props),
+        color: mode("gray.800", "gray.100")(props),
+      },
+      "*::placeholder": {
+        color: mode("gray.400", "gray.600")(props),
+      },
+      "*, *::before, &::after": {
+        borderColor: mode("gray.200", "gray.700")(props),
       },
     }),
   },
@@ -18,12 +25,18 @@ const theme = extendTheme({
       variants: {
         "section-title": {
           textDecoration: "underline",
-          fontSize: 20,
-          textUnderlineOffset: 6,
-          textDecorationColor: "#525252",
+          fontSize: 22,
+          textUnderlineOffset: 8,
+          textDecorationColor: "#ff9933",
           textDecorationThickness: 4,
-          marginTop: 3,
-          marginBottom: 4,
+          marginTop: 4,
+          marginBottom: 5,
+          fontWeight: "bold",
+        },
+        "page-title": {
+          fontSize: { base: "2xl", md: "3xl", lg: "4xl" },
+          fontWeight: "bold",
+          mb: 4,
         },
       },
     },
@@ -31,6 +44,9 @@ const theme = extendTheme({
       baseStyle: (props) => ({
         color: mode("#0066ff", "#d24dff")(props),
         textUnderlineOffset: 3,
+        _hover: {
+          textDecoration: "underline",
+        },
       }),
     },
   },

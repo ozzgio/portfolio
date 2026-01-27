@@ -11,7 +11,14 @@ import NextLink from "next/link";
 import BaseCard from "../basecard";
 import Image from "next/image";
 
-const ProjectCard = ({ children, id, title, thumbnail, stack }) => {
+function formatDate(dateString) {
+  if (!dateString) return "";
+  const [year, month] = dateString.split("-");
+  const date = new Date(year, month - 1);
+  return date.toLocaleString("default", { month: "short", year: "numeric" });
+}
+
+const ProjectCard = ({ children, id, title, thumbnail, stack, date }) => {
   const tagBgColor = useColorModeValue("tagBg.default", "tagBg._dark");
   const tagTextColor = useColorModeValue("tagText.default", "tagText._dark");
   const { colors } = useTheme();
@@ -23,6 +30,7 @@ const ProjectCard = ({ children, id, title, thumbnail, stack }) => {
     colors.bodyText.default,
     colors.bodyText._dark
   );
+  const dateColor = useColorModeValue("gray.500", "gray.400");
 
   return (
     <NextLink href={`/projects/${id}`} passHref scroll={false}>
@@ -30,20 +38,22 @@ const ProjectCard = ({ children, id, title, thumbnail, stack }) => {
         p={0}
         display="flex"
         flexDirection="column"
-        alignItems="center"
+        alignItems="stretch"
         textAlign="center"
         role="group"
         tabIndex={0}
+        h="100%"
       >
         <Box
           w="100%"
-          aspectRatio={[4 / 3, 16 / 7]}
-          maxH="140px"
+          aspectRatio={16 / 9}
           position="relative"
-          bg="transparent"
+          bg={useColorModeValue("gray.50", "gray.700")}
           display="flex"
           alignItems="center"
           justifyContent="center"
+          overflow="hidden"
+          p={4}
         >
           <Image
             src={thumbnail}
@@ -51,29 +61,36 @@ const ProjectCard = ({ children, id, title, thumbnail, stack }) => {
             fill
             style={{ objectFit: "contain" }}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            priority
+            unoptimized={thumbnail?.endsWith('.png')}
           />
         </Box>
-        <Text
-          mt={2}
-          fontSize={["md", 18]}
-          fontWeight="bold"
-          color={headingTextColor}
-          px={2}
-        >
-          {title}
-        </Text>
-        <Box px={2} pb={2} w="100%">
+        <Box p={5} flex={1} display="flex" flexDirection="column">
           <Text
-            fontSize={15}
+            fontSize={["lg", "xl"]}
+            fontWeight="bold"
+            color={headingTextColor}
+            mb={2}
+            lineHeight="tight"
+          >
+            {title}
+          </Text>
+          {date && (
+            <Text fontSize="xs" color={dateColor} mb={3} fontWeight="medium">
+              {formatDate(date)}
+            </Text>
+          )}
+          <Text
+            fontSize="sm"
             color={bodyTextColor}
-            minH="48px"
-            textAlign="center"
+            mb={4}
+            textAlign="left"
+            flex={1}
+            lineHeight="tall"
           >
             {children}
           </Text>
           {stack && stack.length > 0 && (
-            <Wrap spacing={1} mt={3} justify="center">
+            <Wrap spacing={2} mt="auto" justify="flex-start">
               {stack.map((tag, idx) => (
                 <WrapItem key={idx}>
                   <Tag
@@ -82,8 +99,8 @@ const ProjectCard = ({ children, id, title, thumbnail, stack }) => {
                     bg={tagBgColor}
                     color={tagTextColor}
                     borderRadius="full"
-                    px={2}
-                    py={0.5}
+                    px={3}
+                    py={1}
                     fontWeight="semibold"
                   >
                     {tag}

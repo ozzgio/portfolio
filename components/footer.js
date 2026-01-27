@@ -1,25 +1,40 @@
-import { Box } from "@chakra-ui/react";
+import { Box, useColorModeValue, Link, VStack, Text } from "@chakra-ui/react";
 import packageJson from "../package.json";
 
 const Footer = () => {
+  const textColor = useColorModeValue("gray.600", "gray.400");
+  const linkColor = useColorModeValue("orange.600", "orange.400");
+  
   return (
     <Box
       as="footer"
       width="100%"
-      padding={4}
+      padding={6}
       textAlign="center"
       bottom={0}
-      opacity={0.4}
-      fontSize="sm"
+      mt={12}
+      borderTopWidth="1px"
+      borderTopColor={useColorModeValue("gray.200", "gray.700")}
     >
-      &copy; {new Date().getFullYear()} Giorgio Ozzola. All Rights Reserved.
-      <br />
-      Inspired by{" "}
-      <a href="https://www.craftz.dog/" target="_blank">
-        Takuya Matsuyama
-      </a>
-      <br />
-      Version: {packageJson.version}
+      <VStack spacing={2}>
+        <Text fontSize="sm" color={textColor}>
+          &copy; {new Date().getFullYear()} Giorgio Ozzola. All Rights Reserved.
+        </Text>
+        <Text fontSize="sm" color={textColor}>
+          Inspired by{" "}
+          <Link
+            href="https://www.craftz.dog/"
+            target="_blank"
+            color={linkColor}
+            _hover={{ textDecoration: "underline" }}
+          >
+            Takuya Matsuyama
+          </Link>
+        </Text>
+        <Text fontSize="xs" color={textColor} opacity={0.7}>
+          Version: {packageJson.version}
+        </Text>
+      </VStack>
     </Box>
   );
 };
