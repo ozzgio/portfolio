@@ -1,0 +1,2 @@
+# Python dependencies for content generation script
+pyyaml>=6.0
