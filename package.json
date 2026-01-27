@@ -1,16 +1,13 @@
 {
   "name": "devozzo-homepage",
   "version": "1.4.0",
-  "description": " portfolio",
+  "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
-    "prettier": "prettier --write .",
+    "start": "next start",
     "lint": "next lint"
   },
-  "keywords": [],
-  "author": "Ozzola Giorgio<gio.ozzola@gmail.com>",
-  "license": "MIT",
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/react": "^2.8.2",

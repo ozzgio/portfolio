@@ -1,11 +1,18 @@
 import { Box, VStack, Text, useColorModeValue } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { useState } from "react";
 
 const EnhancedChip = ({ tech, delay = 0 }) => {
   const bg = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.600");
   const hoverBg = useColorModeValue("gray.50", "gray.700");
+  const [imgError, setImgError] = useState(false);
+  
+  // Check if image is an external SVG or if it's a local file
+  const isExternalSVG = tech.image?.startsWith('http') && (tech.image?.endsWith('.svg') || tech.image?.includes('simpleicons.org'));
+  const isLocalSVG = tech.image?.startsWith('/') && tech.image?.endsWith('.svg');
+  const shouldUnoptimize = isExternalSVG || isLocalSVG;
 
   return (
     <motion.div
@@ -43,13 +50,26 @@ const EnhancedChip = ({ tech, delay = 0 }) => {
             alignItems="center"
             justifyContent="center"
           >
-            <Image
-              src={tech.image}
-              alt={tech.name}
-              fill
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              style={{ objectFit: "contain" }}
-            />
+            {!imgError ? (
+              <Image
+                src={tech.image}
+                alt={tech.name}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                style={{ objectFit: "contain" }}
+                unoptimized={shouldUnoptimize}
+                onError={() => setImgError(true)}
+              />
+            ) : (
+              <Box
+                as="img"
+                src={tech.image}
+                alt={tech.name}
+                maxW="80%"
+                maxH="80%"
+                objectFit="contain"
+              />
+            )}
           </Box>
           <Text
             fontSize="sm"

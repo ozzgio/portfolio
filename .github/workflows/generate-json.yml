@@ -7,36 +7,74 @@ on:
     paths:
       - 'articles/**'
       - 'books/**'
+      - '.github/scripts/generate_json.py'
   workflow_dispatch:
 
 jobs:
   generate-json:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Fetch all history for proper git operations
+          token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
+          cache: 'pip'
       
       - name: Install dependencies
-        run: pip install pyyaml
+        run: |
+          pip install --upgrade pip
+          pip install pyyaml
       
       - name: Generate JSON files
-        run: python3 .github/scripts/generate_json.py
+        id: generate
+        run: |
+          python3 .github/scripts/generate_json.py
+          GENERATION_EXIT_CODE=$?
+          echo "exit_code=$GENERATION_EXIT_CODE" >> $GITHUB_OUTPUT
+          if [ $GENERATION_EXIT_CODE -ne 0 ]; then
+            echo "Generation failed with exit code $GENERATION_EXIT_CODE"
+            exit $GENERATION_EXIT_CODE
+          fi
+      
+      - name: Check for changes
+        id: changes
+        run: |
+          git add data/ || true
+          if git diff --staged --quiet; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "No changes to commit"
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "Changes detected, will commit"
+          fi
+        continue-on-error: true
       
       - name: Commit and push
+        if: steps.changes.outputs.has_changes == 'true' && steps.generate.outputs.exit_code == '0'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add data/
-          if git diff --staged --quiet; then
-            echo "No changes to commit"
+          git commit -m "chore: update articles.json and books.json [skip ci]"
+          git push
+      
+      - name: Summary
+        if: always()
+        run: |
+          echo "## 📊 Generation Summary" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.generate.outputs.exit_code }}" == "0" ]; then
+            echo "✅ JSON files generated successfully" >> $GITHUB_STEP_SUMMARY
+            if [ "${{ steps.changes.outputs.has_changes }}" == "true" ]; then
+              echo "📝 Changes committed and pushed" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "ℹ️ No changes detected" >> $GITHUB_STEP_SUMMARY
+            fi
           else
-            git commit -m "Update articles.json [skip ci]"
-            git push
+            echo "❌ Generation failed. Check logs for details." >> $GITHUB_STEP_SUMMARY
           fi
-
