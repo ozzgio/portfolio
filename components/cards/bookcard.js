@@ -24,6 +24,11 @@ function formatDate(rawDate) {
 }
 
 const BookCard = ({ title, author, rating, tags, cover, lesson, date }) => {
+  // Debug: log if lesson exists but isn't showing
+  // Remove this after debugging if needed
+  if (lesson && process.env.NODE_ENV === 'development') {
+    console.log(`Book "${title}" has lesson:`, lesson);
+  }
   const { colors } = useTheme();
   const headingTextColor = useColorModeValue(
     colors.headingText.default,
@@ -92,7 +97,7 @@ const BookCard = ({ title, author, rating, tags, cover, lesson, date }) => {
           </Text>
         )}
 
-        {lesson && (
+        {lesson && lesson.trim() && (
           <Box
             bg={lessonBgColor}
             borderRadius="md"

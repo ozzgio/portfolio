@@ -153,15 +153,20 @@ export const getStaticProps = async () => {
 
     // Map the GitHub JSON data to match the expected format
     // The GitHub JSON already matches the Notion format, but we ensure all fields are present
-    const books = booksData.map((book) => ({
-      title: book.title || '',
-      author: book.author || '',
-      rating: typeof book.rating === 'number' ? book.rating : null,
-      tags: Array.isArray(book.tags) ? book.tags : [],
-      cover: book.cover || '',
-      lesson: book.lesson || '',
-      date: book.date || '',
-    }));
+    const books = booksData.map((book) => {
+      // Extract lesson field - check multiple possible field names
+      const lesson = book.lesson || book.what_i_learned || book.learned || '';
+      
+      return {
+        title: book.title || '',
+        author: book.author || '',
+        rating: typeof book.rating === 'number' ? book.rating : null,
+        tags: Array.isArray(book.tags) ? book.tags : [],
+        cover: book.cover || '',
+        lesson: lesson.trim(), // Trim whitespace
+        date: book.date || '',
+      };
+    });
 
     // Sort by rating (highest first) to match previous behavior
     books.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
