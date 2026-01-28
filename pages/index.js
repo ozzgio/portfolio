@@ -4,8 +4,6 @@ import {
   Button,
   Heading,
   Link,
-  List,
-  ListItem,
   chakra,
   Icon,
   VStack,
@@ -45,14 +43,13 @@ const Home = () => {
         <Box
           borderRadius="xl"
           bgGradient="linear(to-r, orange.50, orange.100)"
-          _dark={{ bgGradient: "linear(to-r, orange.900, orange.800)" }}
+          _dark={{ bgGradient: "linear(to-r, orange.900, orange.800)", borderColor: "orange.700" }}
           mb={8}
           p={6}
           textAlign="center"
           boxShadow="lg"
           borderWidth="1px"
           borderColor="orange.200"
-          _dark={{ borderColor: "orange.700" }}
         >
           <Text
             fontSize="lg"

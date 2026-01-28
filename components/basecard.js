@@ -28,6 +28,9 @@ const BaseCard = ({ children, ...props }) => {
         boxShadow: "2xl",
         borderColor: "orange.400",
         _dark: { borderColor: "orange.500" },
+        _before: {
+          opacity: 1,
+        },
       }}
       position="relative"
       overflow="hidden"
@@ -42,11 +45,6 @@ const BaseCard = ({ children, ...props }) => {
         _dark: { bgGradient: "linear(to-r, orange.500, orange.700)" },
         opacity: 0,
         transition: "opacity 0.3s",
-      }}
-      _hover={{
-        _before: {
-          opacity: 1,
-        },
       }}
       {...props}
     >
