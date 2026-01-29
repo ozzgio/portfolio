@@ -4,6 +4,7 @@ import {
   Heading,
   HStack,
   Icon,
+  Link,
   SimpleGrid,
   Text,
   Select,
@@ -98,12 +99,23 @@ const ArticlesPage = ({ articles, error }) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <Heading as="h1" mb={6} id="articles-heading">
-          My Articles
-          <Icon ml={2} fontSize="2xl">
-            <IoDocumentText />
-          </Icon>
-        </Heading>
+        <HStack justify="space-between" align="center" mb={6} flexWrap="wrap">
+          <Heading as="h1" id="articles-heading">
+            My Articles
+            <Icon ml={2} fontSize="2xl">
+              <IoDocumentText />
+            </Icon>
+          </Heading>
+          <Link
+            href="/rss.xml"
+            fontSize="sm"
+            color="orange.500"
+            _hover={{ textDecoration: "underline" }}
+            target="_blank"
+          >
+            RSS Feed
+          </Link>
+        </HStack>
         {error ? (
           <Text color="red.500">{error}</Text>
         ) : filteredArticles.length === 0 ? (

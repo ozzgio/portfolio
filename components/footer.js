@@ -1,4 +1,4 @@
-import { Box, useColorModeValue, Link, VStack, Text } from "@chakra-ui/react";
+import { Box, useColorModeValue, Link, VStack, Text, HStack } from "@chakra-ui/react";
 import packageJson from "../package.json";
 
 const Footer = () => {
@@ -20,17 +20,28 @@ const Footer = () => {
         <Text fontSize="sm" color={textColor}>
           &copy; {new Date().getFullYear()} Giorgio Ozzola. All Rights Reserved.
         </Text>
-        <Text fontSize="sm" color={textColor}>
-          Inspired by{" "}
+        <HStack spacing={4} fontSize="sm">
           <Link
-            href="https://www.craftz.dog/"
-            target="_blank"
+            href="/rss.xml"
             color={linkColor}
             _hover={{ textDecoration: "underline" }}
+            target="_blank"
           >
-            Takuya Matsuyama
+            RSS Feed
           </Link>
-        </Text>
+          <Text color={textColor}>•</Text>
+          <Text color={textColor}>
+            Inspired by{" "}
+            <Link
+              href="https://www.craftz.dog/"
+              target="_blank"
+              color={linkColor}
+              _hover={{ textDecoration: "underline" }}
+            >
+              Takuya Matsuyama
+            </Link>
+          </Text>
+        </HStack>
         <Text fontSize="xs" color={textColor} opacity={0.7}>
           Version: {packageJson.version}
         </Text>

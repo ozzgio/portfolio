@@ -19,14 +19,10 @@ import Paragraph from "../components/paragraph";
 import { BioSection, BioYear } from "../components/bio";
 import Layout from "../components/layouts/layout";
 import {
-  IoLogoGithub,
-  IoLogoLinkedin,
-  IoCafe,
   IoBook,
   IoBarbell,
   IoCode,
   IoFootsteps,
-  IoLogoTwitter,
 } from "react-icons/io5";
 import technologyData from "../libs/technologyData";
 import TechnologyRow from "../components/techrow";
@@ -58,54 +54,11 @@ const Home = () => {
             _dark={{ color: "orange.100" }}
             mb={2}
           >
-            Solo Dev building Synergym, documenting my path.
+            Building digital solutions, one problem at a time.
           </Text>
           <Text fontSize="sm" color="gray.600" _dark={{ color: "gray.300" }}>
-            Follow the journey on these buttons below!
+            A personal space on the internet. Beyond social media. Beyond code repositories.
           </Text>
-        </Box>
-        <Box align="center" mb={8}>
-          <HStack spacing={3} flexWrap="wrap" justify="center">
-            <Link href="https://github.com/ozzgio" target="_blank">
-              <Button
-                variant="solid"
-                colorScheme="orange"
-                leftIcon={<IoLogoGithub />}
-                size="md"
-                _hover={{ transform: "translateY(-2px)", boxShadow: "lg" }}
-                transition="all 0.2s"
-              >
-                @ozzgio
-              </Button>
-            </Link>
-            <Link
-              href="https://www.linkedin.com/in/ozzolagiorgio/"
-              target="_blank"
-            >
-              <Button
-                variant="solid"
-                colorScheme="orange"
-                leftIcon={<IoLogoLinkedin />}
-                size="md"
-                _hover={{ transform: "translateY(-2px)", boxShadow: "lg" }}
-                transition="all 0.2s"
-              >
-                @Giorgio Ozzola
-              </Button>
-            </Link>
-            <Link href="https://x.com/giorgio_ozzola" target="_blank">
-              <Button
-                variant="solid"
-                colorScheme="orange"
-                leftIcon={<IoLogoTwitter />}
-                size="md"
-                _hover={{ transform: "translateY(-2px)", boxShadow: "lg" }}
-                transition="all 0.2s"
-              >
-                @giorgio_ozzola
-              </Button>
-            </Link>
-          </HStack>
         </Box>
         <Box
           display={{ md: "flex" }}
@@ -133,19 +86,25 @@ const Home = () => {
               <HStack>
                 <Icon as={IoCode} color="orange.500" boxSize={5} />
                 <Text fontSize="lg" fontWeight="medium">
-                  Code crafter
+                  Full stack developer
                 </Text>
               </HStack>
               <HStack>
-                <Icon as={IoCafe} color="orange.500" boxSize={5} />
+                <Icon as={IoBarbell} color="orange.500" boxSize={5} />
                 <Text fontSize="lg" fontWeight="medium">
-                  Coffee lover
+                  Fitness enthusiast
+                </Text>
+              </HStack>
+              <HStack>
+                <Icon as={IoBook} color="orange.500" boxSize={5} />
+                <Text fontSize="lg" fontWeight="medium">
+                  Curious learner
                 </Text>
               </HStack>
               <HStack>
                 <Icon as={IoFootsteps} color="orange.500" boxSize={5} />
                 <Text fontSize="lg" fontWeight="medium">
-                  24yo always learning
+                  Building with AI
                 </Text>
               </HStack>
             </VStack>
@@ -186,38 +145,100 @@ const Home = () => {
             </Box>
           </Box>
         </Box>
+        <Section delay={0.1}>
+          <Heading as="h3" variant="section-title">
+            Currently
+          </Heading>
+          <VStack spacing={4} align="stretch" mt={4}>
+            <Box
+              p={4}
+              borderRadius="lg"
+              borderWidth="1px"
+              borderColor="orange.200"
+              bg="orange.50"
+              _dark={{ borderColor: "orange.700", bg: "whiteAlpha.50" }}
+            >
+              <HStack spacing={3} mb={2}>
+                <Icon as={IoCode} color="orange.500" boxSize={5} />
+                <Heading as="h4" fontSize="md" fontWeight="semibold">
+                  Synergym.fit
+                </Heading>
+              </HStack>
+              <Text fontSize="sm" color="gray.700" _dark={{ color: "gray.300" }}>
+                Building a Rails 8 fitness platform for athletes and trainers. Production app with real users.
+              </Text>
+              <Link
+                href="https://synergym.fit"
+                target="_blank"
+                color="orange.600"
+                _dark={{ color: "orange.400" }}
+                fontSize="sm"
+                fontWeight="medium"
+                mt={2}
+                display="inline-block"
+              >
+                Visit synergym.fit →
+              </Link>
+            </Box>
+            <Box
+              p={4}
+              borderRadius="lg"
+              borderWidth="1px"
+              borderColor="orange.200"
+              bg="orange.50"
+              _dark={{ borderColor: "orange.700", bg: "whiteAlpha.50" }}
+            >
+              <HStack spacing={3} mb={2}>
+                <Icon as={IoCode} color="orange.500" boxSize={5} />
+                <Heading as="h4" fontSize="md" fontWeight="semibold">
+                  Self-Hosted Infrastructure
+                </Heading>
+              </HStack>
+              <Text fontSize="sm" color="gray.700" _dark={{ color: "gray.300" }}>
+                Setting up a NUC mini PC with Docker. Hosting Gitea, Nextcloud, and experimenting with self-hosted services on my local network.
+              </Text>
+            </Box>
+          </VStack>
+        </Section>
         <Section delay={0.2}>
           <Heading as="h3" variant="section-title">
-            Purpose
+            Why This Exists
           </Heading>
           <Paragraph>
-            As a Full Stack Developer, I am constantly seeking out new
-            challenges and side projects to help me grow personally and
-            professionally. For me learning is a never-ending journey, and I
-            approach every task with a mindset of constant improvement like{" "}
+            This isn&apos;t a portfolio. It&apos;s my space on the internet. LinkedIn makes you a user ID. GitHub shows code. This shows the person behind the work.
+          </Paragraph>
+          <Paragraph>
+            I build digital products that solve problems. If you have a problem that can be solved with code, I can build it. I&apos;m driven by curiosity and{" "}
             <Link
               as={NextLink}
               href="https://en.wikipedia.org/wiki/Kaizen"
               target="_blank"
               passHref
             >
-              Kaizen
+              <Text as="span" fontWeight="semibold" color="orange.500">
+                kaizen
+              </Text>
             </Link>
-            . I am always looking for opportunities to apply my skills in
-            real-world situations. The best way to learn it is by doing it.
+            . I don&apos;t stop where I don&apos;t know. I learn, experiment, and build.
+          </Paragraph>
+          <Paragraph>
+            I work with AI, not against it. AI boosts what I can do, but it can&apos;t replace critical thinking or domain expertise. The future belongs to those who adapt.
+          </Paragraph>
+          <Paragraph>
+            This site documents my journey. The projects, the learnings, the process. It&apos;s built for the long term, sustainably. If you&apos;re here, I hope you find something valuable or someone worth connecting with.
           </Paragraph>
           <Box display="flex" justifyContent="center" gap={4} my={6} flexWrap="wrap">
             <Button
               as={NextLink}
-              href="/articles#articles-heading"
-              rightIcon={<ChevronRightIcon />}
+              href="/projects"
               scroll={false}
+              rightIcon={<ChevronRightIcon />}
               colorScheme="orange"
               size="lg"
               _hover={{ transform: "translateY(-2px)", boxShadow: "xl" }}
               transition="all 0.2s"
             >
-              Articles
+              See My Work
             </Button>
             <Button
               as={NextLink}
@@ -229,11 +250,11 @@ const Home = () => {
               _hover={{ transform: "translateY(-2px)", boxShadow: "xl" }}
               transition="all 0.2s"
             >
-              Books
+              What I&apos;m Reading
             </Button>
             <Button
               as={NextLink}
-              href="/projects"
+              href="/contacts"
               scroll={false}
               rightIcon={<ChevronRightIcon />}
               colorScheme="orange"
@@ -241,7 +262,7 @@ const Home = () => {
               _hover={{ transform: "translateY(-2px)", boxShadow: "xl" }}
               transition="all 0.2s"
             >
-              Projects
+              Let&apos;s Connect
             </Button>
           </Box>
         </Section>
@@ -308,25 +329,25 @@ const Home = () => {
         </Section>
         <Section delay={0.4}>
           <Heading as="h3" variant="section-title">
-            I ♥
+            What I Care About
           </Heading>
           <VStack align="start" spacing={4} mt={4}>
             <HStack spacing={3}>
               <Icon as={IoCode} color="orange.500" boxSize={6} />
               <Text fontSize="lg" fontWeight="medium">
-                IT
+                Building things with code
               </Text>
             </HStack>
             <HStack spacing={3}>
               <Icon as={IoBarbell} color="orange.500" boxSize={6} />
               <Text fontSize="lg" fontWeight="medium">
-                Fitness
+                Fitness and physical health
               </Text>
             </HStack>
             <HStack spacing={3}>
               <Icon as={IoBook} color="orange.500" boxSize={6} />
               <Text fontSize="lg" fontWeight="medium">
-                Books
+                Reading and continuous learning
               </Text>
             </HStack>
           </VStack>

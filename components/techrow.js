@@ -1,4 +1,12 @@
-import { Flex, HStack, Text, Heading, Box, Icon } from "@chakra-ui/react";
+import {
+  Flex,
+  HStack,
+  Text,
+  Heading,
+  Box,
+  Icon,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { motion, useAnimation } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import EnhancedChip from "./enhancedchip";
@@ -7,6 +15,9 @@ const TechnologyRow = ({ category, enableAnimation: propEnableAnimation }) => {
   const controls = useAnimation();
   const motionDivRef = useRef(null);
   const [contentWidth, setContentWidth] = useState(0);
+  const headerText = useColorModeValue("gray.800", "whiteAlpha.900");
+  const headerSubtle = useColorModeValue("gray.500", "whiteAlpha.700");
+  const headerIconColor = useColorModeValue("orange.500", "orange.300");
 
   let animationDuration = category.technologies.length * 3;
 
@@ -105,15 +116,29 @@ const TechnologyRow = ({ category, enableAnimation: propEnableAnimation }) => {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <HStack justify="center" spacing={3} mb={2}>
-        <Icon fontSize="2xl"> {category.icon}</Icon>
-        <Heading as="h3" variant="section-title">
-          {category.title}
-        </Heading>
+      <HStack
+        spacing={3}
+        align="center"
+        mb={3}
+        justify="flex-start"
+      >
+        <Icon fontSize="2xl" color={headerIconColor}>
+          {category.icon}
+        </Icon>
+        <Box>
+          <Heading
+            as="h3"
+            fontSize="lg"
+            fontWeight="semibold"
+            color={headerText}
+          >
+            {category.title}
+          </Heading>
+          <Text fontSize="sm" color={headerSubtle}>
+            {category.technologies.length} technologies
+          </Text>
+        </Box>
       </HStack>
-      <Text color="gray.500" textAlign="center" mb={4}>
-        {category.technologies.length} technologies
-      </Text>
       <Flex
         flexWrap={propEnableAnimation ? "nowrap" : "wrap"}
         justifyContent={propEnableAnimation ? "flex-start" : "center"}

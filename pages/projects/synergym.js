@@ -19,7 +19,7 @@ const Project = ({ project }) => {
       projectTitle={title}
       imageUrl={project.thumbnail}
       imageAlt={title}
-      dateInfo={{ display: true, value: "2024 - Present" }}
+      dateInfo={{ display: true, value: "2025 - Present" }}
     >
       <P>{description}</P>
       <List ml={4} my={4}>

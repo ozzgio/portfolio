@@ -36,6 +36,10 @@ const technologyData = {
       },
       { name: "Syncfusion", image: "https://cdn.simpleicons.org/react/61DAFB" },
       { name: "jQWidgets", image: "https://cdn.simpleicons.org/jquery/0769AD" },
+      {
+        name: "Tailwind CSS",
+        image: "https://cdn.simpleicons.org/tailwindcss/06B6D4",
+      },
     ],
   },
   backend: {
@@ -55,6 +59,10 @@ const technologyData = {
       },
       { name: "PHP", image: "https://cdn.simpleicons.org/php/777BB4" },
       { name: "Ruby", image: "https://cdn.simpleicons.org/ruby/CC342D" },
+      {
+        name: "Ruby on Rails",
+        image: "https://cdn.simpleicons.org/rubyonrails/CC0000",
+      },
       {
         name: "SQL Server",
         image:
@@ -80,6 +88,8 @@ const technologyData = {
       { name: "Dapper", image: "https://cdn.simpleicons.org/nuget/004880" },
       { name: "XUnit.NET", image: "https://cdn.simpleicons.org/dotnet" },
       { name: "Moq", image: "https://cdn.simpleicons.org/github/181717" },
+      { name: "Redis", image: "https://cdn.simpleicons.org/redis/DC382D" },
+      { name: "Sidekiq", image: "https://cdn.simpleicons.org/ruby/CC342D" },
     ],
   },
   devops: {

@@ -6,19 +6,17 @@ import {
   Text,
   useColorModeValue,
   VStack,
-  HStack,
-  Flex,
   useTheme,
+  Container,
+  Icon,
 } from "@chakra-ui/react";
 import { IoLogoGithub, IoLogoLinkedin, IoMailSharp } from "react-icons/io5";
 import Layout from "../components/layouts/layout";
+import Section from "../components/section";
 
 const Contacts = () => {
   const { colors } = useTheme();
-  const cardBg = useColorModeValue(
-    "linear-gradient(135deg, #fff7ed 0%, #ffe5d0 100%)",
-    "linear-gradient(135deg, #23272f 0%, #2d3748 100%)",
-  );
+  const cardBg = useColorModeValue("white", "gray.800");
   const cardBorder = useColorModeValue(
     colors.cardBorder.default,
     colors.cardBorder._dark,
@@ -31,62 +29,58 @@ const Contacts = () => {
     colors.bodyText.default,
     colors.bodyText._dark,
   );
+  const subtleBg = useColorModeValue("orange.50", "whiteAlpha.100");
+
   return (
     <Layout
       title="Contacts"
       description="Get in touch with Giorgio Ozzola, a full-stack developer specializing in web development and design."
     >
-      <Flex
-        direction="column"
-        align="center"
-        justify="center"
-        py={{ base: 5, sm: 10, md: 20 }}
-        px={{ base: 4, sm: 6, md: 8 }}
-        textAlign="center"
-      >
-        <Heading as="h1" size="2xl" mb={6} color={headingTextColor}>
-          <Box
-            borderRadius="2xl"
-            bg={cardBg}
-            borderWidth="2px"
-            borderColor={cardBorder}
-            boxShadow="lg"
-            py={{ base: 3, sm: 4, md: 5 }}
-            px={{ base: 3, sm: 5, md: 7 }}
-            w="100%"
-            maxW={{ base: "98vw", sm: "95vw", md: "480px", lg: "480px" }}
-            textAlign="center"
-            my="auto"
-            mx="auto"
-            top={{ base: "0", sm: "0", md: "50px" }}
-            transition="transform 0.2s, box-shadow 0.2s"
-            _hover={{
-              transform: "translateY(-10px) scale(1.02)",
-              boxShadow: "2xl",
-              borderColor: "orange.400",
-            }}
-          >
-            <Heading
-              as="h2"
-              size="xl"
-              mb={3}
-              color={headingTextColor}
-              letterSpacing="tight"
+      <Container maxW="container.md">
+        <Section delay={0.1}>
+          <VStack spacing={8} align="stretch">
+            <Box textAlign="center">
+              <Heading
+                as="h1"
+                variant="page-title"
+                fontSize={{ base: "3xl", md: "4xl" }}
+                mb={4}
+                bgGradient="linear(to-r, orange.400, orange.600)"
+                _dark={{ bgGradient: "linear(to-r, orange.300, orange.500)" }}
+                bgClip="text"
+              >
+                Get in Touch
+              </Heading>
+              <Text
+                fontSize={{ base: "lg", md: "xl" }}
+                color={bodyTextColor}
+                maxW="2xl"
+                mx="auto"
+              >
+                Want to collaborate, chat, or have a question?{" "}
+                <Text as="span" fontWeight="semibold" color={headingTextColor}>
+                  Let&apos;s connect!
+                </Text>
+                <br />
+                Reach out using any of the links below.
+              </Text>
+            </Box>
+
+            <Box
+              borderRadius="2xl"
+              bg={cardBg}
+              borderWidth="2px"
+              borderColor={cardBorder}
+              boxShadow="xl"
+              p={{ base: 6, md: 8 }}
+              transition="all 0.3s"
+              _hover={{
+                transform: "translateY(-4px)",
+                boxShadow: "2xl",
+                borderColor: "orange.400",
+              }}
             >
-              Get in Touch
-            </Heading>
-            <Text
-              color={bodyTextColor}
-              fontSize={{ base: "md", md: "lg" }}
-              mb={3}
-            >
-              Want to collaborate, chat, or have a question?{" "}
-              <b>Let&apos;s connect!</b>
-              <br />
-              Reach out using any of the links below.
-            </Text>
-            <VStack spacing={3}>
-              <HStack spacing={2} flexWrap="wrap" justify="center">
+              <VStack spacing={4} align="stretch">
                 <Link
                   href="https://www.linkedin.com/in/ozzolagiorgio/"
                   target="_blank"
@@ -95,28 +89,39 @@ const Contacts = () => {
                   <Button
                     variant="solid"
                     colorScheme="orange"
-                    leftIcon={<IoLogoLinkedin />}
+                    leftIcon={<Icon as={IoLogoLinkedin} boxSize={5} />}
                     size="lg"
-                    px={7}
-                    w={{ base: "100%", sm: "auto" }}
+                    w="100%"
+                    py={6}
+                    fontSize="md"
+                    _hover={{
+                      transform: "translateY(-2px)",
+                      boxShadow: "lg",
+                    }}
+                    transition="all 0.2s"
                   >
-                    @Giorgio Ozzola
+                    Connect on LinkedIn
                   </Button>
                 </Link>
                 <Link
                   href="mailto:gio.ozzola@gmail.com?subject=Mail from your portfolio"
-                  target="_blank"
                   _hover={{ textDecoration: "none" }}
                 >
                   <Button
                     variant="solid"
                     colorScheme="orange"
-                    leftIcon={<IoMailSharp />}
+                    leftIcon={<Icon as={IoMailSharp} boxSize={5} />}
                     size="lg"
-                    px={7}
-                    w={{ base: "100%", sm: "auto" }}
+                    w="100%"
+                    py={6}
+                    fontSize="md"
+                    _hover={{
+                      transform: "translateY(-2px)",
+                      boxShadow: "lg",
+                    }}
+                    transition="all 0.2s"
                   >
-                    gio.ozzola
+                    Send an Email
                   </Button>
                 </Link>
                 <Link
@@ -127,23 +132,42 @@ const Contacts = () => {
                   <Button
                     variant="solid"
                     colorScheme="orange"
-                    leftIcon={<IoLogoGithub />}
+                    leftIcon={<Icon as={IoLogoGithub} boxSize={5} />}
                     size="lg"
-                    px={7}
-                    w={{ base: "100%", sm: "auto" }}
+                    w="100%"
+                    py={6}
+                    fontSize="md"
+                    _hover={{
+                      transform: "translateY(-2px)",
+                      boxShadow: "lg",
+                    }}
+                    transition="all 0.2s"
                   >
-                    @ozzgio
+                    Check out my GitHub
                   </Button>
                 </Link>
-              </HStack>
-            </VStack>
-          </Box>
-        </Heading>
-        <Text color={bodyTextColor} fontSize={{ base: "md", md: "lg" }} mt={6}>
-          I&apos;m always open to new opportunities and collaborations.
-          <br /> Feel free to reach out!
-        </Text>
-      </Flex>
+              </VStack>
+            </Box>
+
+            <Box
+              borderRadius="xl"
+              bg={subtleBg}
+              p={6}
+              textAlign="center"
+            >
+              <Text
+                color={bodyTextColor}
+                fontSize={{ base: "md", md: "lg" }}
+                fontWeight="medium"
+              >
+                I&apos;m always open to new opportunities and collaborations.
+                <br />
+                Feel free to reach out!
+              </Text>
+            </Box>
+          </VStack>
+        </Section>
+      </Container>
     </Layout>
   );
 };

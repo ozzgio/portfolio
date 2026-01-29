@@ -1,4 +1,4 @@
-import { Container, Badge } from "@chakra-ui/react";
+import { Container, Badge, Box } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import Head from "next/head";
 import { WorkImage, Title } from "../project";
@@ -45,11 +45,15 @@ const ProjectDetailsLayout = ({
           <meta property="og:url" content="https://ozzo.blog/projects" />
         </Head>
       )}
-      <Container maxW="container.md" pt={6} pb={10}>
+      <Container maxW="container.md" pt={8} pb={12}>
         <Title>{projectTitle}</Title>
         {dateInfo && dateInfo.display && <Badge mb={4}>{dateInfo.value}</Badge>}
-        {imageUrl && <WorkImage src={imageUrl} alt={imageAlt} />}
-        {children}
+        {imageUrl && (
+          <Box mb={10}>
+            <WorkImage src={imageUrl} alt={imageAlt} />
+          </Box>
+        )}
+        <Box mt={6}>{children}</Box>
       </Container>
     </>
   </motion.article>

@@ -57,54 +57,56 @@ const NavBar = (props) => {
       {...props}
     >
       <Container
-        display="flex"
-        p={3}
-        maxW={"container.md"}
-        wrap="wrap"
-        align="center"
-        justify="space-between"
+        maxW="container.md"
+        px={{ base: 4, md: 6 }}
+        py={3}
       >
-        <Flex align="center" mr={5}>
-          <Heading as="h1" size="lg" letterSpacing={"tighter"}>
-            <Logo />
-          </Heading>
-        </Flex>
-        <Stack
-          direction={{ base: "column", md: "row" }}
-          display={{ base: "none", md: "flex" }}
-          width={{ base: "full", md: "auto" }}
-          alignItems="center"
-          flexGrow={1}
-          spacing={1}
-          mt={{ base: 4, md: 0 }}
+        <Flex
+          align="center"
+          justify="space-between"
+          wrap="wrap"
+          gap={2}
         >
-          <LinkItem href="/articles" path={path}>
-            Articles
-          </LinkItem>
-          <LinkItem href="/books" path={path}>
-            Books
-          </LinkItem>
-          <LinkItem href="/projects" path={path}>
-            Projects
-          </LinkItem>
-          <LinkItem href="/contacts" path={path}>
-            Contacts
-          </LinkItem>
-          <LinkItem
-            target="_blank"
-            href="https://github.com/ozzgio/portfolio"
-            path={path}
-            display="inline-flex"
+          <Flex align="center" flexShrink={0}>
+            <Heading as="h1" size="lg" letterSpacing={"tighter"}>
+              <Logo />
+            </Heading>
+          </Flex>
+          <Stack
+            direction="row"
+            display={{ base: "none", md: "flex" }}
             alignItems="center"
-            style={{ gap: 4 }}
-            pl={2}
+            flexGrow={1}
+            spacing={1}
+            mx={4}
           >
-            Source Code
-          </LinkItem>
-        </Stack>
-        <Box flex={1} align="right" display="flex" alignItems="center" gap={2}>
-          <ThemeToggleButton />
-          <Box display={{ base: "inline-block", md: "none" }}>
+            <LinkItem href="/articles" path={path}>
+              Articles
+            </LinkItem>
+            <LinkItem href="/books" path={path}>
+              Books
+            </LinkItem>
+            <LinkItem href="/projects" path={path}>
+              Projects
+            </LinkItem>
+            <LinkItem href="/contacts" path={path}>
+              Contacts
+            </LinkItem>
+            <LinkItem
+              target="_blank"
+              href="https://github.com/ozzgio/portfolio"
+              path={path}
+              display="inline-flex"
+              alignItems="center"
+              style={{ gap: 4 }}
+              pl={2}
+            >
+              Source Code
+            </LinkItem>
+          </Stack>
+          <Flex align="center" gap={2} flexShrink={0}>
+            <ThemeToggleButton />
+            <Box display={{ base: "inline-block", md: "none" }}>
             <Menu isLazy id="navbar-menu">
               <MenuButton
                 as={IconButton}
@@ -189,7 +191,8 @@ const NavBar = (props) => {
               </MenuList>
             </Menu>
           </Box>
-        </Box>
+          </Flex>
+        </Flex>
       </Container>
     </Box>
   );
