@@ -25,7 +25,9 @@ import {
   IoFootsteps,
 } from "react-icons/io5";
 import technologyData from "../libs/technologyData";
-import TechnologyRow from "../components/techrow";
+import TechnologyRow, {
+  TechRowAnimationProvider,
+} from "../components/techrow";
 
 const ProfileImage = chakra(Image, {
   shouldForwardProp: (prop) => ["width", "height", "src", "alt"].includes(prop),
@@ -361,15 +363,18 @@ const Home = () => {
               </Heading>
             </Box>
 
-            <VStack spacing={8} align="stretch">
-              {Object.entries(technologyData).map(([key, category]) => (
-                <TechnologyRow
-                  key={key}
-                  category={category}
-                  enableAnimation={true}
-                />
-              ))}
-            </VStack>
+            <TechRowAnimationProvider>
+              <VStack spacing={8} align="stretch">
+                {Object.entries(technologyData).map(([key, category]) => (
+                  <TechnologyRow
+                    key={key}
+                    category={category}
+                    enableAnimation={true}
+                    idleResumeSeconds={15}
+                  />
+                ))}
+              </VStack>
+            </TechRowAnimationProvider>
           </VStack>
         </Section>
       </Container>
