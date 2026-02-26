@@ -42,7 +42,7 @@ export async function getServerSideProps({ res }) {
   try {
     // Fetch articles from GitHub
     const response = await fetch(
-      'https://raw.githubusercontent.com/ozzgio/portfolio-data/main/articles.json'
+      'https://raw.githubusercontent.com/ozzgio/portfolio-data/main/data/articles.json'
     );
 
     if (!response.ok) {
