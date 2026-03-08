@@ -21,3 +21,6 @@ yarn-error.log*
 *.swp
 
 brainstorm/
+
+# Articles/books data lives in portfolio-data repo; fetched at build time
+data/
