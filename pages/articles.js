@@ -20,11 +20,11 @@ const MotionBox = motion.create(Box);
 
 const formatDate = (dateStr) => {
   if (!dateStr) return '';
-  
+
   try {
     const articleDate = new Date(dateStr);
     if (isNaN(articleDate.getTime())) return dateStr; // Invalid date, return original
-    
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     articleDate.setHours(0, 0, 0, 0);
@@ -197,9 +197,9 @@ function resolveImageUrl(url) {
 
 export const getStaticProps = async () => {
   try {
-    // Fetch articles from GitHub raw content
+    // Fetch articles from GitHub raw content (root articles.json in portfolio-data repo)
     const response = await fetch(
-      'https://raw.githubusercontent.com/ozzgio/portfolio-data/main/data/articles.json'
+      'https://raw.githubusercontent.com/ozzgio/portfolio-data/main/articles.json'
     );
 
     if (!response.ok) {
@@ -222,7 +222,7 @@ export const getStaticProps = async () => {
       .map((article) => {
         const dateValue = article.date || '';
         const thumbnail = article.thumbnail || '';
-        
+
         return {
           title: String(article.title || ''),
           description: String(article.description || ''),
