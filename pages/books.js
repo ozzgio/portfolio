@@ -135,9 +135,9 @@ const BooksPage = ({ books, error }) => {
 
 export const getStaticProps = async () => {
   try {
-    // Fetch books from GitHub raw content
+    // Fetch books from GitHub raw content (root books.json in portfolio-data repo)
     const response = await fetch(
-      'https://raw.githubusercontent.com/ozzgio/portfolio-data/main/data/books.json'
+      'https://raw.githubusercontent.com/ozzgio/portfolio-data/main/books.json'
     );
 
     if (!response.ok) {
@@ -156,7 +156,7 @@ export const getStaticProps = async () => {
     const books = booksData.map((book) => {
       // Extract lesson field - check multiple possible field names
       const lesson = book.lesson || book.what_i_learned || book.learned || '';
-      
+
       return {
         title: book.title || '',
         author: book.author || '',
