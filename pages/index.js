@@ -35,7 +35,12 @@ const ProfileImage = chakra(Image, {
 
 const Home = () => {
   return (
-    <Layout title={"HomePage"}>
+    <Layout
+      title="Indie Builder & Full Stack Developer Portfolio"
+      description="Ozzo is a full stack developer and indie builder. Explore portfolio projects, shipped products, and practical software work."
+      keywords="indie builder, full stack developer portfolio, SaaS developer, software projects, web developer Italy"
+      path="/"
+    >
       <br />
       <Container>
         <Box
