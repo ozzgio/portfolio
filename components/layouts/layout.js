@@ -7,6 +7,7 @@ const DEFAULT_DESCRIPTION =
   "Portfolio and articles by Ozzo, a full stack developer and indie builder shipping SaaS products, automation workflows, and practical software projects.";
 const DEFAULT_KEYWORDS =
   "full stack developer portfolio, indie builder, SaaS developer, software engineer, web development, automation, Ozzo";
+const DEFAULT_OG_IMAGE = `${SITE_URL}/images/propic.jpg`;
 
 const Layout = ({
   children,
@@ -14,10 +15,12 @@ const Layout = ({
   description = DEFAULT_DESCRIPTION,
   keywords = DEFAULT_KEYWORDS,
   path = "",
+  image = DEFAULT_OG_IMAGE,
+  jsonLd = null,
 }) => {
   const hasCustomTitle = Boolean(title);
   const pageTitle = hasCustomTitle ? `${title} | Ozzo` : DEFAULT_TITLE;
-  const canonicalUrl = `${SITE_URL}${path || ""}`;
+  const canonicalUrl = path ? `${SITE_URL}${path}` : null;
 
   return (
     <Flex direction="column">
@@ -30,15 +33,29 @@ const Layout = ({
         <meta name="description" content={description} />
         <meta name="author" content="Ozzo" />
         <meta name="keywords" content={keywords} />
-        <link rel="canonical" href={canonicalUrl} />
+        <meta name="robots" content="index,follow,max-image-preview:large" />
+        {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/site.webmanifest" />
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={description} />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:url" content={canonicalUrl || SITE_URL} />
         <meta property="og:site_name" content="Ozzo" />
+        <meta property="og:image" content={image} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={image} />
+        {jsonLd && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(jsonLd),
+            }}
+          />
+        )}
       </Head>
       {children}
     </Flex>

@@ -34,12 +34,44 @@ const ProfileImage = chakra(Image, {
 });
 
 const Home = () => {
+  const homepageSchema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "https://ozzo.blog/#person",
+        name: "Giorgio Ozzola",
+        alternateName: "Ozzo",
+        url: "https://ozzo.blog",
+        sameAs: [
+          "https://github.com/ozzgio",
+          "https://www.linkedin.com/in/ozzolagiorgio/",
+        ],
+        jobTitle: "Full Stack Developer",
+        description:
+          "Full stack developer and indie builder creating SaaS products and automation workflows.",
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://ozzo.blog/#website",
+        url: "https://ozzo.blog",
+        name: "Ozzo.blog",
+        description:
+          "Portfolio and articles by Ozzo, full stack developer and indie builder.",
+        publisher: {
+          "@id": "https://ozzo.blog/#person",
+        },
+      },
+    ],
+  };
+
   return (
     <Layout
       title="Indie Builder & Full Stack Developer Portfolio"
       description="Ozzo is a full stack developer and indie builder. Explore portfolio projects, shipped products, and practical software work."
       keywords="indie builder, full stack developer portfolio, SaaS developer, software projects, web developer Italy"
       path="/"
+      jsonLd={homepageSchema}
     >
       <br />
       <Container>
