@@ -17,6 +17,8 @@ const Project = ({ project }) => {
     <ProjectDetailsLayout
       title={title}
       projectTitle={title}
+      description={description}
+      path="/projects/fbetsui"
       imageUrl={project.thumbnail}
       imageAlt={title}
       dateInfo={{ display: true, value: "Jan 2023 - Apr 2024" }}

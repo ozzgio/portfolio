@@ -93,7 +93,12 @@ const ArticlesPage = ({ articles, error }) => {
   }, [sortedArticles, selectedTag]);
 
   return (
-    <Layout title="Articles">
+    <Layout
+      title="Articles on Building SaaS, AI, and Development Workflows"
+      description="Read articles by Ozzo on full stack development, indie building, SaaS execution, and AI-powered developer workflows."
+      keywords="developer blog, SaaS articles, indie hacker writing, AI workflows, full stack development articles"
+      path="/articles"
+    >
       <MotionBox
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

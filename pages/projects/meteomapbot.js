@@ -17,6 +17,8 @@ const Project = ({ project }) => {
     <ProjectDetailsLayout
       title={title}
       projectTitle={title}
+      description={description}
+      path="/projects/meteomapbot"
       imageUrl={project.thumbnail}
       imageAlt={title}
       dateInfo={{ display: true, value: "2021" }}

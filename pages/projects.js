@@ -90,7 +90,12 @@ const Projects = () => {
   }, [selectedTag, sortOption]);
 
   return (
-    <Layout title="Projects">
+    <Layout
+      title="Projects — Full Stack and SaaS Builds"
+      description="Selected projects by Ozzo: full stack applications, SaaS products, and production-ready software builds."
+      keywords="full stack projects, SaaS portfolio, developer case studies, indie builder projects, web app projects"
+      path="/projects"
+    >
       <MotionBox
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
