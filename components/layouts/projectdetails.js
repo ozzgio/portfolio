@@ -14,6 +14,7 @@ const ProjectDetailsLayout = ({
   title,
   projectTitle,
   description,
+  keywords,
   imageUrl,
   imageAlt,
   dateInfo,
@@ -39,6 +40,13 @@ const ProjectDetailsLayout = ({
             content={
               description ||
               `Project details for ${title}, built by Ozzo (full stack developer and indie builder).`
+            }
+          />
+          <meta
+            name="keywords"
+            content={
+              keywords ||
+              `${title}, software project, full stack development, indie builder, Ozzo`
             }
           />
           <meta name="robots" content="index,follow,max-image-preview:large" />
