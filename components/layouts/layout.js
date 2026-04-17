@@ -14,6 +14,7 @@ const Layout = ({
   title,
   description = DEFAULT_DESCRIPTION,
   keywords = DEFAULT_KEYWORDS,
+  robots = "index,follow,max-image-preview:large",
   path = "",
   image = DEFAULT_OG_IMAGE,
   jsonLd = null,
@@ -33,7 +34,7 @@ const Layout = ({
         <meta name="description" content={description} />
         <meta name="author" content="Ozzo" />
         <meta name="keywords" content={keywords} />
-        <meta name="robots" content="index,follow,max-image-preview:large" />
+        <meta name="robots" content={robots} />
         {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
