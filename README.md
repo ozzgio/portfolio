@@ -50,18 +50,30 @@ Then open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 📊 Content Management
 
-This portfolio dynamically fetches articles and books from a GitHub repository:
+This portfolio dynamically fetches articles and books from the public `portfolio-data` repository:
 
 - **Articles**: `https://raw.githubusercontent.com/ozzgio/portfolio-data/main/articles.json`
 - **Books**: `https://raw.githubusercontent.com/ozzgio/portfolio-data/main/books.json`
 
-Content is managed in a private Obsidian vault and automatically synced to the public data repository via GitHub Actions. This allows for:
-- Writing content in Obsidian (markdown)
-- Automatic JSON generation on content updates
-- No API keys or external services required
-- Full control over content and versioning
+Current flow:
+
+`Obsidian vault -> exported public JSON/images -> portfolio-data -> portfolio`
+
+This means:
+- long-form content is authored outside this repo
+- `portfolio-data` is the public publishing layer
+- this repo focuses on presentation, layout, filtering, SEO, and rendering quality
 
 See the [portfolio-data repository](https://github.com/ozzgio/portfolio-data) for the public JSON files.
+
+## 🧭 Repository Boundaries
+
+- **Lives here**: UI, layout, page composition, project cards, animations, SEO pages
+- **Does not live here**: article/book authoring workflow, vault-private notes, publishing automation state
+- **Local source of truth**: `libs/projectData.js` for project cards
+- **External source of truth**: `portfolio-data` for articles/books
+
+For agent-facing repo rules, see [AGENTS.md](./AGENTS.md).
 
 ---
 

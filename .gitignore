@@ -10,6 +10,7 @@ out/
 .env.production.local
 
 .DS_Store
+._*
 
 npm-debug.log*
 yarn-debug.log*
@@ -19,6 +20,8 @@ yarn-error.log*
 
 .vscode/
 *.swp
+__pycache__/
+*.pyc
 
 brainstorm/
 
