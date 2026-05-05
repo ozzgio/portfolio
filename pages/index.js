@@ -207,8 +207,8 @@ const Home = () => {
                 Building a Rails 8 fitness platform for athletes and trainers. Production app with real users.
               </Text>
               <Link
-                href="https://synergym.fit"
-                target="_blank"
+                as={NextLink}
+                href="/projects/synergym"
                 color="orange.600"
                 _dark={{ color: "orange.400" }}
                 fontSize="sm"
@@ -216,7 +216,7 @@ const Home = () => {
                 mt={2}
                 display="inline-block"
               >
-                Visit synergym.fit →
+                View Project →
               </Link>
             </Box>
             <Box
@@ -278,6 +278,18 @@ const Home = () => {
               transition="all 0.2s"
             >
               See My Work
+            </Button>
+            <Button
+              as={NextLink}
+              href="/articles"
+              scroll={false}
+              rightIcon={<ChevronRightIcon />}
+              colorScheme="orange"
+              size="lg"
+              _hover={{ transform: "translateY(-2px)", boxShadow: "xl" }}
+              transition="all 0.2s"
+            >
+              Articles
             </Button>
             <Button
               as={NextLink}

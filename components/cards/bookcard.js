@@ -12,6 +12,7 @@ import {
   useColorModeValue,
   useTheme,
 } from "@chakra-ui/react";
+import NextLink from "next/link";
 import { FiBookOpen } from "react-icons/fi";
 import { FaQuoteLeft } from "react-icons/fa";
 import RatingStar from "../ratingstar";
@@ -23,7 +24,7 @@ function formatDate(rawDate) {
   return date.toLocaleString("default", { month: "short", year: "numeric" });
 }
 
-const BookCard = ({ title, author, rating, tags, cover, lesson, date }) => {
+const BookCard = ({ title, author, rating, tags, cover, lesson, date, slug, source = "external" }) => {
   const { colors } = useTheme();
   const headingTextColor = useColorModeValue(
     colors.headingText.default,
@@ -49,8 +50,8 @@ const BookCard = ({ title, author, rating, tags, cover, lesson, date }) => {
     colors.cardBorder._dark
   );
 
-  return (
-    <BaseCard p={5}>
+  const cardContent = (
+    <BaseCard p={5} cursor={source === "internal" ? "pointer" : "default"} _hover={source === "internal" ? { transform: "translateY(-2px)", boxShadow: "lg" } : undefined} transition="all 0.2s">
       <Flex direction="column" height="100%">
         {cover && (
           <Box mb={4} align="center">
@@ -149,6 +150,14 @@ const BookCard = ({ title, author, rating, tags, cover, lesson, date }) => {
         )}
       </Flex>
     </BaseCard>
+  );
+
+  return source === "internal" && slug ? (
+    <NextLink href={`/books/${slug}`} style={{ textDecoration: "none" }}>
+      {cardContent}
+    </NextLink>
+  ) : (
+    cardContent
   );
 };
 
