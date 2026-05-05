@@ -52,6 +52,7 @@ const BookCard = ({
   source = "external",
   featured = false,
   url,
+  ctaLabel,
 }) => {
   const { colors } = useTheme();
   const headingTextColor = useColorModeValue(
@@ -263,7 +264,7 @@ const BookCard = ({
                   _hover={{ transform: "translateY(-1px)", boxShadow: "md" }}
                   transition="all 0.2s ease-in-out"
                 >
-                  {source === "internal" ? "Read notes" : "Open link"}
+                  {ctaLabel || (source === "internal" ? "Read notes" : "Open link")}
                 </Button>
               </Link>
             </Box>

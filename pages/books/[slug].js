@@ -24,8 +24,9 @@ import { FaQuoteLeft } from "react-icons/fa";
 import RatingStar from "../../components/ratingstar";
 import Layout from "../../components/layouts/layout";
 import {
+  getBookSlug,
   getBookNotes,
-  isInternalBook,
+  hasBookNotes,
   resolvePortfolioAssetUrl,
 } from "../../libs/contentUtils";
 
@@ -49,6 +50,7 @@ export default function BookDetailPage({ book }) {
   const proseBorder = useColorModeValue("blackAlpha.100", "whiteAlpha.200");
   const lessonBg = useColorModeValue("orange.50", "orange.900");
   const lessonText = useColorModeValue("orange.800", "orange.100");
+  const emptyStateBg = useColorModeValue("gray.50", "whiteAlpha.50");
 
   if (!book) return null;
 
@@ -59,7 +61,7 @@ export default function BookDetailPage({ book }) {
       <Head>
         <meta
           name="description"
-          content={`Reading notes and lessons from ${book.title} by ${book.author}.`}
+          content={`Book details, lessons, and reading notes from ${book.title} by ${book.author}.`}
         />
         <link rel="canonical" href={canonicalUrl} />
       </Head>
@@ -102,7 +104,9 @@ export default function BookDetailPage({ book }) {
               {book.rating > 0 && (
                 <HStack spacing={2}>
                   <RatingStar rating={book.rating} />
-                  <Text color="orange.500" fontWeight="bold">{book.rating}</Text>
+                  <Text color="orange.500" fontWeight="bold">
+                    {book.rating}
+                  </Text>
                 </HStack>
               )}
               <HStack flexWrap="wrap" spacing={2}>
@@ -126,7 +130,7 @@ export default function BookDetailPage({ book }) {
             </Box>
           )}
 
-          {book.notes && (
+          {book.notes ? (
             <Box
               w="100%"
               p={{ base: 5, md: 8 }}
@@ -145,6 +149,33 @@ export default function BookDetailPage({ book }) {
                 <ReactMarkdown>{book.notes}</ReactMarkdown>
               </Box>
             </Box>
+          ) : (
+            <Box
+              w="100%"
+              p={{ base: 5, md: 8 }}
+              borderWidth="1px"
+              borderColor={proseBorder}
+              borderRadius="2xl"
+              bg={emptyStateBg}
+            >
+              <VStack align="start" spacing={3}>
+                <HStack spacing={2} color={mutedText}>
+                  <Icon as={IoDocumentTextOutline} />
+                  <Text fontSize="sm" fontWeight="semibold" textTransform="uppercase">
+                    Detail page
+                  </Text>
+                </HStack>
+                <Text color={mutedText}>
+                  Full reading notes for this book have not been published yet. The lesson
+                  above is the current public summary from the vault export.
+                </Text>
+                {book.url && (
+                  <Link href={book.url} color="orange.500" fontWeight="semibold" isExternal>
+                    Open original link
+                  </Link>
+                )}
+              </VStack>
+            </Box>
           )}
         </VStack>
       </Container>
@@ -160,8 +191,9 @@ export async function getStaticPaths() {
 
   const paths = Array.isArray(books)
     ? books
-        .filter((book) => isInternalBook(book))
-        .map((book) => ({ params: { slug: String(book.slug) } }))
+        .map((book) => getBookSlug(book))
+        .filter(Boolean)
+        .map((slug) => ({ params: { slug: String(slug) } }))
     : [];
 
   return { paths, fallback: "blocking" };
@@ -179,9 +211,7 @@ export async function getStaticProps({ params }) {
     const book = Array.isArray(books)
       ? books.find(
           (entry) =>
-            isInternalBook(entry) &&
-            entry?.slug === params?.slug &&
-            getBookNotes(entry),
+            getBookSlug(entry) === params?.slug,
         )
       : null;
 
@@ -193,12 +223,14 @@ export async function getStaticProps({ params }) {
           title: String(book.title || ""),
           author: String(book.author || ""),
           date: String(book.date || ""),
-          slug: String(book.slug || ""),
+          slug: getBookSlug(book),
           notes: getBookNotes(book),
+          hasNotes: hasBookNotes(book),
           lesson: String(book.lesson || ""),
           rating: typeof book.rating === "number" ? book.rating : 0,
           tags: Array.isArray(book.tags) ? book.tags.filter(Boolean) : [],
           cover: resolvePortfolioAssetUrl(book.cover),
+          url: String(book.url || ""),
         },
       },
       revalidate: 60,

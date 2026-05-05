@@ -17,6 +17,9 @@ const ProjectDetailsLayout = ({
   keywords,
   imageUrl,
   imageAlt,
+  imageFit,
+  imageBg,
+  imagePadding,
   dateInfo,
   path,
 }) => (
@@ -109,7 +112,13 @@ const ProjectDetailsLayout = ({
         {dateInfo && dateInfo.display && <Badge mb={4}>{dateInfo.value}</Badge>}
         {imageUrl && (
           <Box mb={10}>
-            <WorkImage src={imageUrl} alt={imageAlt} />
+            <WorkImage
+              src={imageUrl}
+              alt={imageAlt}
+              fit={imageFit}
+              bg={imageBg}
+              p={imagePadding}
+            />
           </Box>
         )}
         <Box mt={6}>{children}</Box>

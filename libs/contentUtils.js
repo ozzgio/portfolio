@@ -4,6 +4,14 @@ const DATA_BRANCH = "main";
 export const getTextContent = (value) =>
   typeof value === "string" ? value.trim() : "";
 
+export const slugify = (value = "") =>
+  getTextContent(value)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
 export const resolvePortfolioAssetUrl = (url, directory = "images") => {
   const value = getTextContent(url);
 
@@ -57,8 +65,12 @@ export const getArticleSummary = (article, maxLength = 220) => {
 export const getBookNotes = (book) =>
   getTextContent(book?.notes || book?.content);
 
-export const isInternalBook = (book) =>
-  Boolean(getTextContent(book?.slug) && getBookNotes(book));
+export const getBookSlug = (book) =>
+  getTextContent(book?.slug) || slugify(book?.title || "");
+
+export const hasBookNotes = (book) => Boolean(getBookNotes(book));
+
+export const isInternalBook = (book) => Boolean(getBookSlug(book));
 
 export const getBookSummary = (book, maxLength = 220) => {
   const notesPreview = createExcerpt(getBookNotes(book), maxLength);

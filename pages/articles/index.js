@@ -223,6 +223,7 @@ const ArticlesPage = ({ articles, error }) => {
           >
             <Stack
               direction={{ base: "column", lg: "row" }}
+              align={{ base: "stretch", lg: "start" }}
               justify="space-between"
               spacing={8}
               position="relative"
@@ -277,6 +278,7 @@ const ArticlesPage = ({ articles, error }) => {
                 spacing={3}
                 minW={{ base: "100%", lg: "380px" }}
                 maxW="540px"
+                alignSelf={{ base: "stretch", lg: "start" }}
               >
                 <Box
                   bg={panelBg}

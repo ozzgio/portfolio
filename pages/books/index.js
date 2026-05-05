@@ -33,9 +33,10 @@ import {
 import Layout from "../../components/layouts/layout";
 import BookCard from "../../components/cards/bookcard";
 import {
+  getBookSlug,
   getBookNotes,
   getBookSummary,
-  isInternalBook,
+  hasBookNotes,
   resolvePortfolioAssetUrl,
 } from "../../libs/contentUtils";
 
@@ -84,14 +85,18 @@ const BooksPage = ({ books, error }) => {
     () =>
       (Array.isArray(books) ? books : []).map((book) => {
         const notes = getBookNotes(book);
-        const source = isInternalBook(book) ? "internal" : "external";
+        const slug = getBookSlug(book);
         const date = book.date || "";
+        const hasNotes = hasBookNotes(book);
 
         return {
           ...book,
           date,
+          slug,
           notes,
-          source,
+          hasNotes,
+          source: slug ? "internal" : "external",
+          ctaLabel: hasNotes ? "Read notes" : "View book",
           summary: book.summary || getBookSummary(book),
           absoluteDate: date ? formatAbsoluteDate(date) : "",
           year: date ? String(new Date(date).getFullYear()) : "",
@@ -171,7 +176,7 @@ const BooksPage = ({ books, error }) => {
   }, [searchQuery, selectedTag, sortedBooks]);
 
   const noteBackedBooks = useMemo(
-    () => normalizedBooks.filter((book) => book.source === "internal").length,
+    () => normalizedBooks.filter((book) => book.hasNotes).length,
     [normalizedBooks],
   );
 
@@ -196,17 +201,13 @@ const BooksPage = ({ books, error }) => {
   const featuredBook = filteredBooks[0] || null;
   const bookGrid = featuredBook ? filteredBooks.slice(1) : [];
 
-  const tertiaryStat = uniqueYears.length
-    ? {
-        icon: IoCalendarOutline,
-        label: "Years",
-        value: uniqueYears.length,
-      }
-    : {
-        icon: IoDocumentTextOutline,
-        label: "Notes",
-        value: noteBackedBooks,
-      };
+  const heroMetaItems = [];
+  if (latestFinishedBook?.absoluteDate) {
+    heroMetaItems.push(`Latest: ${latestFinishedBook.absoluteDate}`);
+  }
+  if (noteBackedBooks > 0) {
+    heroMetaItems.push(`Note-backed entries: ${noteBackedBooks}`);
+  }
 
   return (
     <Layout
@@ -246,6 +247,7 @@ const BooksPage = ({ books, error }) => {
           >
             <Stack
               direction={{ base: "column", lg: "row" }}
+              align={{ base: "stretch", lg: "start" }}
               justify="space-between"
               spacing={8}
               position="relative"
@@ -271,15 +273,18 @@ const BooksPage = ({ books, error }) => {
                     once the vault exports them.
                   </Text>
                 </Box>
-                <HStack spacing={3} flexWrap="wrap">
-                  <Text fontSize="sm" color={mutedText}>
-                    Latest: {latestFinishedBook ? latestFinishedBook.absoluteDate : "N/A"}
-                  </Text>
-                  <Text color={mutedText}>/</Text>
-                  <Text fontSize="sm" color={mutedText}>
-                    Note-backed entries: {noteBackedBooks}
-                  </Text>
-                </HStack>
+                {heroMetaItems.length > 0 && (
+                  <HStack spacing={3} flexWrap="wrap">
+                    {heroMetaItems.map((item, index) => (
+                      <Box key={item} display="contents">
+                        {index > 0 && <Text color={mutedText}>/</Text>}
+                        <Text fontSize="sm" color={mutedText}>
+                          {item}
+                        </Text>
+                      </Box>
+                    ))}
+                  </HStack>
+                )}
               </VStack>
 
               <SimpleGrid
@@ -287,6 +292,7 @@ const BooksPage = ({ books, error }) => {
                 spacing={3}
                 minW={{ base: "100%", lg: "380px" }}
                 maxW="540px"
+                alignSelf={{ base: "stretch", lg: "start" }}
               >
                 <Box
                   bg={panelBg}
@@ -330,13 +336,13 @@ const BooksPage = ({ books, error }) => {
                   p={4}
                 >
                   <HStack mb={2}>
-                    <Icon as={tertiaryStat.icon} color="orange.400" />
+                    <Icon as={IoDocumentTextOutline} color="orange.400" />
                     <Text fontSize="sm" color={mutedText}>
-                      {tertiaryStat.label}
+                      Notes
                     </Text>
                   </HStack>
                   <Text fontSize="2xl" fontWeight="bold">
-                    {tertiaryStat.value}
+                    {noteBackedBooks}
                   </Text>
                 </Box>
               </SimpleGrid>
@@ -517,7 +523,8 @@ export const getStaticProps = async () => {
     const books = booksData
       .filter((book) => book && book.title)
       .map((book) => {
-        const source = isInternalBook(book) ? "internal" : "external";
+        const slug = getBookSlug(book);
+        const hasNotes = hasBookNotes(book);
 
         return {
           title: String(book.title || ""),
@@ -529,8 +536,10 @@ export const getStaticProps = async () => {
           summary: getBookSummary(book),
           notes: getBookNotes(book),
           date: String(book.date || ""),
-          slug: String(book.slug || ""),
-          source,
+          slug,
+          hasNotes,
+          source: slug ? "internal" : "external",
+          ctaLabel: hasNotes ? "Read notes" : "View book",
           url: String(book.url || ""),
           status: String(book.status || "read"),
         };
