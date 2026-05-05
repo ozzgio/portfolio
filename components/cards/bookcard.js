@@ -75,6 +75,7 @@ const BookCard = ({
   const featuredGlow = useColorModeValue("orange.50", "orange.900");
   const subtlePanel = useColorModeValue("blackAlpha.50", "whiteAlpha.100");
   const sourceBadgeBg = useColorModeValue("whiteAlpha.800", "blackAlpha.500");
+  const coverPanelBg = useColorModeValue("blackAlpha.50", "blackAlpha.400");
 
   const href = source === "internal" ? `/books/${slug}` : url;
   const formattedDate = formatDate(date);
@@ -94,21 +95,25 @@ const BookCard = ({
             minH={featured ? "280px" : "220px"}
             maxH={featured ? "380px" : "260px"}
             overflow="hidden"
+            bg={featured ? coverPanelBg : undefined}
+            p={featured ? { base: 4, md: 6 } : 0}
           >
             <Image
               src={cover}
               alt={title}
               width="100%"
               height="100%"
-              objectFit="cover"
+              objectFit={featured ? "contain" : "cover"}
               transition="transform 0.5s ease"
               _groupHover={{ transform: "scale(1.04)" }}
             />
-            <Box
-              position="absolute"
-              inset={0}
-              bgGradient="linear(to-t, blackAlpha.700, transparent 55%)"
-            />
+            {!featured && (
+              <Box
+                position="absolute"
+                inset={0}
+                bgGradient="linear(to-t, blackAlpha.700, transparent 55%)"
+              />
+            )}
             {featured && (
               <Badge
                 position="absolute"

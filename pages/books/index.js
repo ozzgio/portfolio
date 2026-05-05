@@ -22,7 +22,6 @@ import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
   IoBookOutline,
-  IoCalendarOutline,
   IoCloseCircleOutline,
   IoDocumentTextOutline,
   IoFlashOutline,
@@ -177,11 +176,6 @@ const BooksPage = ({ books, error }) => {
 
   const noteBackedBooks = useMemo(
     () => normalizedBooks.filter((book) => book.hasNotes).length,
-    [normalizedBooks],
-  );
-
-  const uniqueYears = useMemo(
-    () => [...new Set(normalizedBooks.map((book) => book.year).filter(Boolean))],
     [normalizedBooks],
   );
 
