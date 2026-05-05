@@ -1,11 +1,9 @@
 import {
   Badge,
   Box,
-  Button,
   Heading,
   HStack,
   Image,
-  Link,
   Tag,
   Text,
   VStack,
@@ -14,13 +12,11 @@ import {
   useColorModeValue,
   useTheme,
 } from "@chakra-ui/react";
-import { ExternalLinkIcon } from "@chakra-ui/icons";
 import NextLink from "next/link";
 import {
   IoBookOutline,
   IoCalendarOutline,
   IoDocumentTextOutline,
-  IoSparklesOutline,
   IoStar,
 } from "react-icons/io5";
 import BaseCard from "../basecard";
@@ -52,7 +48,6 @@ const BookCard = ({
   source = "external",
   featured = false,
   url,
-  ctaLabel,
 }) => {
   const { colors } = useTheme();
   const headingTextColor = useColorModeValue(
@@ -79,14 +74,17 @@ const BookCard = ({
 
   const href = source === "internal" ? `/books/${slug}` : url;
   const formattedDate = formatDate(date);
+  const isInternalLink = source === "internal" && href;
 
-  return (
+  const cardContent = (
     <BaseCard
       p={0}
       maxW="none"
       h="100%"
       borderColor={featured ? "orange.400" : undefined}
       bgGradient={featured ? `linear(to-br, ${featuredGlow}, transparent)` : undefined}
+      cursor={isInternalLink ? "pointer" : "default"}
+      role="group"
     >
       <Box display="flex" flexDirection="column" h="100%">
         {cover && (
@@ -249,35 +247,23 @@ const BookCard = ({
               ))}
             </Wrap>
           )}
-
-          {href && (
-            <Box pt={2} mt="auto" w="100%">
-              <Link
-                as={source === "internal" ? NextLink : "a"}
-                href={href}
-                isExternal={source !== "internal"}
-                _hover={{ textDecoration: "none" }}
-                display="block"
-              >
-                <Button
-                  rightIcon={source === "internal" ? undefined : <ExternalLinkIcon />}
-                  leftIcon={featured ? <IoSparklesOutline /> : undefined}
-                  colorScheme="orange"
-                  variant={featured ? "solid" : "outline"}
-                  size={featured ? "md" : "sm"}
-                  w={featured ? { base: "100%", sm: "auto" } : "auto"}
-                  _hover={{ transform: "translateY(-1px)", boxShadow: "md" }}
-                  transition="all 0.2s ease-in-out"
-                >
-                  {ctaLabel || (source === "internal" ? "Read notes" : "Open link")}
-                </Button>
-              </Link>
-            </Box>
-          )}
         </VStack>
       </Box>
     </BaseCard>
   );
+
+  if (isInternalLink) {
+    return (
+      <NextLink
+        href={href}
+        style={{ display: "block", height: "100%", textDecoration: "none" }}
+      >
+        {cardContent}
+      </NextLink>
+    );
+  }
+
+  return cardContent;
 };
 
 export default BookCard;
