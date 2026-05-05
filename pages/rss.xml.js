@@ -15,8 +15,8 @@ function generateRSSFeed(articles) {
       return `
     <item>
       <title><![CDATA[${article.title}]]></title>
-      <link>${article.url}</link>
-      <guid isPermaLink="true">${article.url}</guid>
+      <link>${article.link}</link>
+      <guid isPermaLink="true">${article.link}</guid>
       <pubDate>${pubDate}</pubDate>
       ${description}
       ${thumbnail}
@@ -57,14 +57,24 @@ export async function getServerSideProps({ res }) {
 
     // Process articles
     const articles = articlesData
-      .filter((article) => article && article.title && article.url && article.date)
+      .filter((article) => article && article.title && article.date)
       .map((article) => ({
+        source: article.source === 'internal' ? 'internal' : 'external',
+        slug: String(article.slug || ''),
         title: String(article.title || ''),
         description: String(article.description || ''),
         url: String(article.url || ''),
         date: article.date || '',
         thumbnail: article.thumbnail || '',
       }))
+      .map((article) => ({
+        ...article,
+        link:
+          article.source === 'internal' && article.slug
+            ? `${siteUrl}/articles/${article.slug}`
+            : article.url,
+      }))
+      .filter((article) => article.link)
       .sort((a, b) => new Date(b.date) - new Date(a.date))
       .slice(0, 20); // Limit to 20 most recent articles
 

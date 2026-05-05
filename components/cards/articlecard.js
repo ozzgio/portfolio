@@ -15,6 +15,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
+import NextLink from "next/link";
 import { IoSparklesOutline, IoTimeOutline } from "react-icons/io5";
 import BaseCard from "../basecard";
 
@@ -24,6 +25,7 @@ const ArticleCard = ({
   absoluteDate,
   description,
   url,
+  source = "external",
   thumbnail,
   tags,
   featured = false,
@@ -157,9 +159,15 @@ const ArticleCard = ({
           )}
 
           <Box pt={2} mt="auto" w="100%">
-            <Link href={url} isExternal _hover={{ textDecoration: "none" }} display="block">
+            <Link
+              as={source === "internal" ? NextLink : "a"}
+              href={url}
+              isExternal={source !== "internal"}
+              _hover={{ textDecoration: "none" }}
+              display="block"
+            >
               <Button
-                rightIcon={<ExternalLinkIcon />}
+                rightIcon={source === "internal" ? undefined : <ExternalLinkIcon />}
                 leftIcon={featured ? <IoSparklesOutline /> : undefined}
                 colorScheme="orange"
                 variant={featured ? "solid" : "outline"}
@@ -168,7 +176,7 @@ const ArticleCard = ({
                 _hover={{ transform: "translateY(-1px)", boxShadow: "md" }}
                 transition="all 0.2s ease-in-out"
               >
-                Read on LinkedIn
+                {source === "internal" ? "Read article" : "Read on LinkedIn"}
               </Button>
             </Link>
           </Box>

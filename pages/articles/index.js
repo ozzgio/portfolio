@@ -30,8 +30,8 @@ import {
   IoSearchOutline,
   IoTimeOutline,
 } from "react-icons/io5";
-import Layout from "../components/layouts/layout";
-import ArticleCard from "../components/cards/articlecard";
+import Layout from "../../components/layouts/layout";
+import ArticleCard from "../../components/cards/articlecard";
 
 const MotionBox = motion.create(Box);
 
@@ -455,7 +455,7 @@ const ArticlesPage = ({ articles, error }) => {
                       </Flex>
                       <SimpleGrid columns={{ base: 1, md: 2, xl: 3 }} spacing={6}>
                         {articleGrid.map((article) => (
-                          <ArticleCard key={article.url} {...article} />
+                          <ArticleCard key={article.slug || article.url} {...article} />
                         ))}
                       </SimpleGrid>
                     </Box>
@@ -509,16 +509,29 @@ export const getStaticProps = async () => {
     }
 
     const articles = articlesData
-      .filter((article) => article && article.title && article.url)
+      .filter((article) => article && article.title)
       .map((article) => {
         const dateValue = article.date || "";
         const thumbnail = article.thumbnail || "";
+        const source = article.source === "internal" ? "internal" : "external";
+        const slug =
+          typeof article.slug === "string" && article.slug.trim()
+            ? article.slug.trim()
+            : "";
+        const internalUrl = slug ? `/articles/${slug}` : "";
+        const externalUrl =
+          typeof article.url === "string" && article.url.trim()
+            ? article.url.trim()
+            : "";
+        const resolvedUrl = source === "internal" ? internalUrl : externalUrl;
 
         return {
           title: String(article.title || ""),
           description: String(article.description || ""),
-          url: String(article.url || ""),
+          url: resolvedUrl,
           date: dateValue,
+          source,
+          slug,
           formattedDate: null,
           thumbnail: thumbnail ? resolveImageUrl(thumbnail) : "",
           tags: Array.isArray(article.tags) ? article.tags.filter(Boolean) : [],

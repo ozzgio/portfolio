@@ -1,0 +1,165 @@
+import {
+  Box,
+  Container,
+  Heading,
+  HStack,
+  Icon,
+  Link,
+  Tag,
+  Text,
+  VStack,
+  useColorModeValue,
+} from "@chakra-ui/react";
+import Head from "next/head";
+import NextLink from "next/link";
+import ReactMarkdown from "react-markdown";
+import { IoArrowBackOutline, IoCalendarOutline } from "react-icons/io5";
+import Layout from "../../components/layouts/layout";
+
+const resolveImageUrl = (url) => {
+  if (!url || typeof url !== "string") return url;
+  if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("/")) {
+    return url;
+  }
+
+  const dataRepo = "ozzgio/portfolio-data";
+  const branch = "main";
+  return `https://cdn.jsdelivr.net/gh/${dataRepo}@${branch}/images/${url}`;
+};
+
+const formatAbsoluteDate = (dateStr) => {
+  if (!dateStr) return "";
+
+  try {
+    return new Intl.DateTimeFormat("en", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    }).format(new Date(dateStr));
+  } catch {
+    return dateStr;
+  }
+};
+
+export default function ArticleDetailPage({ article }) {
+  const mutedText = useColorModeValue("gray.600", "gray.400");
+  const proseBg = useColorModeValue("white", "whiteAlpha.100");
+  const proseBorder = useColorModeValue("blackAlpha.100", "whiteAlpha.200");
+
+  if (!article) return null;
+
+  const canonicalUrl = `https://ozzo.blog/articles/${article.slug}`;
+
+  return (
+    <Layout title={article.title}>
+      <Head>
+        <meta name="description" content={article.description || "Article on ozzo.blog"} />
+        <link rel="canonical" href={canonicalUrl} />
+      </Head>
+
+      <Container maxW="4xl" py={{ base: 6, md: 10 }}>
+        <VStack align="start" spacing={6}>
+          <Link as={NextLink} href="/articles" color="orange.500" fontWeight="semibold">
+            <HStack spacing={2}>
+              <Icon as={IoArrowBackOutline} />
+              <Text>Back to articles</Text>
+            </HStack>
+          </Link>
+
+          <VStack align="start" spacing={3}>
+            <Heading as="h1" size="2xl" lineHeight="1.1">
+              {article.title}
+            </Heading>
+            <HStack spacing={3} flexWrap="wrap" color={mutedText}>
+              <HStack spacing={1}>
+                <Icon as={IoCalendarOutline} />
+                <Text>{formatAbsoluteDate(article.date)}</Text>
+              </HStack>
+              {article.tags?.map((tag) => (
+                <Tag key={tag} colorScheme="orange" borderRadius="full">
+                  {tag}
+                </Tag>
+              ))}
+            </HStack>
+            {article.description && <Text color={mutedText}>{article.description}</Text>}
+          </VStack>
+
+          <Box
+            w="100%"
+            p={{ base: 5, md: 8 }}
+            borderWidth="1px"
+            borderColor={proseBorder}
+            borderRadius="2xl"
+            bg={proseBg}
+          >
+            <Box className="article-prose">
+              <ReactMarkdown>{article.content}</ReactMarkdown>
+            </Box>
+          </Box>
+        </VStack>
+      </Container>
+    </Layout>
+  );
+}
+
+export async function getStaticPaths() {
+  const response = await fetch(
+    "https://raw.githubusercontent.com/ozzgio/portfolio-data/main/articles.json",
+  );
+  const articles = response.ok ? await response.json() : [];
+
+  const paths = Array.isArray(articles)
+    ? articles
+        .filter((article) => article?.source === "internal" && article?.slug)
+        .map((article) => ({ params: { slug: String(article.slug) } }))
+    : [];
+
+  return {
+    paths,
+    fallback: "blocking",
+  };
+}
+
+export async function getStaticProps({ params }) {
+  try {
+    const response = await fetch(
+      "https://raw.githubusercontent.com/ozzgio/portfolio-data/main/articles.json",
+    );
+
+    if (!response.ok) {
+      return { notFound: true, revalidate: 60 };
+    }
+
+    const articles = await response.json();
+    const article = Array.isArray(articles)
+      ? articles.find(
+          (entry) =>
+            entry?.source === "internal" &&
+            entry?.slug === params?.slug &&
+            typeof entry?.content === "string" &&
+            entry.content.trim(),
+        )
+      : null;
+
+    if (!article) {
+      return { notFound: true, revalidate: 60 };
+    }
+
+    return {
+      props: {
+        article: {
+          title: String(article.title || ""),
+          description: String(article.description || ""),
+          date: String(article.date || ""),
+          slug: String(article.slug || ""),
+          content: String(article.content || ""),
+          tags: Array.isArray(article.tags) ? article.tags.filter(Boolean) : [],
+          thumbnail: article.thumbnail ? resolveImageUrl(article.thumbnail) : "",
+        },
+      },
+      revalidate: 60,
+    };
+  } catch {
+    return { notFound: true, revalidate: 60 };
+  }
+}
