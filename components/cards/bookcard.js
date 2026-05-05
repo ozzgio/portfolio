@@ -24,7 +24,7 @@ function formatDate(rawDate) {
   return date.toLocaleString("default", { month: "short", year: "numeric" });
 }
 
-const BookCard = ({ title, author, rating, tags, cover, lesson, date, slug, source = "external" }) => {
+const BookCard = ({ title, author, rating, tags, cover, lesson, date, slug, source = "external", featured = false }) => {
   const { colors } = useTheme();
   const headingTextColor = useColorModeValue(
     colors.headingText.default,
@@ -51,15 +51,21 @@ const BookCard = ({ title, author, rating, tags, cover, lesson, date, slug, sour
   );
 
   const cardContent = (
-    <BaseCard p={5} cursor={source === "internal" ? "pointer" : "default"} _hover={source === "internal" ? { transform: "translateY(-2px)", boxShadow: "lg" } : undefined} transition="all 0.2s">
-      <Flex direction="column" height="100%">
+    <BaseCard
+      p={featured ? 6 : 5}
+      borderColor={featured ? "orange.400" : undefined}
+      cursor={source === "internal" ? "pointer" : "default"}
+      _hover={source === "internal" ? { transform: "translateY(-2px)", boxShadow: "lg" } : undefined}
+      transition="all 0.2s"
+    >
+      <Flex direction={featured ? { base: "column", md: "row" } : "column"} height="100%" gap={featured ? 6 : 0}>
         {cover && (
-          <Box mb={4} align="center">
+          <Box mb={featured ? 0 : 4} align="center" flexShrink={0}>
             <Image
               src={cover}
               alt={title}
               borderRadius="lg"
-              maxH="180px"
+              maxH={featured ? "240px" : "180px"}
               objectFit="cover"
               boxShadow="xl"
               border="4px solid"
@@ -67,10 +73,11 @@ const BookCard = ({ title, author, rating, tags, cover, lesson, date, slug, sour
             />
           </Box>
         )}
+        <Flex direction="column" flex={1}>
         <Heading
-          fontSize="xl"
+          fontSize={featured ? "2xl" : "xl"}
           fontWeight="bold"
-          textAlign="center"
+          textAlign={featured ? "left" : "center"}
           color={headingTextColor}
           mb={1}
           letterSpacing="tight"
@@ -79,7 +86,7 @@ const BookCard = ({ title, author, rating, tags, cover, lesson, date, slug, sour
         </Heading>
         <Text
           fontSize="md"
-          textAlign="center"
+          textAlign={featured ? "left" : "center"}
           color={bodyTextColor}
           mb={1}
           fontWeight="medium"
@@ -88,7 +95,7 @@ const BookCard = ({ title, author, rating, tags, cover, lesson, date, slug, sour
           {author}
         </Text>
         {date && (
-          <Text fontSize="xs" color={bodyTextColor} mb={3} textAlign="center">
+          <Text fontSize="xs" color={bodyTextColor} mb={3} textAlign={featured ? "left" : "center"}>
             Finished: {formatDate(date)}
           </Text>
         )}
@@ -113,7 +120,7 @@ const BookCard = ({ title, author, rating, tags, cover, lesson, date, slug, sour
         <HStack
           spacing={2}
           alignItems="center"
-          justifyContent="center"
+          justifyContent={featured ? "start" : "center"}
           mt={2}
           mb={2}
         >
@@ -129,7 +136,7 @@ const BookCard = ({ title, author, rating, tags, cover, lesson, date, slug, sour
         </HStack>
 
         {tags.length > 0 && (
-          <Wrap spacing={2} mb={2} justify="center">
+          <Wrap spacing={2} mb={2} justify={featured ? "start" : "center"}>
             {tags.map((tag, idx) => (
               <WrapItem key={idx}>
                 <Tag
@@ -148,6 +155,7 @@ const BookCard = ({ title, author, rating, tags, cover, lesson, date, slug, sour
             ))}
           </Wrap>
         )}
+        </Flex>
       </Flex>
     </BaseCard>
   );
