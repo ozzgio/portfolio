@@ -22,7 +22,9 @@ import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
   IoBookOutline,
+  IoCalendarOutline,
   IoCloseCircleOutline,
+  IoDocumentTextOutline,
   IoFlashOutline,
   IoPricetagOutline,
   IoSearchOutline,
@@ -30,8 +32,38 @@ import {
 } from "react-icons/io5";
 import Layout from "../../components/layouts/layout";
 import BookCard from "../../components/cards/bookcard";
+import {
+  getBookNotes,
+  getBookSummary,
+  isInternalBook,
+  resolvePortfolioAssetUrl,
+} from "../../libs/contentUtils";
 
 const MotionBox = motion.create(Box);
+
+const formatAbsoluteDate = (dateStr) => {
+  if (!dateStr) return "";
+
+  try {
+    return new Intl.DateTimeFormat("en", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    }).format(new Date(dateStr));
+  } catch {
+    return dateStr;
+  }
+};
+
+const sortByDate = (a, b, direction = "desc") => {
+  const dateA = a.date ? new Date(a.date).getTime() : null;
+  const dateB = b.date ? new Date(b.date).getTime() : null;
+
+  if (dateA && dateB) return direction === "desc" ? dateB - dateA : dateA - dateB;
+  if (dateA) return direction === "desc" ? -1 : 1;
+  if (dateB) return direction === "desc" ? 1 : -1;
+  return 0;
+};
 
 const BooksPage = ({ books, error }) => {
   const [selectedTag, setSelectedTag] = useState(null);
@@ -48,50 +80,133 @@ const BooksPage = ({ books, error }) => {
   const panelBorder = useColorModeValue("blackAlpha.100", "whiteAlpha.200");
   const accentSubtle = useColorModeValue("orange.50", "orange.900");
 
+  const normalizedBooks = useMemo(
+    () =>
+      (Array.isArray(books) ? books : []).map((book) => {
+        const notes = getBookNotes(book);
+        const source = isInternalBook(book) ? "internal" : "external";
+        const date = book.date || "";
+
+        return {
+          ...book,
+          date,
+          notes,
+          source,
+          summary: book.summary || getBookSummary(book),
+          absoluteDate: date ? formatAbsoluteDate(date) : "",
+          year: date ? String(new Date(date).getFullYear()) : "",
+        };
+      }),
+    [books],
+  );
+
   const allTags = useMemo(() => {
     const tagCounts = new Map();
-    (Array.isArray(books) ? books : []).forEach((book) => {
+
+    normalizedBooks.forEach((book) => {
       (book.tags || []).forEach((tag) => {
         tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
       });
     });
+
     return [...tagCounts.entries()]
-      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+      .sort((a, b) => {
+        if (b[1] !== a[1]) return b[1] - a[1];
+        return a[0].localeCompare(b[0]);
+      })
       .map(([tag, count]) => ({ tag, count }));
-  }, [books]);
+  }, [normalizedBooks]);
 
   const sortedBooks = useMemo(() => {
-    const list = [...(Array.isArray(books) ? books : [])];
-    if (sortOption === "highest_rating") list.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
-    else if (sortOption === "lowest_rating") list.sort((a, b) => (a.rating ?? 0) - (b.rating ?? 0));
-    else if (sortOption === "alphabetical") list.sort((a, b) => a.title.localeCompare(b.title));
-    return list.map((book) => ({ ...book, tags: book.tags ? [...book.tags].sort() : [] }));
-  }, [books, sortOption]);
+    const currentBooks = [...normalizedBooks];
+
+    if (sortOption === "highest_rating") {
+      currentBooks.sort((a, b) => {
+        if ((b.rating ?? 0) !== (a.rating ?? 0)) return (b.rating ?? 0) - (a.rating ?? 0);
+        return sortByDate(a, b, "desc") || a.title.localeCompare(b.title);
+      });
+    } else if (sortOption === "lowest_rating") {
+      currentBooks.sort((a, b) => {
+        if ((a.rating ?? 0) !== (b.rating ?? 0)) return (a.rating ?? 0) - (b.rating ?? 0);
+        return sortByDate(a, b, "desc") || a.title.localeCompare(b.title);
+      });
+    } else if (sortOption === "newest") {
+      currentBooks.sort((a, b) => {
+        const byDate = sortByDate(a, b, "desc");
+        if (byDate !== 0) return byDate;
+        if ((b.rating ?? 0) !== (a.rating ?? 0)) return (b.rating ?? 0) - (a.rating ?? 0);
+        return a.title.localeCompare(b.title);
+      });
+    } else if (sortOption === "oldest") {
+      currentBooks.sort((a, b) => {
+        const byDate = sortByDate(a, b, "asc");
+        if (byDate !== 0) return byDate;
+        if ((b.rating ?? 0) !== (a.rating ?? 0)) return (b.rating ?? 0) - (a.rating ?? 0);
+        return a.title.localeCompare(b.title);
+      });
+    } else if (sortOption === "alphabetical") {
+      currentBooks.sort((a, b) => a.title.localeCompare(b.title));
+    }
+
+    return currentBooks.map((book) => ({
+      ...book,
+      tags: Array.isArray(book.tags) ? [...book.tags].sort() : [],
+    }));
+  }, [normalizedBooks, sortOption]);
 
   const filteredBooks = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
+
     return sortedBooks.filter((book) => {
       const matchesTag = selectedTag ? book.tags?.includes(selectedTag) : true;
       const matchesQuery = query
-        ? [book.title, book.author, book.lesson, ...(book.tags || [])]
+        ? [book.title, book.author, book.lesson, book.notes, ...(book.tags || [])]
             .join(" ")
             .toLowerCase()
             .includes(query)
         : true;
+
       return matchesTag && matchesQuery;
     });
   }, [searchQuery, selectedTag, sortedBooks]);
 
-  const currentlyReading = useMemo(
-    () => sortedBooks.filter((b) => b.status === "reading").length,
-    [sortedBooks],
+  const noteBackedBooks = useMemo(
+    () => normalizedBooks.filter((book) => book.source === "internal").length,
+    [normalizedBooks],
   );
 
+  const uniqueYears = useMemo(
+    () => [...new Set(normalizedBooks.map((book) => book.year).filter(Boolean))],
+    [normalizedBooks],
+  );
+
+  const latestFinishedBook = useMemo(() => {
+    const datedBooks = normalizedBooks.filter((book) => book.date);
+    if (datedBooks.length === 0) return null;
+
+    return [...datedBooks].sort((a, b) => new Date(b.date) - new Date(a.date))[0];
+  }, [normalizedBooks]);
+
   const hasActiveFilters = Boolean(selectedTag || searchQuery.trim());
-  const resetFilters = () => { setSelectedTag(null); setSearchQuery(""); };
+  const resetFilters = () => {
+    setSelectedTag(null);
+    setSearchQuery("");
+  };
 
   const featuredBook = filteredBooks[0] || null;
   const bookGrid = featuredBook ? filteredBooks.slice(1) : [];
+
+  const tertiaryStat = uniqueYears.length
+    ? {
+        icon: IoCalendarOutline,
+        label: "Years",
+        value: uniqueYears.length,
+      }
+    : {
+        icon: IoDocumentTextOutline,
+        label: "Notes",
+        value: noteBackedBooks,
+      };
 
   return (
     <Layout
@@ -148,18 +263,23 @@ const BooksPage = ({ books, error }) => {
                   Reading library
                 </Badge>
                 <Box>
-                  <Heading
-                    as="h1"
-                    fontSize={{ base: "3xl", md: "4xl" }}
-                    lineHeight="1"
-                    mb={3}
-                  >
-                    Books that shaped how I build.
+                  <Heading as="h1" fontSize={{ base: "3xl", md: "4xl" }} lineHeight="1" mb={3}>
+                    Reading notes, highlighted lessons, and books worth revisiting.
                   </Heading>
                   <Text fontSize={{ base: "md", md: "lg" }} color={mutedText}>
-                    What I read, what stuck, and why. One lesson per book — the rest in the notes.
+                    What I read, what stayed with me, and the longer notes behind each book
+                    once the vault exports them.
                   </Text>
                 </Box>
+                <HStack spacing={3} flexWrap="wrap">
+                  <Text fontSize="sm" color={mutedText}>
+                    Latest: {latestFinishedBook ? latestFinishedBook.absoluteDate : "N/A"}
+                  </Text>
+                  <Text color={mutedText}>/</Text>
+                  <Text fontSize="sm" color={mutedText}>
+                    Note-backed entries: {noteBackedBooks}
+                  </Text>
+                </HStack>
               </VStack>
 
               <SimpleGrid
@@ -168,26 +288,56 @@ const BooksPage = ({ books, error }) => {
                 minW={{ base: "100%", lg: "380px" }}
                 maxW="540px"
               >
-                <Box bg={panelBg} borderWidth="1px" borderColor={panelBorder} borderRadius="2xl" p={4}>
+                <Box
+                  bg={panelBg}
+                  borderWidth="1px"
+                  borderColor={panelBorder}
+                  borderRadius="2xl"
+                  p={4}
+                >
                   <HStack mb={2}>
                     <Icon as={IoBookOutline} color="orange.400" />
-                    <Text fontSize="sm" color={mutedText}>Books</Text>
+                    <Text fontSize="sm" color={mutedText}>
+                      Books
+                    </Text>
                   </HStack>
-                  <Text fontSize="2xl" fontWeight="bold">{sortedBooks.length}</Text>
+                  <Text fontSize="2xl" fontWeight="bold">
+                    {sortedBooks.length}
+                  </Text>
                 </Box>
-                <Box bg={panelBg} borderWidth="1px" borderColor={panelBorder} borderRadius="2xl" p={4}>
+                <Box
+                  bg={panelBg}
+                  borderWidth="1px"
+                  borderColor={panelBorder}
+                  borderRadius="2xl"
+                  p={4}
+                >
                   <HStack mb={2}>
                     <Icon as={IoPricetagOutline} color="orange.400" />
-                    <Text fontSize="sm" color={mutedText}>Tags</Text>
+                    <Text fontSize="sm" color={mutedText}>
+                      Tags
+                    </Text>
                   </HStack>
-                  <Text fontSize="2xl" fontWeight="bold">{allTags.length}</Text>
+                  <Text fontSize="2xl" fontWeight="bold">
+                    {allTags.length}
+                  </Text>
                 </Box>
-                <Box bg={panelBg} borderWidth="1px" borderColor={panelBorder} borderRadius="2xl" p={4}>
+                <Box
+                  bg={panelBg}
+                  borderWidth="1px"
+                  borderColor={panelBorder}
+                  borderRadius="2xl"
+                  p={4}
+                >
                   <HStack mb={2}>
-                    <Icon as={IoStarOutline} color="orange.400" />
-                    <Text fontSize="sm" color={mutedText}>Reading</Text>
+                    <Icon as={tertiaryStat.icon} color="orange.400" />
+                    <Text fontSize="sm" color={mutedText}>
+                      {tertiaryStat.label}
+                    </Text>
                   </HStack>
-                  <Text fontSize="2xl" fontWeight="bold">{currentlyReading}</Text>
+                  <Text fontSize="2xl" fontWeight="bold">
+                    {tertiaryStat.value}
+                  </Text>
                 </Box>
               </SimpleGrid>
             </Stack>
@@ -211,18 +361,20 @@ const BooksPage = ({ books, error }) => {
                       <Icon as={IoSearchOutline} color="gray.400" />
                     </InputLeftElement>
                     <Input
-                      placeholder="Search titles, authors, or lessons"
+                      placeholder="Search titles, authors, notes, or tags"
                       value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onChange={(event) => setSearchQuery(event.target.value)}
                     />
                   </InputGroup>
                   <Select
                     value={sortOption}
-                    onChange={(e) => setSortOption(e.target.value)}
+                    onChange={(event) => setSortOption(event.target.value)}
                     maxW={{ base: "100%", xl: "220px" }}
                   >
                     <option value="highest_rating">Highest Rating</option>
                     <option value="lowest_rating">Lowest Rating</option>
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
                     <option value="alphabetical">Alphabetical</option>
                   </Select>
                   {hasActiveFilters && (
@@ -263,15 +415,21 @@ const BooksPage = ({ books, error }) => {
                 </Wrap>
 
                 <HStack mt={4} spacing={3} color={mutedText} fontSize="sm" flexWrap="wrap">
-                  <Icon as={IoBookOutline} />
-                  <Text>{filteredBooks.length} selected</Text>
+                  <HStack spacing={1}>
+                    <Icon as={IoStarOutline} />
+                    <Text>{filteredBooks.length} selected</Text>
+                  </HStack>
                   <Text>•</Text>
                   <Text>
                     {sortOption === "highest_rating"
                       ? "Sorted by rating"
                       : sortOption === "lowest_rating"
-                        ? "Lowest first"
-                        : "Sorted alphabetically"}
+                        ? "Lowest rating first"
+                        : sortOption === "newest"
+                          ? "Sorted by newest"
+                          : sortOption === "oldest"
+                            ? "Sorted by oldest"
+                            : "Sorted alphabetically"}
                   </Text>
                 </HStack>
               </Box>
@@ -287,38 +445,45 @@ const BooksPage = ({ books, error }) => {
                   bg={accentSubtle}
                 >
                   <Icon as={IoFlashOutline} boxSize={8} color="orange.400" mb={3} />
-                  <Heading as="h2" size="md" mb={2}>No books found</Heading>
-                  <Text color={mutedText}>Try a different search or clear the tag filter.</Text>
+                  <Heading as="h2" size="md" mb={2}>
+                    No books found
+                  </Heading>
+                  <Text color={mutedText}>
+                    Try a different search term or clear the active tag filter.
+                  </Text>
                 </Box>
               ) : (
                 <VStack spacing={8} align="stretch">
                   {featuredBook && (
                     <Box>
-                      <HStack spacing={3} mb={4} flexWrap="wrap">
+                      <HStack spacing={3} mb={4} align="center" flexWrap="wrap">
                         <Badge colorScheme="orange" px={3} py={1} borderRadius="full">
-                          Top result
+                          Featured result
                         </Badge>
                         <Text fontSize="sm" color={mutedText}>
-                          Highest rated from your selection
+                          Top result from your current selection
                         </Text>
                       </HStack>
-                      <SimpleGrid columns={{ base: 1, md: 1 }} spacing={6}>
-                        <BookCard {...featuredBook} featured />
-                      </SimpleGrid>
+                      <BookCard {...featuredBook} featured />
                     </Box>
                   )}
 
                   {bookGrid.length > 0 && (
                     <Box>
                       <Flex justify="space-between" mb={4} gap={3} wrap="wrap" align="center">
-                        <Heading as="h2" size="md">Library</Heading>
+                        <Heading as="h2" size="md">
+                          Explore more
+                        </Heading>
                         <Text fontSize="sm" color={mutedText}>
-                          {bookGrid.length} more books
+                          {bookGrid.length} remaining books
                         </Text>
                       </Flex>
-                      <SimpleGrid columns={{ base: 1, md: 2, xl: 3 }} spacing={6} gridAutoRows="1fr">
-                        {bookGrid.map((book, idx) => (
-                          <BookCard key={book.slug || idx} {...book} />
+                      <SimpleGrid columns={{ base: 1, md: 2, xl: 3 }} spacing={6}>
+                        {bookGrid.map((book) => (
+                          <BookCard
+                            key={book.slug || `${book.title}-${book.author}`}
+                            {...book}
+                          />
                         ))}
                       </SimpleGrid>
                     </Box>
@@ -349,18 +514,27 @@ export const getStaticProps = async () => {
       throw new Error("Invalid JSON format: expected an array");
     }
 
-    const books = booksData.map((book) => ({
-      title: book.title || "",
-      author: book.author || "",
-      rating: typeof book.rating === "number" ? book.rating : null,
-      tags: Array.isArray(book.tags) ? book.tags : [],
-      cover: book.cover || "",
-      lesson: (book.lesson || "").trim(),
-      date: book.date || "",
-      slug: book.slug || "",
-      source: book.source || "external",
-      status: book.status || "read",
-    }));
+    const books = booksData
+      .filter((book) => book && book.title)
+      .map((book) => {
+        const source = isInternalBook(book) ? "internal" : "external";
+
+        return {
+          title: String(book.title || ""),
+          author: String(book.author || ""),
+          rating: typeof book.rating === "number" ? book.rating : null,
+          tags: Array.isArray(book.tags) ? book.tags.filter(Boolean) : [],
+          cover: resolvePortfolioAssetUrl(book.cover),
+          lesson: String(book.lesson || "").trim(),
+          summary: getBookSummary(book),
+          notes: getBookNotes(book),
+          date: String(book.date || ""),
+          slug: String(book.slug || ""),
+          source,
+          url: String(book.url || ""),
+          status: String(book.status || "read"),
+        };
+      });
 
     return { props: { books }, revalidate: 60 };
   } catch (error) {

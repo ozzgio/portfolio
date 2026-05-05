@@ -15,17 +15,11 @@ import NextLink from "next/link";
 import ReactMarkdown from "react-markdown";
 import { IoArrowBackOutline, IoCalendarOutline } from "react-icons/io5";
 import Layout from "../../components/layouts/layout";
-
-const resolveImageUrl = (url) => {
-  if (!url || typeof url !== "string") return url;
-  if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("/")) {
-    return url;
-  }
-
-  const dataRepo = "ozzgio/portfolio-data";
-  const branch = "main";
-  return `https://cdn.jsdelivr.net/gh/${dataRepo}@${branch}/images/${url}`;
-};
+import {
+  getArticleBody,
+  isInternalArticle,
+  resolvePortfolioAssetUrl,
+} from "../../libs/contentUtils";
 
 const formatAbsoluteDate = (dateStr) => {
   if (!dateStr) return "";
@@ -110,7 +104,7 @@ export async function getStaticPaths() {
 
   const paths = Array.isArray(articles)
     ? articles
-        .filter((article) => article?.source === "internal" && article?.slug)
+        .filter((article) => isInternalArticle(article))
         .map((article) => ({ params: { slug: String(article.slug) } }))
     : [];
 
@@ -134,10 +128,9 @@ export async function getStaticProps({ params }) {
     const article = Array.isArray(articles)
       ? articles.find(
           (entry) =>
-            entry?.source === "internal" &&
+            isInternalArticle(entry) &&
             entry?.slug === params?.slug &&
-            typeof entry?.content === "string" &&
-            entry.content.trim(),
+            getArticleBody(entry),
         )
       : null;
 
@@ -152,9 +145,11 @@ export async function getStaticProps({ params }) {
           description: String(article.description || ""),
           date: String(article.date || ""),
           slug: String(article.slug || ""),
-          content: String(article.content || ""),
+          content: getArticleBody(article),
           tags: Array.isArray(article.tags) ? article.tags.filter(Boolean) : [],
-          thumbnail: article.thumbnail ? resolveImageUrl(article.thumbnail) : "",
+          thumbnail: article.thumbnail
+            ? resolvePortfolioAssetUrl(article.thumbnail)
+            : "",
         },
       },
       revalidate: 60,

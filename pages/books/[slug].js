@@ -14,10 +14,34 @@ import {
 import Head from "next/head";
 import NextLink from "next/link";
 import ReactMarkdown from "react-markdown";
-import { IoArrowBackOutline, IoBookOutline } from "react-icons/io5";
+import {
+  IoArrowBackOutline,
+  IoBookOutline,
+  IoCalendarOutline,
+  IoDocumentTextOutline,
+} from "react-icons/io5";
 import { FaQuoteLeft } from "react-icons/fa";
 import RatingStar from "../../components/ratingstar";
 import Layout from "../../components/layouts/layout";
+import {
+  getBookNotes,
+  isInternalBook,
+  resolvePortfolioAssetUrl,
+} from "../../libs/contentUtils";
+
+const formatAbsoluteDate = (dateStr) => {
+  if (!dateStr) return "";
+
+  try {
+    return new Intl.DateTimeFormat("en", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    }).format(new Date(dateStr));
+  } catch {
+    return dateStr;
+  }
+};
 
 export default function BookDetailPage({ book }) {
   const mutedText = useColorModeValue("gray.600", "gray.400");
@@ -69,6 +93,12 @@ export default function BookDetailPage({ book }) {
                 <Icon as={IoBookOutline} />
                 <Text fontWeight="medium">{book.author}</Text>
               </HStack>
+              {book.date && (
+                <HStack spacing={2} color={mutedText}>
+                  <Icon as={IoCalendarOutline} />
+                  <Text>{formatAbsoluteDate(book.date)}</Text>
+                </HStack>
+              )}
               {book.rating > 0 && (
                 <HStack spacing={2}>
                   <RatingStar rating={book.rating} />
@@ -106,6 +136,12 @@ export default function BookDetailPage({ book }) {
               bg={proseBg}
             >
               <Box className="article-prose">
+                <HStack spacing={2} color={mutedText} mb={4}>
+                  <Icon as={IoDocumentTextOutline} />
+                  <Text fontSize="sm" fontWeight="semibold" textTransform="uppercase">
+                    Reading notes
+                  </Text>
+                </HStack>
                 <ReactMarkdown>{book.notes}</ReactMarkdown>
               </Box>
             </Box>
@@ -124,7 +160,7 @@ export async function getStaticPaths() {
 
   const paths = Array.isArray(books)
     ? books
-        .filter((book) => book?.source === "internal" && book?.slug)
+        .filter((book) => isInternalBook(book))
         .map((book) => ({ params: { slug: String(book.slug) } }))
     : [];
 
@@ -143,10 +179,9 @@ export async function getStaticProps({ params }) {
     const book = Array.isArray(books)
       ? books.find(
           (entry) =>
-            entry?.source === "internal" &&
+            isInternalBook(entry) &&
             entry?.slug === params?.slug &&
-            typeof entry?.notes === "string" &&
-            entry.notes.trim(),
+            getBookNotes(entry),
         )
       : null;
 
@@ -159,11 +194,11 @@ export async function getStaticProps({ params }) {
           author: String(book.author || ""),
           date: String(book.date || ""),
           slug: String(book.slug || ""),
-          notes: String(book.notes || ""),
+          notes: getBookNotes(book),
           lesson: String(book.lesson || ""),
           rating: typeof book.rating === "number" ? book.rating : 0,
           tags: Array.isArray(book.tags) ? book.tags.filter(Boolean) : [],
-          cover: book.cover ? String(book.cover) : "",
+          cover: resolvePortfolioAssetUrl(book.cover),
         },
       },
       revalidate: 60,

@@ -23,7 +23,7 @@ const LogoBox = styled.span`
 
 const Logo = () => {
   return (
-    <Link href="/" scroll={false}>
+    <Link href="/articles" scroll={false}>
       <LogoBox>
         <ZIcon />
         <Text

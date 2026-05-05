@@ -204,7 +204,7 @@ const Home = () => {
                 </Heading>
               </HStack>
               <Text fontSize="sm" color="gray.700" _dark={{ color: "gray.300" }}>
-                Building a Rails 8 fitness platform for athletes and trainers. Production app with real users.
+                Building a Rails 8 fitness platform for athletes and trainers, live at synergym.fit and used by real people.
               </Text>
               <Link
                 as={NextLink}

@@ -1,5 +1,10 @@
+import {
+  isInternalArticle,
+  resolvePortfolioAssetUrl,
+} from "../libs/contentUtils";
+
 function generateRSSFeed(articles) {
-  const siteUrl = 'https://ozzo.blog';
+  const siteUrl = "https://ozzo.blog";
   const currentDate = new Date().toUTCString();
 
   const rssItems = articles
@@ -7,10 +12,10 @@ function generateRSSFeed(articles) {
       const pubDate = article.date ? new Date(article.date).toUTCString() : currentDate;
       const description = article.description
         ? `<description><![CDATA[${article.description}]]></description>`
-        : '';
+        : "";
       const thumbnail = article.thumbnail
         ? `<media:thumbnail url="${article.thumbnail}" />`
-        : '';
+        : "";
 
       return `
     <item>
@@ -20,9 +25,9 @@ function generateRSSFeed(articles) {
       <pubDate>${pubDate}</pubDate>
       ${description}
       ${thumbnail}
-    </item>`;
+      </item>`;
     })
-    .join('');
+    .join("");
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
@@ -40,9 +45,8 @@ function generateRSSFeed(articles) {
 
 export async function getServerSideProps({ res }) {
   try {
-    // Fetch articles from GitHub
     const response = await fetch(
-      'https://raw.githubusercontent.com/ozzgio/portfolio-data/main/articles.json'
+      "https://raw.githubusercontent.com/ozzgio/portfolio-data/main/articles.json",
     );
 
     if (!response.ok) {
@@ -52,42 +56,41 @@ export async function getServerSideProps({ res }) {
     const articlesData = await response.json();
 
     if (!Array.isArray(articlesData)) {
-      throw new Error('Invalid JSON format: expected an array');
+      throw new Error("Invalid JSON format: expected an array");
     }
 
-    // Process articles
     const articles = articlesData
       .filter((article) => article && article.title && article.date)
       .map((article) => ({
-        source: article.source === 'internal' ? 'internal' : 'external',
-        slug: String(article.slug || ''),
-        title: String(article.title || ''),
-        description: String(article.description || ''),
-        url: String(article.url || ''),
-        date: article.date || '',
-        thumbnail: article.thumbnail || '',
+        source: isInternalArticle(article) ? "internal" : "external",
+        slug: String(article.slug || ""),
+        title: String(article.title || ""),
+        description: String(article.description || ""),
+        url: String(article.url || ""),
+        date: article.date || "",
+        thumbnail: resolvePortfolioAssetUrl(article.thumbnail),
       }))
       .map((article) => ({
         ...article,
         link:
-          article.source === 'internal' && article.slug
+          article.source === "internal" && article.slug
             ? `${siteUrl}/articles/${article.slug}`
             : article.url,
       }))
       .filter((article) => article.link)
       .sort((a, b) => new Date(b.date) - new Date(a.date))
-      .slice(0, 20); // Limit to 20 most recent articles
+      .slice(0, 20);
 
     const rssFeed = generateRSSFeed(articles);
 
-    res.setHeader('Content-Type', 'text/xml; charset=utf-8');
-    res.setHeader('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=300');
+    res.setHeader("Content-Type", "text/xml; charset=utf-8");
+    res.setHeader("Cache-Control", "public, s-maxage=600, stale-while-revalidate=300");
     res.write(rssFeed);
     res.end();
 
     return { props: {} };
   } catch (error) {
-    console.error('Failed to generate RSS feed:', error);
+    console.error("Failed to generate RSS feed:", error);
     res.statusCode = 500;
     res.end();
     return { props: {} };

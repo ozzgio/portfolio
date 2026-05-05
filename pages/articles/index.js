@@ -32,6 +32,12 @@ import {
 } from "react-icons/io5";
 import Layout from "../../components/layouts/layout";
 import ArticleCard from "../../components/cards/articlecard";
+import {
+  getArticleBody,
+  getArticleSummary,
+  isInternalArticle,
+  resolvePortfolioAssetUrl,
+} from "../../libs/contentUtils";
 
 const MotionBox = motion.create(Box);
 
@@ -108,9 +114,12 @@ const ArticlesPage = ({ articles, error }) => {
       .map((article) => {
         const formattedDate =
           isMounted && article.date ? formatDate(article.date) : article.date || "";
+        const content = getArticleBody(article);
 
         return {
           ...article,
+          content,
+          summary: article.summary || getArticleSummary(article),
           formattedDate: formattedDate || article.date || "",
           absoluteDate: article.date ? formatAbsoluteDate(article.date) : "",
           year: article.date ? String(new Date(article.date).getFullYear()) : "",
@@ -155,7 +164,7 @@ const ArticlesPage = ({ articles, error }) => {
     return sortedArticles.filter((article) => {
       const matchesTag = selectedTag ? article.tags?.includes(selectedTag) : true;
       const matchesQuery = query
-        ? [article.title, article.description, ...(article.tags || [])]
+        ? [article.title, article.description, article.content, ...(article.tags || [])]
             .join(" ")
             .toLowerCase()
             .includes(query)
@@ -342,7 +351,7 @@ const ArticlesPage = ({ articles, error }) => {
                       <Icon as={IoSearchOutline} color="gray.400" />
                     </InputLeftElement>
                     <Input
-                      placeholder="Search titles, summaries, or tags"
+                      placeholder="Search titles, summaries, notes, or tags"
                       value={searchQuery}
                       onChange={(event) => setSearchQuery(event.target.value)}
                     />
@@ -470,26 +479,6 @@ const ArticlesPage = ({ articles, error }) => {
   );
 };
 
-function resolveImageUrl(url) {
-  if (!url || typeof url !== "string") return url;
-
-  if (url.startsWith("http://") || url.startsWith("https://")) {
-    return url;
-  }
-
-  if (url.startsWith("/")) {
-    return url;
-  }
-
-  if (!url.includes("/") && !url.includes("http")) {
-    const dataRepo = "ozzgio/portfolio-data";
-    const branch = "main";
-    return `https://cdn.jsdelivr.net/gh/${dataRepo}@${branch}/images/${url}`;
-  }
-
-  return url;
-}
-
 export const getStaticProps = async () => {
   try {
     const response = await fetch(
@@ -513,7 +502,8 @@ export const getStaticProps = async () => {
       .map((article) => {
         const dateValue = article.date || "";
         const thumbnail = article.thumbnail || "";
-        const source = article.source === "internal" ? "internal" : "external";
+        const internal = isInternalArticle(article);
+        const source = internal ? "internal" : "external";
         const slug =
           typeof article.slug === "string" && article.slug.trim()
             ? article.slug.trim()
@@ -528,12 +518,14 @@ export const getStaticProps = async () => {
         return {
           title: String(article.title || ""),
           description: String(article.description || ""),
+          content: getArticleBody(article),
+          summary: getArticleSummary(article),
           url: resolvedUrl,
           date: dateValue,
           source,
           slug,
           formattedDate: null,
-          thumbnail: thumbnail ? resolveImageUrl(thumbnail) : "",
+          thumbnail: thumbnail ? resolvePortfolioAssetUrl(thumbnail) : "",
           tags: Array.isArray(article.tags) ? article.tags.filter(Boolean) : [],
         };
       })
