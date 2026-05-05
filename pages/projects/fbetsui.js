@@ -12,11 +12,15 @@ const Project = ({ project }) => {
   }
 
   const { title, description, stack, github, demo } = project;
+  const projectKeywords = `${title}, ${stack.join(", ")}, software project, full stack developer, Ozzo`;
 
   return (
     <ProjectDetailsLayout
       title={title}
       projectTitle={title}
+      description={description}
+      keywords={projectKeywords}
+      path="/projects/fbetsui"
       imageUrl={project.thumbnail}
       imageAlt={title}
       dateInfo={{ display: true, value: "Jan 2023 - Apr 2024" }}

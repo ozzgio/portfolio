@@ -65,7 +65,12 @@ const BooksPage = ({ books, error }) => {
   }, [books, selectedTag, sortOption]);
 
   return (
-    <Layout title="Books">
+    <Layout
+      title="Books and Reading Notes for Builders"
+      description="A curated library of books read by Ozzo, with short notes and lessons on software, product building, and personal growth."
+      keywords="developer reading list, software engineering books, indie builder books, startup books, personal knowledge base"
+      path="/books"
+    >
       <MotionBox
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

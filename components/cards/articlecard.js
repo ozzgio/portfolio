@@ -25,6 +25,7 @@ const ArticleCard = ({
   absoluteDate,
   description,
   url,
+  slug,
   source = "external",
   thumbnail,
   tags,
@@ -51,7 +52,8 @@ const ArticleCard = ({
   const featuredGlow = useColorModeValue("orange.50", "orange.900");
   const subtlePanel = useColorModeValue("blackAlpha.50", "whiteAlpha.100");
 
-  if (!url || !title) return null;
+  const href = source === "internal" ? `/articles/${slug}` : url;
+  if (!href || !title) return null;
 
   return (
     <BaseCard
@@ -161,7 +163,7 @@ const ArticleCard = ({
           <Box pt={2} mt="auto" w="100%">
             <Link
               as={source === "internal" ? NextLink : "a"}
-              href={url}
+              href={href}
               isExternal={source !== "internal"}
               _hover={{ textDecoration: "none" }}
               display="block"

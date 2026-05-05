@@ -35,6 +35,8 @@ const Contacts = () => {
     <Layout
       title="Contacts"
       description="Get in touch with Giorgio Ozzola, a full-stack developer specializing in web development and design."
+      keywords="hire full stack developer, contact developer, freelance developer, collaborate on SaaS project"
+      path="/contacts"
     >
       <Container maxW="container.md">
         <Section delay={0.1}>

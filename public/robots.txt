@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://ozzo.blog
+
+# Sitemaps
+Sitemap: https://ozzo.blog/sitemap.xml
