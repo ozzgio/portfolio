@@ -23,6 +23,9 @@ const Project = ({ project }) => {
       path="/projects/synergym"
       imageUrl={project.thumbnail}
       imageAlt={title}
+      imageFit="contain"
+      imageBg="#0f172a"
+      imagePadding={8}
       dateInfo={{ display: true, value: "2025 - Present" }}
     >
       <P>{description}</P>

@@ -1,9 +1,9 @@
 const projectData = [
   {
     id: "synergym",
-    title: "Synergym",
+    title: "Synergym.fit",
     description:
-      "A professional Rails 8 application for athlete and trainer management with comprehensive fitness program creation, assignment capabilities, and role-based access control. Features Devise authentication, Sidekiq background jobs, E2E testing with Playwright, and PostgreSQL database.",
+      "A Rails 8 fitness platform for athlete and trainer management with comprehensive program creation, assignment workflows, and role-based access control. Features Devise authentication, Sidekiq background jobs, E2E testing with Playwright, and PostgreSQL.",
     thumbnail: "/thumbs/synergym.png",
     stack: ["Ruby on Rails", "PostgreSQL", "Redis", "Sidekiq", "Tailwind CSS"],
     github: null,

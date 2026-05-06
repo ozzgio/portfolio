@@ -28,17 +28,31 @@ export const Title = ({ children }) => {
   );
 };
 
-export const WorkImage = ({ src, alt }) => (
-  <Box w="100%" position="relative" aspectRatio={["4/3", "16/7"]}>
+export const WorkImage = ({
+  src,
+  alt,
+  fit = "cover",
+  bg = "transparent",
+  p = 0,
+}) => (
+  <Box
+    w="100%"
+    position="relative"
+    aspectRatio={["4/3", "16/7"]}
+    borderRadius="lg"
+    overflow="hidden"
+    bg={bg}
+    p={p}
+  >
     <Image
       borderRadius="lg"
       w="100%"
-      h="auto"
+      h="100%"
       maxH="320px"
-      objectFit="cover"
+      objectFit={fit}
       src={src}
       alt={alt}
-      mb={8}
+      mb={0}
       fallbackSrc="/thumbs/portfolio.png"
     />
   </Box>
