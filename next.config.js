@@ -1,14 +1,5 @@
 const nextConfig = {
   reactStrictMode: true,
-  async redirects() {
-    return [
-      {
-        source: "/",
-        destination: "/articles",
-        permanent: false,
-      },
-    ];
-  },
   webpack: (config, { dev, isServer }) => {
     if (dev && !isServer) {
       // Fix webpack hot-update.json 404 errors
