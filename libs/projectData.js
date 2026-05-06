@@ -4,7 +4,7 @@ const projectData = [
     title: "Synergym.fit",
     description:
       "A Rails 8 fitness platform for athlete and trainer management with comprehensive program creation, assignment workflows, and role-based access control. Features Devise authentication, Sidekiq background jobs, E2E testing with Playwright, and PostgreSQL.",
-    thumbnail: "/thumbs/synergym.svg",
+    thumbnail: "/thumbs/synergym.png",
     stack: ["Ruby on Rails", "PostgreSQL", "Redis", "Sidekiq", "Tailwind CSS"],
     github: null,
     demo: "https://synergym.fit",
