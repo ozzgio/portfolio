@@ -32,8 +32,15 @@ const Logo = () => {
           fontWeight="bold"
           as="span"
           ml={4}
+          fontSize={{ base: "lg", md: "inherit" }}
+          whiteSpace="nowrap"
         >
-          Ozzo&apos;s blog
+          <Text as="span" display={{ base: "none", sm: "inline" }}>
+            Ozzo&apos;s blog
+          </Text>
+          <Text as="span" display={{ base: "inline", sm: "none" }}>
+            Ozzo
+          </Text>
         </Text>
       </LogoBox>
     </Link>
