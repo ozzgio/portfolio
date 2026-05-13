@@ -9,7 +9,6 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
-  Link,
   Select,
   SimpleGrid,
   Stack,
@@ -19,54 +18,28 @@ import {
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
-  IoCalendarOutline,
+  IoBookOutline,
   IoCloseCircleOutline,
-  IoDocumentText,
+  IoDocumentTextOutline,
   IoFlashOutline,
   IoPricetagOutline,
   IoSearchOutline,
-  IoTimeOutline,
+  IoStarOutline,
 } from "react-icons/io5";
-import Layout from "../components/layouts/layout";
-import ArticleCard from "../components/cards/articlecard";
+import Layout from "../../components/layouts/layout";
+import BookCard from "../../components/cards/bookcard";
+import {
+  getBookSlug,
+  getBookNotes,
+  getBookSummary,
+  hasBookNotes,
+  resolvePortfolioAssetUrl,
+} from "../../libs/contentUtils";
 
 const MotionBox = motion.create(Box);
-
-const formatDate = (dateStr) => {
-  if (!dateStr) return "";
-
-  try {
-    const articleDate = new Date(dateStr);
-    if (Number.isNaN(articleDate.getTime())) return dateStr;
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    articleDate.setHours(0, 0, 0, 0);
-
-    const diffTime = today - articleDate;
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffDays < 0) {
-      const absDays = Math.abs(diffDays);
-      if (absDays === 1) return "Tomorrow";
-      return `In ${absDays} days`;
-    }
-
-    switch (diffDays) {
-      case 0:
-        return "Today";
-      case 1:
-        return "Yesterday";
-      default:
-        return `${diffDays} days ago`;
-    }
-  } catch (error) {
-    return dateStr;
-  }
-};
 
 const formatAbsoluteDate = (dateStr) => {
   if (!dateStr) return "";
@@ -77,16 +50,25 @@ const formatAbsoluteDate = (dateStr) => {
       month: "short",
       year: "numeric",
     }).format(new Date(dateStr));
-  } catch (error) {
+  } catch {
     return dateStr;
   }
 };
 
-const ArticlesPage = ({ articles, error }) => {
+const sortByDate = (a, b, direction = "desc") => {
+  const dateA = a.date ? new Date(a.date).getTime() : null;
+  const dateB = b.date ? new Date(b.date).getTime() : null;
+
+  if (dateA && dateB) return direction === "desc" ? dateB - dateA : dateA - dateB;
+  if (dateA) return direction === "desc" ? -1 : 1;
+  if (dateB) return direction === "desc" ? 1 : -1;
+  return 0;
+};
+
+const BooksPage = ({ books, error }) => {
   const [selectedTag, setSelectedTag] = useState(null);
-  const [sortOption, setSortOption] = useState("newest");
+  const [sortOption, setSortOption] = useState("highest_rating");
   const [searchQuery, setSearchQuery] = useState("");
-  const [isMounted, setIsMounted] = useState(false);
 
   const heroBg = useColorModeValue(
     "linear(to-br, orange.50, white 40%, orange.100)",
@@ -98,45 +80,35 @@ const ArticlesPage = ({ articles, error }) => {
   const panelBorder = useColorModeValue("blackAlpha.100", "whiteAlpha.200");
   const accentSubtle = useColorModeValue("orange.50", "orange.900");
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  const normalizedArticles = useMemo(() => {
-    return articles
-      .filter((article) => article.date)
-      .map((article) => {
-        const formattedDate =
-          isMounted && article.date ? formatDate(article.date) : article.date || "";
+  const normalizedBooks = useMemo(
+    () =>
+      (Array.isArray(books) ? books : []).map((book) => {
+        const notes = getBookNotes(book);
+        const slug = getBookSlug(book);
+        const date = book.date || "";
+        const hasNotes = hasBookNotes(book);
 
         return {
-          ...article,
-          formattedDate: formattedDate || article.date || "",
-          absoluteDate: article.date ? formatAbsoluteDate(article.date) : "",
-          year: article.date ? String(new Date(article.date).getFullYear()) : "",
+          ...book,
+          date,
+          slug,
+          notes,
+          hasNotes,
+          source: slug ? "internal" : "external",
+          ctaLabel: hasNotes ? "Read notes" : "View book",
+          summary: book.summary || getBookSummary(book),
+          absoluteDate: date ? formatAbsoluteDate(date) : "",
+          year: date ? String(new Date(date).getFullYear()) : "",
         };
-      });
-  }, [articles, isMounted]);
-
-  const sortedArticles = useMemo(() => {
-    const currentArticles = [...normalizedArticles];
-
-    if (sortOption === "newest") {
-      currentArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
-    } else if (sortOption === "oldest") {
-      currentArticles.sort((a, b) => new Date(a.date) - new Date(b.date));
-    } else if (sortOption === "alphabetical") {
-      currentArticles.sort((a, b) => a.title.localeCompare(b.title));
-    }
-
-    return currentArticles;
-  }, [normalizedArticles, sortOption]);
+      }),
+    [books],
+  );
 
   const allTags = useMemo(() => {
     const tagCounts = new Map();
 
-    sortedArticles.forEach((article) => {
-      (article.tags || []).forEach((tag) => {
+    normalizedBooks.forEach((book) => {
+      (book.tags || []).forEach((tag) => {
         tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
       });
     });
@@ -147,15 +119,52 @@ const ArticlesPage = ({ articles, error }) => {
         return a[0].localeCompare(b[0]);
       })
       .map(([tag, count]) => ({ tag, count }));
-  }, [sortedArticles]);
+  }, [normalizedBooks]);
 
-  const filteredArticles = useMemo(() => {
+  const sortedBooks = useMemo(() => {
+    const currentBooks = [...normalizedBooks];
+
+    if (sortOption === "highest_rating") {
+      currentBooks.sort((a, b) => {
+        if ((b.rating ?? 0) !== (a.rating ?? 0)) return (b.rating ?? 0) - (a.rating ?? 0);
+        return sortByDate(a, b, "desc") || a.title.localeCompare(b.title);
+      });
+    } else if (sortOption === "lowest_rating") {
+      currentBooks.sort((a, b) => {
+        if ((a.rating ?? 0) !== (b.rating ?? 0)) return (a.rating ?? 0) - (b.rating ?? 0);
+        return sortByDate(a, b, "desc") || a.title.localeCompare(b.title);
+      });
+    } else if (sortOption === "newest") {
+      currentBooks.sort((a, b) => {
+        const byDate = sortByDate(a, b, "desc");
+        if (byDate !== 0) return byDate;
+        if ((b.rating ?? 0) !== (a.rating ?? 0)) return (b.rating ?? 0) - (a.rating ?? 0);
+        return a.title.localeCompare(b.title);
+      });
+    } else if (sortOption === "oldest") {
+      currentBooks.sort((a, b) => {
+        const byDate = sortByDate(a, b, "asc");
+        if (byDate !== 0) return byDate;
+        if ((b.rating ?? 0) !== (a.rating ?? 0)) return (b.rating ?? 0) - (a.rating ?? 0);
+        return a.title.localeCompare(b.title);
+      });
+    } else if (sortOption === "alphabetical") {
+      currentBooks.sort((a, b) => a.title.localeCompare(b.title));
+    }
+
+    return currentBooks.map((book) => ({
+      ...book,
+      tags: Array.isArray(book.tags) ? [...book.tags].sort() : [],
+    }));
+  }, [normalizedBooks, sortOption]);
+
+  const filteredBooks = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
 
-    return sortedArticles.filter((article) => {
-      const matchesTag = selectedTag ? article.tags?.includes(selectedTag) : true;
+    return sortedBooks.filter((book) => {
+      const matchesTag = selectedTag ? book.tags?.includes(selectedTag) : true;
       const matchesQuery = query
-        ? [article.title, article.description, ...(article.tags || [])]
+        ? [book.title, book.author, book.lesson, book.notes, ...(book.tags || [])]
             .join(" ")
             .toLowerCase()
             .includes(query)
@@ -163,26 +172,44 @@ const ArticlesPage = ({ articles, error }) => {
 
       return matchesTag && matchesQuery;
     });
-  }, [searchQuery, selectedTag, sortedArticles]);
+  }, [searchQuery, selectedTag, sortedBooks]);
 
-  const featuredArticle = filteredArticles[0] || null;
-  const articleGrid = featuredArticle ? filteredArticles.slice(1) : [];
-  const latestArticle = sortedArticles[0] || null;
-
-  const uniqueYears = useMemo(
-    () => [...new Set(sortedArticles.map((article) => article.year).filter(Boolean))],
-    [sortedArticles],
+  const noteBackedBooks = useMemo(
+    () => normalizedBooks.filter((book) => book.hasNotes).length,
+    [normalizedBooks],
   );
 
-  const hasActiveFilters = Boolean(selectedTag || searchQuery.trim());
+  const latestFinishedBook = useMemo(() => {
+    const datedBooks = normalizedBooks.filter((book) => book.date);
+    if (datedBooks.length === 0) return null;
 
+    return [...datedBooks].sort((a, b) => new Date(b.date) - new Date(a.date))[0];
+  }, [normalizedBooks]);
+
+  const hasActiveFilters = Boolean(selectedTag || searchQuery.trim());
   const resetFilters = () => {
     setSelectedTag(null);
     setSearchQuery("");
   };
 
+  const featuredBook = filteredBooks[0] || null;
+  const bookGrid = featuredBook ? filteredBooks.slice(1) : [];
+
+  const heroMetaItems = [];
+  if (latestFinishedBook?.absoluteDate) {
+    heroMetaItems.push(`Latest: ${latestFinishedBook.absoluteDate}`);
+  }
+  if (noteBackedBooks > 0) {
+    heroMetaItems.push(`Note-backed entries: ${noteBackedBooks}`);
+  }
+
   return (
-    <Layout title="Articles">
+    <Layout
+      title="Books and Reading Notes for Builders"
+      description="A curated library of books read by Ozzo, with short notes and lessons on software, product building, and personal growth."
+      keywords="developer reading list, software engineering books, indie builder books, startup books, personal knowledge base"
+      path="/books"
+    >
       <MotionBox
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
@@ -214,6 +241,7 @@ const ArticlesPage = ({ articles, error }) => {
           >
             <Stack
               direction={{ base: "column", lg: "row" }}
+              align={{ base: "stretch", lg: "start" }}
               justify="space-between"
               spacing={8}
               position="relative"
@@ -228,39 +256,29 @@ const ArticlesPage = ({ articles, error }) => {
                   fontSize="xs"
                   textTransform="uppercase"
                 >
-                  Build in public log
+                  Reading library
                 </Badge>
                 <Box>
-                  <Heading
-                    as="h1"
-                    id="articles-heading"
-                    fontSize={{ base: "3xl", md: "4xl" }}
-                    lineHeight="1"
-                    mb={3}
-                  >
-                    Weekly shipping notes, architecture calls, and product lessons.
+                  <Heading as="h1" fontSize={{ base: "3xl", md: "4xl" }} lineHeight="1" mb={3}>
+                    Reading notes, highlighted lessons, and books worth revisiting.
                   </Heading>
                   <Text fontSize={{ base: "md", md: "lg" }} color={mutedText}>
-                    A running archive of what changed, why it changed, and what broke while
-                    shipping.
+                    What I read, what stayed with me, and the longer notes behind each book
+                    once the vault exports them.
                   </Text>
                 </Box>
-                <HStack spacing={3} flexWrap="wrap">
-                  <Link
-                    href="/rss.xml"
-                    fontSize="sm"
-                    color="orange.500"
-                    fontWeight="semibold"
-                    target="_blank"
-                    _hover={{ textDecoration: "underline" }}
-                  >
-                    RSS Feed
-                  </Link>
-                  <Text color={mutedText}>/</Text>
-                  <Text fontSize="sm" color={mutedText}>
-                    Latest: {latestArticle ? latestArticle.absoluteDate : "N/A"}
-                  </Text>
-                </HStack>
+                {heroMetaItems.length > 0 && (
+                  <HStack spacing={3} flexWrap="wrap">
+                    {heroMetaItems.map((item, index) => (
+                      <Box key={item} display="contents">
+                        {index > 0 && <Text color={mutedText}>/</Text>}
+                        <Text fontSize="sm" color={mutedText}>
+                          {item}
+                        </Text>
+                      </Box>
+                    ))}
+                  </HStack>
+                )}
               </VStack>
 
               <SimpleGrid
@@ -268,6 +286,7 @@ const ArticlesPage = ({ articles, error }) => {
                 spacing={3}
                 minW={{ base: "100%", lg: "380px" }}
                 maxW="540px"
+                alignSelf={{ base: "stretch", lg: "start" }}
               >
                 <Box
                   bg={panelBg}
@@ -277,13 +296,13 @@ const ArticlesPage = ({ articles, error }) => {
                   p={4}
                 >
                   <HStack mb={2}>
-                    <Icon as={IoDocumentText} color="orange.400" />
+                    <Icon as={IoBookOutline} color="orange.400" />
                     <Text fontSize="sm" color={mutedText}>
-                      Articles
+                      Books
                     </Text>
                   </HStack>
                   <Text fontSize="2xl" fontWeight="bold">
-                    {sortedArticles.length}
+                    {sortedBooks.length}
                   </Text>
                 </Box>
                 <Box
@@ -311,13 +330,13 @@ const ArticlesPage = ({ articles, error }) => {
                   p={4}
                 >
                   <HStack mb={2}>
-                    <Icon as={IoCalendarOutline} color="orange.400" />
+                    <Icon as={IoDocumentTextOutline} color="orange.400" />
                     <Text fontSize="sm" color={mutedText}>
-                      Years
+                      Notes
                     </Text>
                   </HStack>
                   <Text fontSize="2xl" fontWeight="bold">
-                    {uniqueYears.length}
+                    {noteBackedBooks}
                   </Text>
                 </Box>
               </SimpleGrid>
@@ -342,7 +361,7 @@ const ArticlesPage = ({ articles, error }) => {
                       <Icon as={IoSearchOutline} color="gray.400" />
                     </InputLeftElement>
                     <Input
-                      placeholder="Search titles, summaries, or tags"
+                      placeholder="Search titles, authors, notes, or tags"
                       value={searchQuery}
                       onChange={(event) => setSearchQuery(event.target.value)}
                     />
@@ -352,6 +371,8 @@ const ArticlesPage = ({ articles, error }) => {
                     onChange={(event) => setSortOption(event.target.value)}
                     maxW={{ base: "100%", xl: "220px" }}
                   >
+                    <option value="highest_rating">Highest Rating</option>
+                    <option value="lowest_rating">Lowest Rating</option>
                     <option value="newest">Newest First</option>
                     <option value="oldest">Oldest First</option>
                     <option value="alphabetical">Alphabetical</option>
@@ -376,7 +397,7 @@ const ArticlesPage = ({ articles, error }) => {
                       variant={!selectedTag ? "solid" : "outline"}
                       onClick={() => setSelectedTag(null)}
                     >
-                      All ({sortedArticles.length})
+                      All ({sortedBooks.length})
                     </Button>
                   </WrapItem>
                   {allTags.map(({ tag, count }) => (
@@ -395,21 +416,25 @@ const ArticlesPage = ({ articles, error }) => {
 
                 <HStack mt={4} spacing={3} color={mutedText} fontSize="sm" flexWrap="wrap">
                   <HStack spacing={1}>
-                    <Icon as={IoTimeOutline} />
-                    <Text>{filteredArticles.length} selected</Text>
+                    <Icon as={IoStarOutline} />
+                    <Text>{filteredBooks.length} selected</Text>
                   </HStack>
                   <Text>•</Text>
                   <Text>
-                    {sortOption === "newest"
-                      ? "Sorted by newest"
-                      : sortOption === "oldest"
-                        ? "Sorted by oldest"
-                        : "Sorted alphabetically"}
+                    {sortOption === "highest_rating"
+                      ? "Sorted by rating"
+                      : sortOption === "lowest_rating"
+                        ? "Lowest rating first"
+                        : sortOption === "newest"
+                          ? "Sorted by newest"
+                          : sortOption === "oldest"
+                            ? "Sorted by oldest"
+                            : "Sorted alphabetically"}
                   </Text>
                 </HStack>
               </Box>
 
-              {filteredArticles.length === 0 ? (
+              {filteredBooks.length === 0 ? (
                 <Box
                   borderWidth="1px"
                   borderStyle="dashed"
@@ -421,7 +446,7 @@ const ArticlesPage = ({ articles, error }) => {
                 >
                   <Icon as={IoFlashOutline} boxSize={8} color="orange.400" mb={3} />
                   <Heading as="h2" size="md" mb={2}>
-                    No articles found
+                    No books found
                   </Heading>
                   <Text color={mutedText}>
                     Try a different search term or clear the active tag filter.
@@ -429,7 +454,7 @@ const ArticlesPage = ({ articles, error }) => {
                 </Box>
               ) : (
                 <VStack spacing={8} align="stretch">
-                  {featuredArticle && (
+                  {featuredBook && (
                     <Box>
                       <HStack spacing={3} mb={4} align="center" flexWrap="wrap">
                         <Badge colorScheme="orange" px={3} py={1} borderRadius="full">
@@ -439,23 +464,26 @@ const ArticlesPage = ({ articles, error }) => {
                           Top result from your current selection
                         </Text>
                       </HStack>
-                      <ArticleCard {...featuredArticle} featured />
+                      <BookCard {...featuredBook} featured />
                     </Box>
                   )}
 
-                  {articleGrid.length > 0 && (
+                  {bookGrid.length > 0 && (
                     <Box>
                       <Flex justify="space-between" mb={4} gap={3} wrap="wrap" align="center">
                         <Heading as="h2" size="md">
                           Explore more
                         </Heading>
                         <Text fontSize="sm" color={mutedText}>
-                          {articleGrid.length} remaining articles
+                          {bookGrid.length} remaining books
                         </Text>
                       </Flex>
                       <SimpleGrid columns={{ base: 1, md: 2, xl: 3 }} spacing={6}>
-                        {articleGrid.map((article) => (
-                          <ArticleCard key={article.url} {...article} />
+                        {bookGrid.map((book) => (
+                          <BookCard
+                            key={book.slug || `${book.title}-${book.author}`}
+                            {...book}
+                          />
                         ))}
                       </SimpleGrid>
                     </Box>
@@ -470,77 +498,57 @@ const ArticlesPage = ({ articles, error }) => {
   );
 };
 
-function resolveImageUrl(url) {
-  if (!url || typeof url !== "string") return url;
-
-  if (url.startsWith("http://") || url.startsWith("https://")) {
-    return url;
-  }
-
-  if (url.startsWith("/")) {
-    return url;
-  }
-
-  if (!url.includes("/") && !url.includes("http")) {
-    const dataRepo = "ozzgio/portfolio-data";
-    const branch = "main";
-    return `https://cdn.jsdelivr.net/gh/${dataRepo}@${branch}/images/${url}`;
-  }
-
-  return url;
-}
-
 export const getStaticProps = async () => {
   try {
     const response = await fetch(
-      "https://raw.githubusercontent.com/ozzgio/portfolio-data/main/articles.json",
+      "https://raw.githubusercontent.com/ozzgio/portfolio-data/main/books.json",
     );
 
     if (!response.ok) {
-      throw new Error(
-        `Failed to fetch articles: ${response.status} ${response.statusText}`,
-      );
+      throw new Error(`Failed to fetch books: ${response.status} ${response.statusText}`);
     }
 
-    const articlesData = await response.json();
+    const booksData = await response.json();
 
-    if (!Array.isArray(articlesData)) {
+    if (!Array.isArray(booksData)) {
       throw new Error("Invalid JSON format: expected an array");
     }
 
-    const articles = articlesData
-      .filter((article) => article && article.title && article.url)
-      .map((article) => {
-        const dateValue = article.date || "";
-        const thumbnail = article.thumbnail || "";
+    const books = booksData
+      .filter((book) => book && book.title)
+      .map((book) => {
+        const slug = getBookSlug(book);
+        const hasNotes = hasBookNotes(book);
 
         return {
-          title: String(article.title || ""),
-          description: String(article.description || ""),
-          url: String(article.url || ""),
-          date: dateValue,
-          formattedDate: null,
-          thumbnail: thumbnail ? resolveImageUrl(thumbnail) : "",
-          tags: Array.isArray(article.tags) ? article.tags.filter(Boolean) : [],
+          title: String(book.title || ""),
+          author: String(book.author || ""),
+          rating: typeof book.rating === "number" ? book.rating : null,
+          tags: Array.isArray(book.tags) ? book.tags.filter(Boolean) : [],
+          cover: resolvePortfolioAssetUrl(book.cover),
+          lesson: String(book.lesson || "").trim(),
+          summary: getBookSummary(book),
+          notes: getBookNotes(book),
+          date: String(book.date || ""),
+          slug,
+          hasNotes,
+          source: slug ? "internal" : "external",
+          ctaLabel: hasNotes ? "Read notes" : "View book",
+          url: String(book.url || ""),
+          status: String(book.status || "read"),
         };
-      })
-      .filter((article) => article.title && article.url);
+      });
 
-    return {
-      props: {
-        articles: Array.isArray(articles) ? articles : [],
-      },
-      revalidate: 10,
-    };
+    return { props: { books }, revalidate: 60 };
   } catch (error) {
-    console.error("Failed to fetch articles in getStaticProps:", error);
+    console.error("Failed to fetch books in getStaticProps:", error);
     return {
       props: {
-        articles: [],
-        error: "Failed to load articles. Please try again later.",
+        books: [],
+        error: "Failed to load books. Please try again later.",
       },
     };
   }
 };
 
-export default ArticlesPage;
+export default BooksPage;

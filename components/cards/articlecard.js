@@ -15,6 +15,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
+import NextLink from "next/link";
 import { IoSparklesOutline, IoTimeOutline } from "react-icons/io5";
 import BaseCard from "../basecard";
 
@@ -24,8 +25,11 @@ const ArticleCard = ({
   absoluteDate,
   description,
   url,
+  slug,
+  source = "external",
   thumbnail,
   tags,
+  summary,
   featured = false,
 }) => {
   const { colors } = useTheme();
@@ -48,8 +52,10 @@ const ArticleCard = ({
   const metaText = useColorModeValue("gray.500", "gray.300");
   const featuredGlow = useColorModeValue("orange.50", "orange.900");
   const subtlePanel = useColorModeValue("blackAlpha.50", "whiteAlpha.100");
+  const sourceBadgeBg = useColorModeValue("whiteAlpha.800", "blackAlpha.500");
 
-  if (!url || !title) return null;
+  const href = source === "internal" ? `/articles/${slug}` : url;
+  if (!href || !title) return null;
 
   return (
     <BaseCard
@@ -116,6 +122,16 @@ const ArticleCard = ({
             {absoluteDate && <Text>({absoluteDate})</Text>}
           </HStack>
 
+          <Badge
+            colorScheme={source === "internal" ? "orange" : "gray"}
+            bg={sourceBadgeBg}
+            borderRadius="full"
+            px={3}
+            py={1}
+          >
+            {source === "internal" ? "Published on ozzo.blog" : "LinkedIn post"}
+          </Badge>
+
           <Heading
             fontSize={featured ? { base: "2xl", md: "3xl" } : "xl"}
             fontWeight="bold"
@@ -129,10 +145,30 @@ const ArticleCard = ({
             <Text
               fontSize={featured ? "md" : "sm"}
               color={bodyTextColor}
-              noOfLines={featured ? 4 : 3}
+              noOfLines={featured ? 3 : 2}
             >
               {description}
             </Text>
+          )}
+
+          {summary && summary !== description && (
+            <Box
+              w="100%"
+              bg={subtlePanel}
+              borderWidth="1px"
+              borderColor="transparent"
+              borderRadius="xl"
+              px={4}
+              py={3}
+            >
+              <Text
+                fontSize={featured ? "md" : "sm"}
+                color={bodyTextColor}
+                noOfLines={featured ? 5 : 4}
+              >
+                {summary}
+              </Text>
+            </Box>
           )}
 
           {tags && Array.isArray(tags) && tags.length > 0 && (
@@ -157,9 +193,15 @@ const ArticleCard = ({
           )}
 
           <Box pt={2} mt="auto" w="100%">
-            <Link href={url} isExternal _hover={{ textDecoration: "none" }} display="block">
+            <Link
+              as={source === "internal" ? NextLink : "a"}
+              href={href}
+              isExternal={source !== "internal"}
+              _hover={{ textDecoration: "none" }}
+              display="block"
+            >
               <Button
-                rightIcon={<ExternalLinkIcon />}
+                rightIcon={source === "internal" ? undefined : <ExternalLinkIcon />}
                 leftIcon={featured ? <IoSparklesOutline /> : undefined}
                 colorScheme="orange"
                 variant={featured ? "solid" : "outline"}
@@ -168,7 +210,7 @@ const ArticleCard = ({
                 _hover={{ transform: "translateY(-1px)", boxShadow: "md" }}
                 transition="all 0.2s ease-in-out"
               >
-                Read on LinkedIn
+                {source === "internal" ? "Read article" : "Read on LinkedIn"}
               </Button>
             </Link>
           </Box>

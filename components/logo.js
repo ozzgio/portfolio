@@ -8,12 +8,14 @@ const LogoBox = styled.span`
   font-size: 18px;
   display: inline-flex;
   align-items: center;
-  height: 30px;
-  line-height: 20px;
-  padding: 10px;
+  gap: 10px;
+  min-height: 30px;
+  line-height: 1;
+  padding: 8px 10px;
 
   > svg {
     transition: 200ms ease;
+    flex-shrink: 0;
   }
 
   &:hover > svg {
@@ -28,12 +30,29 @@ const Logo = () => {
         <ZIcon />
         <Text
           color={useColorModeValue("gray.800", "whiteAlpha.900")}
-          fontFamily="Roboto"
-          fontWeight="bold"
+          fontFamily="'Raleway', sans-serif"
+          fontWeight="700"
           as="span"
-          ml={4}
+          display="inline-flex"
+          alignItems="baseline"
+          gap={{ base: 1.5, md: 2 }}
+          fontSize={{ base: "xl", md: "2xl" }}
+          letterSpacing="-0.04em"
+          whiteSpace="nowrap"
         >
-          Ozzo&apos;s blog
+          <Text as="span" color={useColorModeValue("gray.900", "whiteAlpha.900")}>
+            Ozzo&apos;s
+          </Text>
+          <Text
+            as="span"
+            fontSize={{ base: "0.7em", md: "0.62em" }}
+            fontWeight="300"
+            letterSpacing="0.18em"
+            textTransform="uppercase"
+            color={useColorModeValue("orange.500", "orange.300")}
+          >
+            blog
+          </Text>
         </Text>
       </LogoBox>
     </Link>

@@ -20,6 +20,8 @@ yarn-error.log*
 
 .vscode/
 *.swp
+__pycache__/
+*.pyc
 
 brainstorm/
 

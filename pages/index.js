@@ -6,11 +6,11 @@ import {
   Heading,
   HStack,
   Icon,
+  Image,
   Link,
   SimpleGrid,
   Text,
   VStack,
-  Image,
   chakra,
 } from "@chakra-ui/react";
 import { ChevronRightIcon, ExternalLinkIcon } from "@chakra-ui/icons";
@@ -22,6 +22,11 @@ import Paragraph from "../components/paragraph";
 import { BioSection, BioYear } from "../components/bio";
 import Layout from "../components/layouts/layout";
 import BaseCard from "../components/basecard";
+import {
+  getArticleSummary,
+  isInternalArticle,
+  resolvePortfolioAssetUrl,
+} from "../libs/contentUtils";
 
 const ProfileImage = chakra(Image, {
   shouldForwardProp: (prop) => ["width", "height", "src", "alt"].includes(prop),
@@ -42,22 +47,65 @@ const formatAbsoluteDate = (dateStr) => {
 };
 
 const normalizeArticle = (article) => {
+  const internal = isInternalArticle(article);
+  const slug =
+    typeof article.slug === "string" && article.slug.trim() ? article.slug.trim() : "";
+  const externalUrl =
+    typeof article.url === "string" && article.url.trim() ? article.url.trim() : "";
+  const url = internal ? `/articles/${slug}` : externalUrl;
+
   return {
     title: String(article.title || ""),
     description: String(article.description || ""),
-    url: String(article.url || ""),
+    summary: getArticleSummary(article, 140),
+    url,
     date: String(article.date || ""),
     formattedDate: formatAbsoluteDate(article.date || ""),
+    source: internal ? "internal" : "external",
+    thumbnail: article.thumbnail ? resolvePortfolioAssetUrl(article.thumbnail) : "",
   };
 };
 
 const Home = ({ latestArticles = [], articlesError = false }) => {
+  const homepageSchema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "https://ozzo.blog/#person",
+        name: "Giorgio Ozzola",
+        alternateName: "Ozzo",
+        url: "https://ozzo.blog",
+        sameAs: [
+          "https://github.com/ozzgio",
+          "https://www.linkedin.com/in/ozzolagiorgio/",
+        ],
+        jobTitle: "Solo Developer",
+        description:
+          "Italian solo developer building systems for autonomy with practical AI and human review.",
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://ozzo.blog/#website",
+        url: "https://ozzo.blog",
+        name: "Ozzo.blog",
+        description:
+          "Writing about Synergym, my personal operating system, and the stack decisions behind both.",
+        publisher: {
+          "@id": "https://ozzo.blog/#person",
+        },
+      },
+    ],
+  };
+
   return (
     <Layout
       title="Home"
       metaTitle="Ozzo — solo developer building systems for autonomy"
       description="Italian solo developer building systems for autonomy. Writing about Synergym, my personal operating system, and the stack decisions behind both."
-      socialTitle="Ozzo — solo developer building systems for autonomy"
+      keywords="solo developer, practical AI, systems for autonomy, Synergym, Italian developer, build in public"
+      path="/"
+      jsonLd={homepageSchema}
     >
       <br />
       <Container>
@@ -283,24 +331,31 @@ const Home = ({ latestArticles = [], articlesError = false }) => {
           ) : (
             <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6} mt={4}>
               {latestArticles.map((article) => (
-                <BaseCard key={article.url} maxW="none" h="100%">
+                <BaseCard key={`${article.source}:${article.url}`} maxW="none" h="100%">
                   <VStack align="start" spacing={3} h="100%">
                     <Badge colorScheme="orange">{article.formattedDate || "No date"}</Badge>
                     <Heading as="h3" fontSize="lg" lineHeight="1.2">
                       {article.title}
                     </Heading>
                     <Text fontSize="sm" color="gray.600" _dark={{ color: "gray.300" }}>
-                      {article.description || "No description provided."}
+                      {article.description || article.summary || "No description provided."}
                     </Text>
                     <Link
+                      as={article.source === "internal" ? NextLink : "a"}
                       href={article.url}
-                      isExternal
+                      isExternal={article.source !== "internal"}
                       color="orange.600"
                       _dark={{ color: "orange.400" }}
                       fontWeight="medium"
                       mt="auto"
                     >
-                      Read article <ExternalLinkIcon mx="2px" />
+                      {article.source === "internal" ? (
+                        "Read article"
+                      ) : (
+                        <>
+                          Read article <ExternalLinkIcon mx="2px" />
+                        </>
+                      )}
                     </Link>
                   </VStack>
                 </BaseCard>
@@ -386,8 +441,9 @@ export async function getStaticProps() {
     }
 
     const latestArticles = articlesData
-      .filter((article) => article && article.title && article.url && article.date)
+      .filter((article) => article && article.title && article.date)
       .map(normalizeArticle)
+      .filter((article) => article.url)
       .sort((a, b) => new Date(b.date) - new Date(a.date))
       .slice(0, 3);
 

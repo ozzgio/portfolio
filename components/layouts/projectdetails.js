@@ -13,9 +13,15 @@ const ProjectDetailsLayout = ({
   children,
   title,
   projectTitle,
+  description,
+  keywords,
   imageUrl,
   imageAlt,
+  imageFit,
+  imageBg,
+  imagePadding,
   dateInfo,
+  path,
 }) => (
   <motion.article
     initial="hidden"
@@ -34,15 +40,71 @@ const ProjectDetailsLayout = ({
           </title>
           <meta
             name="description"
-            content={`Details for ${title} project by Ozzo`}
+            content={
+              description ||
+              `Project details for ${title}, built by Ozzo (full stack developer and indie builder).`
+            }
           />
+          <meta
+            name="keywords"
+            content={
+              keywords ||
+              `${title}, software project, full stack development, indie builder, Ozzo`
+            }
+          />
+          <meta name="robots" content="index,follow,max-image-preview:large" />
+          {path && <link rel="canonical" href={`https://ozzo.blog${path}`} />}
           <meta property="og:title" content={`${title} - Ozzo`} />
           <meta
             property="og:description"
-            content={`Details for ${title} project by Ozzo`}
+            content={
+              description ||
+              `Project details for ${title}, built by Ozzo (full stack developer and indie builder).`
+            }
           />
           <meta property="og:type" content="website" />
-          <meta property="og:url" content="https://ozzo.blog/projects" />
+          <meta
+            property="og:url"
+            content={path ? `https://ozzo.blog${path}` : "https://ozzo.blog/projects"}
+          />
+          <meta
+            property="og:image"
+            content={imageUrl ? `https://ozzo.blog${imageUrl}` : "https://ozzo.blog/images/propic.jpg"}
+          />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content={`${title} - Ozzo`} />
+          <meta
+            name="twitter:description"
+            content={
+              description ||
+              `Project details for ${title}, built by Ozzo (full stack developer and indie builder).`
+            }
+          />
+          <meta
+            name="twitter:image"
+            content={imageUrl ? `https://ozzo.blog${imageUrl}` : "https://ozzo.blog/images/propic.jpg"}
+          />
+          {path && (
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                  "@context": "https://schema.org",
+                  "@type": "SoftwareSourceCode",
+                  name: title,
+                  description:
+                    description ||
+                    `Project details for ${title}, built by Ozzo (full stack developer and indie builder).`,
+                  url: `https://ozzo.blog${path}`,
+                  author: {
+                    "@type": "Person",
+                    name: "Giorgio Ozzola",
+                    alternateName: "Ozzo",
+                  },
+                }),
+              }}
+            />
+          )}
         </Head>
       )}
       <Container maxW="container.md" pt={8} pb={12}>
@@ -50,7 +112,13 @@ const ProjectDetailsLayout = ({
         {dateInfo && dateInfo.display && <Badge mb={4}>{dateInfo.value}</Badge>}
         {imageUrl && (
           <Box mb={10}>
-            <WorkImage src={imageUrl} alt={imageAlt} />
+            <WorkImage
+              src={imageUrl}
+              alt={imageAlt}
+              fit={imageFit}
+              bg={imageBg}
+              p={imagePadding}
+            />
           </Box>
         )}
         <Box mt={6}>{children}</Box>

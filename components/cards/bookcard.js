@@ -1,155 +1,269 @@
 import {
+  Badge,
   Box,
   Heading,
-  Text,
+  HStack,
   Image,
-  Icon,
   Tag,
+  Text,
+  VStack,
   Wrap,
   WrapItem,
-  Flex,
-  HStack,
   useColorModeValue,
   useTheme,
 } from "@chakra-ui/react";
-import { FiBookOpen } from "react-icons/fi";
-import { FaQuoteLeft } from "react-icons/fa";
-import RatingStar from "../ratingstar";
+import NextLink from "next/link";
+import {
+  IoBookOutline,
+  IoCalendarOutline,
+  IoDocumentTextOutline,
+  IoStar,
+} from "react-icons/io5";
 import BaseCard from "../basecard";
 
 function formatDate(rawDate) {
   if (!rawDate) return "";
-  const date = new Date(rawDate);
-  return date.toLocaleString("default", { month: "short", year: "numeric" });
+
+  try {
+    return new Intl.DateTimeFormat("en", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    }).format(new Date(rawDate));
+  } catch {
+    return rawDate;
+  }
 }
 
-const BookCard = ({ title, author, rating, tags, cover, lesson, date }) => {
+const BookCard = ({
+  title,
+  author,
+  rating,
+  tags = [],
+  cover,
+  lesson,
+  summary,
+  date,
+  slug,
+  source = "external",
+  featured = false,
+  url,
+}) => {
   const { colors } = useTheme();
   const headingTextColor = useColorModeValue(
     colors.headingText.default,
-    colors.headingText._dark
+    colors.headingText._dark,
   );
   const bodyTextColor = useColorModeValue(
     colors.bodyText.default,
-    colors.bodyText._dark
+    colors.bodyText._dark,
   );
   const tagBgColor = useColorModeValue(
     colors.tagBg.default,
-    colors.tagBg._dark
+    colors.tagBg._dark,
   );
   const tagTextColor = useColorModeValue(
     colors.tagText.default,
-    colors.tagText._dark
+    colors.tagText._dark,
   );
-  const iconColor = useColorModeValue("gray.500", "gray.400");
-  const lessonBgColor = useColorModeValue("orange.50", "orange.900");
-  const lessonTextColor = useColorModeValue("orange.800", "orange.100");
-  const cardBorder = useColorModeValue(
-    colors.cardBorder.default,
-    colors.cardBorder._dark
-  );
+  const metaText = useColorModeValue("gray.500", "gray.300");
+  const featuredGlow = useColorModeValue("orange.50", "orange.900");
+  const subtlePanel = useColorModeValue("blackAlpha.50", "whiteAlpha.100");
+  const sourceBadgeBg = useColorModeValue("whiteAlpha.800", "blackAlpha.500");
+  const coverPanelBg = useColorModeValue("blackAlpha.50", "blackAlpha.400");
 
-  return (
-    <BaseCard p={5}>
-      <Flex direction="column" height="100%">
+  const href = source === "internal" ? `/books/${slug}` : url;
+  const formattedDate = formatDate(date);
+  const isInternalLink = source === "internal" && href;
+
+  const cardContent = (
+    <BaseCard
+      p={0}
+      maxW="none"
+      h="100%"
+      borderColor={featured ? "orange.400" : undefined}
+      bgGradient={featured ? `linear(to-br, ${featuredGlow}, transparent)` : undefined}
+      cursor={isInternalLink ? "pointer" : "default"}
+      role="group"
+    >
+      <Box display="flex" flexDirection="column" h="100%">
         {cover && (
-          <Box mb={4} align="center">
+          <Box
+            position="relative"
+            minH={featured ? "280px" : "220px"}
+            maxH={featured ? "380px" : "260px"}
+            overflow="hidden"
+            bg={featured ? coverPanelBg : undefined}
+            p={featured ? { base: 4, md: 6 } : 0}
+          >
             <Image
               src={cover}
               alt={title}
-              borderRadius="lg"
-              maxH="180px"
-              objectFit="cover"
-              boxShadow="xl"
-              border="4px solid"
-              borderColor={cardBorder}
+              width="100%"
+              height="100%"
+              objectFit={featured ? "contain" : "cover"}
+              transition="transform 0.5s ease"
+              _groupHover={{ transform: "scale(1.04)" }}
             />
+            {!featured && (
+              <Box
+                position="absolute"
+                inset={0}
+                bgGradient="linear(to-t, blackAlpha.700, transparent 55%)"
+              />
+            )}
+            {featured && (
+              <Badge
+                position="absolute"
+                top={4}
+                left={4}
+                colorScheme="orange"
+                px={3}
+                py={1}
+                borderRadius="full"
+              >
+                Featured book
+              </Badge>
+            )}
           </Box>
         )}
-        <Heading
-          fontSize="xl"
-          fontWeight="bold"
-          textAlign="center"
-          color={headingTextColor}
-          mb={1}
-          letterSpacing="tight"
-        >
-          {title}
-        </Heading>
-        <Text
-          fontSize="md"
-          textAlign="center"
-          color={bodyTextColor}
-          mb={1}
-          fontWeight="medium"
-        >
-          <Icon as={FiBookOpen} mr={1} color={iconColor} />
-          {author}
-        </Text>
-        {date && (
-          <Text fontSize="xs" color={bodyTextColor} mb={3} textAlign="center">
-            Finished: {formatDate(date)}
-          </Text>
-        )}
 
-        {lesson && lesson.trim() && (
-          <Box
-            bg={lessonBgColor}
-            borderRadius="md"
-            p={3}
-            mb={3}
-            display="flex"
-            alignItems="center"
-            boxShadow="sm"
+        <VStack align="start" spacing={4} p={{ base: 5, md: 6 }} flex={1}>
+          <HStack spacing={2} color={metaText} fontSize="sm" flexWrap="wrap">
+            <HStack
+              spacing={2}
+              bg={subtlePanel}
+              borderWidth="1px"
+              borderColor="transparent"
+              borderRadius="full"
+              px={3}
+              py={1}
+            >
+              <IoBookOutline />
+              <Text>{author}</Text>
+            </HStack>
+            {formattedDate && (
+              <HStack
+                spacing={2}
+                bg={subtlePanel}
+                borderWidth="1px"
+                borderColor="transparent"
+                borderRadius="full"
+                px={3}
+                py={1}
+              >
+                <IoCalendarOutline />
+                <Text>{formattedDate}</Text>
+              </HStack>
+            )}
+            {typeof rating === "number" && rating > 0 && (
+              <HStack
+                spacing={2}
+                bg={subtlePanel}
+                borderWidth="1px"
+                borderColor="transparent"
+                borderRadius="full"
+                px={3}
+                py={1}
+              >
+                <IoStar color="#dd6b20" />
+                <Text>{rating.toFixed(1)}</Text>
+              </HStack>
+            )}
+          </HStack>
+
+          <Badge
+            colorScheme={source === "internal" ? "orange" : "gray"}
+            bg={sourceBadgeBg}
+            borderRadius="full"
+            px={3}
+            py={1}
           >
-            <Icon as={FaQuoteLeft} color={lessonTextColor} boxSize={4} mr={2} />
-            <Text fontSize="sm" fontStyle="italic" color={lessonTextColor}>
+            {source === "internal" ? "Reading note" : "Library entry"}
+          </Badge>
+
+          <Heading
+            fontSize={featured ? { base: "2xl", md: "3xl" } : "xl"}
+            fontWeight="bold"
+            color={headingTextColor}
+            lineHeight="1.1"
+          >
+            {title}
+          </Heading>
+
+          {lesson && (
+            <Text
+              fontSize={featured ? "md" : "sm"}
+              color={bodyTextColor}
+              noOfLines={featured ? 3 : 2}
+            >
               {lesson}
             </Text>
-          </Box>
-        )}
+          )}
 
-        <HStack
-          spacing={2}
-          alignItems="center"
-          justifyContent="center"
-          mt={2}
-          mb={2}
-        >
-          <RatingStar rating={rating} />
-          <Text
-            fontSize="md"
-            color="orange.500"
-            fontWeight="bold"
-            lineHeight={1}
-          >
-            {rating}
-          </Text>
-        </HStack>
+          {summary && summary !== lesson && (
+            <Box
+              w="100%"
+              bg={subtlePanel}
+              borderWidth="1px"
+              borderColor="transparent"
+              borderRadius="xl"
+              px={4}
+              py={3}
+            >
+              <HStack spacing={2} color={metaText} mb={2}>
+                <IoDocumentTextOutline />
+                <Text fontSize="xs" fontWeight="semibold" textTransform="uppercase">
+                  Note preview
+                </Text>
+              </HStack>
+              <Text
+                fontSize={featured ? "md" : "sm"}
+                color={bodyTextColor}
+                noOfLines={featured ? 5 : 4}
+              >
+                {summary}
+              </Text>
+            </Box>
+          )}
 
-        {tags.length > 0 && (
-          <Wrap spacing={2} mb={2} justify="center">
-            {tags.map((tag, idx) => (
-              <WrapItem key={idx}>
-                <Tag
-                  size="md"
-                  colorScheme="orange"
-                  bg={tagBgColor}
-                  color={tagTextColor}
-                  borderRadius="full"
-                  px={3}
-                  py={1}
-                  fontWeight="semibold"
-                >
-                  {tag}
-                </Tag>
-              </WrapItem>
-            ))}
-          </Wrap>
-        )}
-      </Flex>
+          {tags.length > 0 && (
+            <Wrap spacing={2}>
+              {tags.map((tag) => (
+                <WrapItem key={tag}>
+                  <Tag
+                    size="md"
+                    colorScheme="orange"
+                    bg={tagBgColor}
+                    color={tagTextColor}
+                    borderRadius="full"
+                    px={3}
+                    py={1}
+                    fontWeight="semibold"
+                  >
+                    {tag}
+                  </Tag>
+                </WrapItem>
+              ))}
+            </Wrap>
+          )}
+        </VStack>
+      </Box>
     </BaseCard>
   );
+
+  if (isInternalLink) {
+    return (
+      <NextLink
+        href={href}
+        style={{ display: "block", height: "100%", textDecoration: "none" }}
+      >
+        {cardContent}
+      </NextLink>
+    );
+  }
+
+  return cardContent;
 };
 
 export default BookCard;
