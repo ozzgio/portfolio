@@ -329,7 +329,7 @@ const Home = ({ latestArticles = [], articlesError = false }) => {
           ) : latestArticles.length === 0 ? (
             <Text mt={4}>No articles yet. That gap is visible on purpose.</Text>
           ) : (
-            <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6} mt={4}>
+            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6} mt={4}>
               {latestArticles.map((article) => (
                 <BaseCard key={`${article.source}:${article.url}`} maxW="none" h="100%">
                   <VStack align="start" spacing={3} h="100%">

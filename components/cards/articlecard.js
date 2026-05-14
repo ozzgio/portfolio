@@ -55,6 +55,8 @@ const ArticleCard = ({
   const sourceBadgeBg = useColorModeValue("whiteAlpha.800", "blackAlpha.500");
 
   const href = source === "internal" ? `/articles/${slug}` : url;
+  const leadText = description || summary || "No description provided.";
+
   if (!href || !title) return null;
 
   return (
@@ -141,17 +143,15 @@ const ArticleCard = ({
             {title}
           </Heading>
 
-          {description && (
-            <Text
-              fontSize={featured ? "md" : "sm"}
-              color={bodyTextColor}
-              noOfLines={featured ? 3 : 2}
-            >
-              {description}
-            </Text>
-          )}
+          <Text
+            fontSize={featured ? "md" : "sm"}
+            color={bodyTextColor}
+            noOfLines={featured ? 3 : 2}
+          >
+            {leadText}
+          </Text>
 
-          {summary && summary !== description && (
+          {description && summary && summary !== description && (
             <Box
               w="100%"
               bg={subtlePanel}

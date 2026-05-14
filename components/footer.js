@@ -1,10 +1,11 @@
-import { Box, useColorModeValue, Link, VStack, Text, HStack } from "@chakra-ui/react";
+import { Box, HStack, Link, Text, VStack, useColorModeValue } from "@chakra-ui/react";
 import packageJson from "../package.json";
 
-const Footer = () => {
+const Footer = ({ showBorder = true }) => {
   const textColor = useColorModeValue("gray.600", "gray.400");
   const linkColor = useColorModeValue("orange.600", "orange.400");
-  
+  const borderColor = useColorModeValue("gray.200", "gray.700");
+
   return (
     <Box
       as="footer"
@@ -13,8 +14,8 @@ const Footer = () => {
       textAlign="center"
       bottom={0}
       mt={12}
-      borderTopWidth="1px"
-      borderTopColor={useColorModeValue("gray.200", "gray.700")}
+      borderTopWidth={showBorder ? "1px" : "0"}
+      borderTopColor={showBorder ? borderColor : "transparent"}
     >
       <VStack spacing={2}>
         <Text fontSize="sm" color={textColor}>
