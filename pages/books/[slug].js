@@ -20,7 +20,6 @@ import {
   IoCalendarOutline,
   IoDocumentTextOutline,
 } from "react-icons/io5";
-import { FaQuoteLeft } from "react-icons/fa";
 import RatingStar from "../../components/ratingstar";
 import Layout from "../../components/layouts/layout";
 import {
@@ -48,8 +47,7 @@ export default function BookDetailPage({ book }) {
   const mutedText = useColorModeValue("gray.600", "gray.400");
   const proseBg = useColorModeValue("white", "whiteAlpha.100");
   const proseBorder = useColorModeValue("blackAlpha.100", "whiteAlpha.200");
-  const lessonBg = useColorModeValue("orange.50", "orange.900");
-  const lessonText = useColorModeValue("orange.800", "orange.100");
+  const takedownColor = useColorModeValue("gray.700", "gray.300");
   const emptyStateBg = useColorModeValue("gray.50", "whiteAlpha.50");
 
   if (!book) return null;
@@ -120,13 +118,20 @@ export default function BookDetailPage({ book }) {
           </HStack>
 
           {book.lesson && (
-            <Box w="100%" bg={lessonBg} borderRadius="lg" p={4}>
-              <HStack align="start" spacing={3}>
-                <Icon as={FaQuoteLeft} color={lessonText} mt={1} flexShrink={0} />
-                <Text fontStyle="italic" color={lessonText}>
-                  {book.lesson}
-                </Text>
-              </HStack>
+            <Box w="100%" borderLeftWidth="3px" borderLeftColor="orange.400" pl={4}>
+              <Text
+                fontSize="xs"
+                fontWeight="bold"
+                textTransform="uppercase"
+                letterSpacing="wider"
+                color={mutedText}
+                mb={1}
+              >
+                Main takedown
+              </Text>
+              <Text fontStyle="italic" color={takedownColor} fontSize="md">
+                {book.lesson}
+              </Text>
             </Box>
           )}
 
