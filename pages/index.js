@@ -6,12 +6,10 @@ import {
   Heading,
   HStack,
   Icon,
-  Image,
   Link,
   SimpleGrid,
   Text,
   VStack,
-  chakra,
 } from "@chakra-ui/react";
 import { ChevronRightIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import NextLink from "next/link";
@@ -27,10 +25,6 @@ import {
   isInternalArticle,
   resolvePortfolioAssetUrl,
 } from "../libs/contentUtils";
-
-const ProfileImage = chakra(Image, {
-  shouldForwardProp: (prop) => ["width", "height", "src", "alt"].includes(prop),
-});
 
 const formatAbsoluteDate = (dateStr) => {
   if (!dateStr) return "";
@@ -157,41 +151,6 @@ const Home = ({ latestArticles = [], articlesError = false }) => {
             <Text fontSize="lg" fontWeight="medium">
               Practical AI use with human review for peers, solo builders, and operators.
             </Text>
-          </Box>
-          <Box
-            flexShrink={0}
-            mt={{ base: 6, md: 0 }}
-            ml={{ md: 8 }}
-            textAlign="center"
-          >
-            <Box
-              borderColor="orange.300"
-              _dark={{ borderColor: "orange.600" }}
-              borderWidth={3}
-              borderStyle="solid"
-              w="120px"
-              h="120px"
-              display="inline-block"
-              borderRadius="full"
-              overflow="hidden"
-              boxShadow="xl"
-              _hover={{
-                transform: "scale(1.05)",
-                borderColor: "orange.400",
-                _dark: { borderColor: "orange.500" },
-              }}
-              transition="all 0.3s"
-            >
-              <ProfileImage
-                src="/images/propic.jpg"
-                alt="Profile image"
-                borderRadius="full"
-                width={120}
-                height={120}
-                objectFit="cover"
-                style={{ aspectRatio: "1 / 1" }}
-              />
-            </Box>
           </Box>
         </Box>
         <Section delay={0.1}>
@@ -417,7 +376,6 @@ const Home = ({ latestArticles = [], articlesError = false }) => {
             </Link>
             .
           </BioSection>
-          <Paragraph>Currently in Piacenza, building things outside of work.</Paragraph>
         </Section>
       </Container>
     </Layout>
