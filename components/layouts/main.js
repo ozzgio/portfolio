@@ -4,6 +4,8 @@ import Head from "next/head";
 import Footer from "../footer";
 
 const Main = ({ children, router }) => {
+  const showFooterBorder = router.asPath !== "/";
+
   return (
     <Box as="main" minH="100vh" display="flex" flexDirection="column">
       <Head>
@@ -19,8 +21,9 @@ const Main = ({ children, router }) => {
       <Container maxW="container.md" pt={24} flex="1">
         {children}
       </Container>
-      <Footer />
+      <Footer showBorder={showFooterBorder} />
     </Box>
   );
 };
+
 export default Main;

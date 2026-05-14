@@ -2,16 +2,18 @@ import Head from "next/head";
 import { Flex } from "@chakra-ui/react";
 
 const SITE_URL = "https://ozzo.blog";
-const DEFAULT_TITLE = "Ozzo | Full Stack Developer & Indie Builder";
+const DEFAULT_TITLE = "Ozzo — solo developer building systems for autonomy";
 const DEFAULT_DESCRIPTION =
-  "Portfolio and articles by Ozzo, a full stack developer and indie builder shipping SaaS products, automation workflows, and practical software projects.";
+  "Italian solo developer building systems for autonomy. Writing about Synergym, my personal operating system, and the stack decisions behind both.";
 const DEFAULT_KEYWORDS =
-  "full stack developer portfolio, indie builder, SaaS developer, software engineer, web development, automation, Ozzo";
+  "solo developer, indie builder, Italian developer, practical AI, autonomy systems, Synergym, software engineering";
 const DEFAULT_OG_IMAGE = `${SITE_URL}/images/propic.jpg`;
 
 const Layout = ({
   children,
   title,
+  metaTitle,
+  socialTitle,
   description = DEFAULT_DESCRIPTION,
   keywords = DEFAULT_KEYWORDS,
   robots = "index,follow,max-image-preview:large",
@@ -19,8 +21,8 @@ const Layout = ({
   image = DEFAULT_OG_IMAGE,
   jsonLd = null,
 }) => {
-  const hasCustomTitle = Boolean(title);
-  const pageTitle = hasCustomTitle ? `${title} | Ozzo` : DEFAULT_TITLE;
+  const pageTitle = metaTitle || (title ? `${title} | Ozzo` : DEFAULT_TITLE);
+  const shareTitle = socialTitle || pageTitle;
   const canonicalUrl = path ? `${SITE_URL}${path}` : null;
 
   return (
@@ -39,14 +41,14 @@ const Layout = ({
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/site.webmanifest" />
-        <meta property="og:title" content={pageTitle} />
+        <meta property="og:title" content={shareTitle} />
         <meta property="og:description" content={description} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={canonicalUrl || SITE_URL} />
         <meta property="og:site_name" content="Ozzo" />
         <meta property="og:image" content={image} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:title" content={shareTitle} />
         <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={image} />
         {jsonLd && (
