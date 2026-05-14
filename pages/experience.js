@@ -29,6 +29,7 @@ const StackTag = ({ label }) => {
 const WorkEntry = ({ title, company, companyUrl, period, location, bullets, stack }) => {
   const mutedText = useColorModeValue("gray.500", "gray.400");
   const borderColor = useColorModeValue("orange.200", "orange.800");
+  const bodyText = useColorModeValue("gray.700", "gray.300");
   return (
     <Box borderLeftWidth="2px" borderLeftColor={borderColor} pl={5} py={1}>
       <Heading as="h3" fontSize="md" fontWeight="semibold">{title}</Heading>
@@ -41,7 +42,7 @@ const WorkEntry = ({ title, company, companyUrl, period, location, bullets, stac
       </HStack>
       <VStack align="start" spacing={1} mt={2}>
         {bullets.map((b, i) => (
-          <Text key={i} fontSize="sm" color={useColorModeValue("gray.700", "gray.300")}>
+          <Text key={i} fontSize="sm" color={bodyText}>
             {b}
           </Text>
         ))}
@@ -58,6 +59,7 @@ const WorkEntry = ({ title, company, companyUrl, period, location, bullets, stac
 const ProjectEntry = ({ id, title, url, period, description, stack }) => {
   const mutedText = useColorModeValue("gray.500", "gray.400");
   const borderColor = useColorModeValue("orange.200", "orange.800");
+  const bodyText = useColorModeValue("gray.700", "gray.300");
   return (
     <Box id={id} borderLeftWidth="2px" borderLeftColor={borderColor} pl={5} py={1}>
       <HStack spacing={3} flexWrap="wrap">
@@ -67,7 +69,7 @@ const ProjectEntry = ({ id, title, url, period, description, stack }) => {
         )}
         <Text fontSize="sm" color={mutedText}>{period}</Text>
       </HStack>
-      <Text fontSize="sm" color={useColorModeValue("gray.700", "gray.300")} mt={2}>{description}</Text>
+      <Text fontSize="sm" color={bodyText} mt={2}>{description}</Text>
       {stack && (
         <Wrap spacing={2} mt={3}>
           {stack.map((s) => <WrapItem key={s}><StackTag label={s} /></WrapItem>)}
