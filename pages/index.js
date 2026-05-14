@@ -214,9 +214,9 @@ const Home = ({ latestArticles = [], articlesError = false }) => {
                 </Heading>
               </HStack>
               <Text fontSize="sm" color="gray.700" _dark={{ color: "gray.300" }}>
-                A Rails 8 platform for athletes and trainers. This month I shipped UI and
-                translation tooling improvements, tightened infrastructure, and kept pushing the
-                product toward a cleaner coach and athlete experience.
+                Gym management SaaS on Rails 8 — PostgreSQL, Redis, Sidekiq for background jobs,
+                Playwright for full E2E coverage. Trainer and athlete workflows, workout program
+                creation, progress tracking. Running in production.
               </Text>
               <Link
                 as={NextLink}
@@ -265,9 +265,23 @@ const Home = ({ latestArticles = [], articlesError = false }) => {
                 </Heading>
               </HStack>
               <Text fontSize="sm" color="gray.700" _dark={{ color: "gray.300" }}>
-                Running a small local stack on a NUC with Docker, Gitea, Nextcloud, and the usual
-                experiments that make the rest of my work more autonomous.
+                25+ Dockerized services on an Intel NUC14. Custom MCP server exposing the Obsidian
+                vault to AI agents. n8n in queue mode, Letta for agent memory, ChromaDB as vector
+                store, Ollama for local inference, Faster-Whisper for speech-to-text. Self-hosted
+                Gitea with act_runner CI/CD. The infrastructure layer behind everything else here.
               </Text>
+              <Link
+                as={NextLink}
+                href="/experience#homelab"
+                color="orange.600"
+                _dark={{ color: "orange.400" }}
+                fontSize="sm"
+                fontWeight="medium"
+                mt={2}
+                display="inline-block"
+              >
+                Full breakdown →
+              </Link>
             </Box>
           </VStack>
         </Section>
@@ -317,6 +331,19 @@ const Home = ({ latestArticles = [], articlesError = false }) => {
               transition="all 0.2s"
             >
               Read The Writing
+            </Button>
+            <Button
+              as={NextLink}
+              href="/experience"
+              scroll={false}
+              rightIcon={<ChevronRightIcon />}
+              colorScheme="orange"
+              variant="ghost"
+              size="lg"
+              _hover={{ transform: "translateY(-2px)", boxShadow: "xl" }}
+              transition="all 0.2s"
+            >
+              My Background
             </Button>
           </Box>
         </Section>
