@@ -306,37 +306,6 @@ const Home = ({ latestArticles = [], articlesError = false, currentBook = null }
             I lift 4x a week, read constantly, and build software outside of work. That&apos;s the
             whole personality section.
           </Paragraph>
-          {currentBook && (
-            <Link as={NextLink} href="/books" _hover={{ textDecoration: "none" }}>
-              <HStack
-                spacing={4}
-                p={4}
-                borderRadius="lg"
-                borderWidth="1px"
-                borderColor="orange.200"
-                bg="orange.50"
-                _dark={{ borderColor: "orange.700", bg: "whiteAlpha.50" }}
-                _hover={{ borderColor: "orange.400" }}
-                transition="border-color 0.2s"
-                mt={2}
-                mb={2}
-              >
-                <Icon as={IoBookOutline} color="orange.500" boxSize={5} flexShrink={0} />
-                <Box flex={1} minW={0}>
-                  <Text fontSize="xs" fontWeight="bold" textTransform="uppercase" letterSpacing="wider" color="orange.500" mb={0.5}>
-                    Currently reading
-                  </Text>
-                  <Text fontSize="sm" fontWeight="semibold" noOfLines={1}>
-                    {currentBook.title}
-                  </Text>
-                  <Text fontSize="xs" color="gray.500" _dark={{ color: "gray.400" }}>
-                    {currentBook.author}
-                  </Text>
-                </Box>
-                <ChevronRightIcon color="orange.400" />
-              </HStack>
-            </Link>
-          )}
           <Box display="flex" justifyContent="center" gap={4} my={6} flexWrap="wrap">
             <Button
               as={NextLink}
@@ -406,6 +375,36 @@ const Home = ({ latestArticles = [], articlesError = false, currentBook = null }
                 </BaseCard>
               ))}
             </SimpleGrid>
+          )}
+          {currentBook && (
+            <Link as={NextLink} href="/books" _hover={{ textDecoration: "none" }}>
+              <HStack
+                spacing={4}
+                p={4}
+                borderRadius="lg"
+                borderWidth="1px"
+                borderColor="orange.200"
+                bg="orange.50"
+                _dark={{ borderColor: "orange.700", bg: "whiteAlpha.50" }}
+                _hover={{ borderColor: "orange.400" }}
+                transition="border-color 0.2s"
+                mt={6}
+              >
+                <Icon as={IoBookOutline} color="orange.500" boxSize={5} flexShrink={0} />
+                <Box flex={1} minW={0}>
+                  <Text fontSize="xs" fontWeight="bold" textTransform="uppercase" letterSpacing="wider" color="orange.500" mb={0.5}>
+                    Currently reading
+                  </Text>
+                  <Text fontSize="sm" fontWeight="semibold" noOfLines={1}>
+                    {currentBook.title}
+                  </Text>
+                  <Text fontSize="xs" color="gray.500" _dark={{ color: "gray.400" }}>
+                    {currentBook.author}
+                  </Text>
+                </Box>
+                <ChevronRightIcon color="orange.400" />
+              </HStack>
+            </Link>
           )}
         </Section>
         <Section delay={0.4}>
