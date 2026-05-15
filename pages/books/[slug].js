@@ -186,15 +186,6 @@ export default function BookDetailPage({ book }) {
             </Box>
           )}
 
-          {/* TLDR from deep summary */}
-          {book.tldr && (
-            <Box w="100%">
-              <Text color={bodyColor} fontSize="sm" lineHeight="1.8">
-                {book.tldr}
-              </Text>
-            </Box>
-          )}
-
           {/* Personal read sections */}
           {hasPersonalSections && (
             <VStack align="start" spacing={4} w="100%">
@@ -260,28 +251,6 @@ export default function BookDetailPage({ book }) {
                 </Box>
               )}
             </VStack>
-          )}
-
-          {/* Deep dive */}
-          {hasDeepDive && (
-            <>
-              <Divider />
-              <VStack align="start" spacing={4} w="100%">
-                <Heading as="h2" size="sm" color={mutedText} textTransform="uppercase" letterSpacing="wider">
-                  Deep dive
-                </Heading>
-                <Box
-                  w="100%"
-                  borderWidth="1px"
-                  borderColor={proseBorder}
-                  borderRadius="xl"
-                  p={{ base: 4, md: 6 }}
-                  bg={proseBg}
-                >
-                  <MarkdownProse>{book.deep_dive}</MarkdownProse>
-                </Box>
-              </VStack>
-            </>
           )}
 
           {/* Notable quotes */}

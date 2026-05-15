@@ -259,12 +259,11 @@ const BooksPage = ({ books, error }) => {
                   Reading library
                 </Badge>
                 <Box>
-                  <Heading as="h1" fontSize={{ base: "2xl", md: "3xl" }} lineHeight="1.1" mb={3}>
-                    Reading notes, highlighted lessons, and books worth revisiting.
+                  <Heading as="h1" fontSize={{ base: "xl", md: "2xl" }} lineHeight="1.2" mb={2}>
+                    Books I&apos;ve read
                   </Heading>
-                  <Text fontSize={{ base: "md", md: "lg" }} color={mutedText}>
-                    What I read, what stayed with me, and the longer notes behind each book
-                    once the vault exports them.
+                  <Text fontSize="sm" color={mutedText}>
+                    Notes on what stuck, what changed, and the occasional full breakdown.
                   </Text>
                 </Box>
                 {heroMetaItems.length > 0 && (

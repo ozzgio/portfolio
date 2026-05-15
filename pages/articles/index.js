@@ -244,15 +244,14 @@ const ArticlesPage = ({ articles, error }) => {
                   <Heading
                     as="h1"
                     id="articles-heading"
-                    fontSize={{ base: "3xl", md: "4xl" }}
-                    lineHeight="1"
-                    mb={3}
+                    fontSize={{ base: "xl", md: "2xl" }}
+                    lineHeight="1.2"
+                    mb={2}
                   >
-                    Weekly shipping notes, architecture calls, and product lessons.
+                    What I&apos;m shipping
                   </Heading>
-                  <Text fontSize={{ base: "md", md: "lg" }} color={mutedText}>
-                    A running archive of what changed, why it changed, and what broke while
-                    shipping.
+                  <Text fontSize="sm" color={mutedText}>
+                    Architecture calls, decisions, and things that broke on the way.
                   </Text>
                 </Box>
                 <HStack spacing={3} flexWrap="wrap">
