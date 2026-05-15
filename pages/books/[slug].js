@@ -10,6 +10,8 @@ import {
   Text,
   VStack,
   useColorModeValue,
+  Divider,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import Head from "next/head";
 import NextLink from "next/link";
@@ -18,9 +20,13 @@ import {
   IoArrowBackOutline,
   IoBookOutline,
   IoCalendarOutline,
-  IoDocumentTextOutline,
+  IoBulbOutline,
+  IoFlashOutline,
+  IoSwapHorizontalOutline,
+  IoCheckmarkCircleOutline,
+  IoLayersOutline,
+  IoQuoteOutline,
 } from "react-icons/io5";
-import { FaQuoteLeft } from "react-icons/fa";
 import RatingStar from "../../components/ratingstar";
 import Layout from "../../components/layouts/layout";
 import {
@@ -32,7 +38,6 @@ import {
 
 const formatAbsoluteDate = (dateStr) => {
   if (!dateStr) return "";
-
   try {
     return new Intl.DateTimeFormat("en", {
       day: "2-digit",
@@ -44,139 +49,311 @@ const formatAbsoluteDate = (dateStr) => {
   }
 };
 
+function SectionBlock({ icon, label, color, children, bg }) {
+  const defaultBg = useColorModeValue("gray.50", "whiteAlpha.50");
+  const border = useColorModeValue("blackAlpha.100", "whiteAlpha.100");
+  const labelColor = useColorModeValue(`${color}.700`, `${color}.300`);
+
+  return (
+    <Box
+      borderWidth="1px"
+      borderColor={border}
+      borderRadius="xl"
+      p={{ base: 4, md: 5 }}
+      bg={bg || defaultBg}
+    >
+      <HStack spacing={2} mb={3}>
+        <Icon as={icon} color={`${color}.500`} boxSize={4} />
+        <Text fontSize="xs" fontWeight="bold" textTransform="uppercase" color={labelColor} letterSpacing="wider">
+          {label}
+        </Text>
+      </HStack>
+      {children}
+    </Box>
+  );
+}
+
 export default function BookDetailPage({ book }) {
   const mutedText = useColorModeValue("gray.600", "gray.400");
-  const proseBg = useColorModeValue("white", "whiteAlpha.100");
+  const headingColor = useColorModeValue("gray.800", "gray.100");
+  const bodyColor = useColorModeValue("gray.700", "gray.300");
+  const proseBg = useColorModeValue("white", "whiteAlpha.50");
   const proseBorder = useColorModeValue("blackAlpha.100", "whiteAlpha.200");
-  const lessonBg = useColorModeValue("orange.50", "orange.900");
-  const lessonText = useColorModeValue("orange.800", "orange.100");
-  const emptyStateBg = useColorModeValue("gray.50", "whiteAlpha.50");
+  const decisionBg = useColorModeValue("orange.50", "orange.900");
+  const decisionBorder = useColorModeValue("orange.300", "orange.600");
+  const decisionText = useColorModeValue("orange.800", "orange.100");
+  const quoteBg = useColorModeValue("gray.50", "whiteAlpha.50");
+  const quoteBorder = useColorModeValue("orange.300", "orange.600");
+  const coverBg = useColorModeValue("gray.50", "blackAlpha.400");
 
   if (!book) return null;
 
   const canonicalUrl = `https://ozzo.blog/books/${book.slug}`;
+  const hasPersonalSections = book.problem || book.decision || book.effect || book.trade_off;
+  const hasDeepDive = Boolean(book.deep_dive);
+  const hasQuotes = book.quotes?.length > 0;
 
   return (
     <Layout title={`${book.title} — Reading Notes`}>
       <Head>
         <meta
           name="description"
-          content={`Book details, lessons, and reading notes from ${book.title} by ${book.author}.`}
+          content={`${book.tldr || `Personal reading notes and deep dive on ${book.title} by ${book.author}.`}`}
         />
         <link rel="canonical" href={canonicalUrl} />
       </Head>
 
-      <Container maxW="4xl" py={{ base: 6, md: 10 }}>
-        <VStack align="start" spacing={6}>
+      <Container maxW="3xl" py={{ base: 6, md: 10 }}>
+        <VStack align="start" spacing={8}>
+
+          {/* Back link */}
           <Link as={NextLink} href="/books" color="orange.500" fontWeight="semibold">
-            <HStack spacing={2}>
+            <HStack spacing={1}>
               <Icon as={IoArrowBackOutline} />
               <Text>Back to books</Text>
             </HStack>
           </Link>
 
-          <HStack align="start" spacing={6} flexWrap="wrap">
-            {book.cover && (
-              <Image
-                src={book.cover}
-                alt={book.title}
-                borderRadius="lg"
-                maxH="200px"
-                objectFit="cover"
-                boxShadow="xl"
-                flexShrink={0}
-              />
-            )}
-            <VStack align="start" spacing={3} flex={1} minW="200px">
-              <Heading as="h1" size="xl" lineHeight="1.1">
-                {book.title}
-              </Heading>
-              <HStack spacing={2} color={mutedText}>
-                <Icon as={IoBookOutline} />
-                <Text fontWeight="medium">{book.author}</Text>
-              </HStack>
-              {book.date && (
-                <HStack spacing={2} color={mutedText}>
-                  <Icon as={IoCalendarOutline} />
-                  <Text>{formatAbsoluteDate(book.date)}</Text>
-                </HStack>
+          {/* Hero: cover + meta */}
+          <Box w="100%">
+            <HStack align="start" spacing={6} flexWrap="wrap">
+              {book.cover && (
+                <Box
+                  flexShrink={0}
+                  w={{ base: "100px", md: "130px" }}
+                  bg={coverBg}
+                  borderRadius="lg"
+                  overflow="hidden"
+                  boxShadow="lg"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  p={2}
+                >
+                  <Image
+                    src={book.cover}
+                    alt={book.title}
+                    maxH={{ base: "150px", md: "190px" }}
+                    objectFit="contain"
+                  />
+                </Box>
               )}
-              {book.rating > 0 && (
-                <HStack spacing={2}>
-                  <RatingStar rating={book.rating} />
-                  <Text color="orange.500" fontWeight="bold">
-                    {book.rating}
-                  </Text>
+              <VStack align="start" spacing={3} flex={1} minW="200px">
+                <Heading as="h1" size="lg" lineHeight="1.15" color={headingColor}>
+                  {book.title}
+                </Heading>
+                <HStack spacing={2} color={mutedText} fontSize="sm">
+                  <Icon as={IoBookOutline} />
+                  <Text fontWeight="medium">{book.author}</Text>
                 </HStack>
-              )}
-              <HStack flexWrap="wrap" spacing={2}>
-                {book.tags?.map((tag) => (
-                  <Tag key={tag} colorScheme="orange" borderRadius="full">
-                    {tag}
-                  </Tag>
-                ))}
-              </HStack>
-            </VStack>
-          </HStack>
-
-          {book.lesson && (
-            <Box w="100%" bg={lessonBg} borderRadius="lg" p={4}>
-              <HStack align="start" spacing={3}>
-                <Icon as={FaQuoteLeft} color={lessonText} mt={1} flexShrink={0} />
-                <Text fontStyle="italic" color={lessonText}>
-                  {book.lesson}
-                </Text>
-              </HStack>
-            </Box>
-          )}
-
-          {book.notes ? (
-            <Box
-              w="100%"
-              p={{ base: 5, md: 8 }}
-              borderWidth="1px"
-              borderColor={proseBorder}
-              borderRadius="2xl"
-              bg={proseBg}
-            >
-              <Box className="article-prose">
-                <HStack spacing={2} color={mutedText} mb={4}>
-                  <Icon as={IoDocumentTextOutline} />
-                  <Text fontSize="sm" fontWeight="semibold" textTransform="uppercase">
-                    Reading notes
-                  </Text>
-                </HStack>
-                <ReactMarkdown>{book.notes}</ReactMarkdown>
-              </Box>
-            </Box>
-          ) : (
-            <Box
-              w="100%"
-              p={{ base: 5, md: 8 }}
-              borderWidth="1px"
-              borderColor={proseBorder}
-              borderRadius="2xl"
-              bg={emptyStateBg}
-            >
-              <VStack align="start" spacing={3}>
-                <HStack spacing={2} color={mutedText}>
-                  <Icon as={IoDocumentTextOutline} />
-                  <Text fontSize="sm" fontWeight="semibold" textTransform="uppercase">
-                    Detail page
-                  </Text>
-                </HStack>
-                <Text color={mutedText}>
-                  Full reading notes for this book have not been published yet. The lesson
-                  above is the current public summary from the vault export.
-                </Text>
-                {book.url && (
-                  <Link href={book.url} color="orange.500" fontWeight="semibold" isExternal>
-                    Open original link
-                  </Link>
+                {book.date && (
+                  <HStack spacing={2} color={mutedText} fontSize="sm">
+                    <Icon as={IoCalendarOutline} />
+                    <Text>Read {formatAbsoluteDate(book.date)}</Text>
+                  </HStack>
                 )}
+                {book.rating > 0 && (
+                  <HStack spacing={2}>
+                    <RatingStar rating={book.rating} />
+                    <Text color="orange.500" fontWeight="bold" fontSize="sm">
+                      {book.rating}/5
+                    </Text>
+                  </HStack>
+                )}
+                <HStack flexWrap="wrap" spacing={2}>
+                  {book.tags?.map((tag) => (
+                    <Tag key={tag} colorScheme="orange" borderRadius="full" size="sm">
+                      {tag}
+                    </Tag>
+                  ))}
+                </HStack>
               </VStack>
+            </HStack>
+          </Box>
+
+          {/* Key lesson — always shown if present */}
+          {book.lesson && (
+            <Box
+              w="100%"
+              borderLeftWidth="3px"
+              borderLeftColor="orange.400"
+              pl={4}
+              py={1}
+            >
+              <Text fontStyle="italic" color={bodyColor} fontSize="md" lineHeight="1.6">
+                &ldquo;{book.lesson}&rdquo;
+              </Text>
             </Box>
           )}
+
+          {/* TLDR from deep summary */}
+          {book.tldr && (
+            <Box w="100%">
+              <Text color={bodyColor} fontSize="sm" lineHeight="1.8">
+                {book.tldr}
+              </Text>
+            </Box>
+          )}
+
+          {/* Personal read sections */}
+          {hasPersonalSections && (
+            <VStack align="start" spacing={4} w="100%">
+              <Heading as="h2" size="sm" color={mutedText} textTransform="uppercase" letterSpacing="wider">
+                My read
+              </Heading>
+
+              <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4} w="100%">
+                {book.problem && (
+                  <SectionBlock icon={IoBulbOutline} label="Why I picked this up" color="blue">
+                    <Text fontSize="sm" color={bodyColor} lineHeight="1.7">
+                      {book.problem}
+                    </Text>
+                  </SectionBlock>
+                )}
+                {book.concept && (
+                  <SectionBlock icon={IoLayersOutline} label="What it teaches" color="purple">
+                    <Text fontSize="sm" color={bodyColor} lineHeight="1.7">
+                      {book.concept}
+                    </Text>
+                  </SectionBlock>
+                )}
+                {book.effect && (
+                  <SectionBlock icon={IoCheckmarkCircleOutline} label="What changed" color="green">
+                    <Text fontSize="sm" color={bodyColor} lineHeight="1.7">
+                      {book.effect}
+                    </Text>
+                  </SectionBlock>
+                )}
+                {book.trade_off && (
+                  <SectionBlock icon={IoSwapHorizontalOutline} label="Honest take" color="gray">
+                    <Text fontSize="sm" color={bodyColor} lineHeight="1.7">
+                      {book.trade_off}
+                    </Text>
+                  </SectionBlock>
+                )}
+              </SimpleGrid>
+
+              {/* Decision — full width, highlighted */}
+              {book.decision && (
+                <Box
+                  w="100%"
+                  bg={decisionBg}
+                  borderWidth="1px"
+                  borderColor={decisionBorder}
+                  borderRadius="xl"
+                  p={{ base: 4, md: 5 }}
+                >
+                  <HStack spacing={2} mb={3}>
+                    <Icon as={IoFlashOutline} color="orange.500" boxSize={4} />
+                    <Text fontSize="xs" fontWeight="bold" textTransform="uppercase" color={decisionText} letterSpacing="wider">
+                      What I decided
+                    </Text>
+                  </HStack>
+                  <Text fontSize="sm" color={decisionText} lineHeight="1.7" fontWeight="medium">
+                    {book.decision}
+                  </Text>
+                  {book.implementation && (
+                    <Text fontSize="sm" color={decisionText} lineHeight="1.7" mt={3} opacity={0.85}>
+                      {book.implementation}
+                    </Text>
+                  )}
+                </Box>
+              )}
+            </VStack>
+          )}
+
+          {/* Deep dive */}
+          {hasDeepDive && (
+            <>
+              <Divider />
+              <VStack align="start" spacing={4} w="100%">
+                <Heading as="h2" size="sm" color={mutedText} textTransform="uppercase" letterSpacing="wider">
+                  Deep dive
+                </Heading>
+                <Box
+                  w="100%"
+                  borderWidth="1px"
+                  borderColor={proseBorder}
+                  borderRadius="xl"
+                  p={{ base: 4, md: 6 }}
+                  bg={proseBg}
+                  className="article-prose"
+                >
+                  <ReactMarkdown>{book.deep_dive}</ReactMarkdown>
+                </Box>
+              </VStack>
+            </>
+          )}
+
+          {/* Notable quotes */}
+          {hasQuotes && (
+            <>
+              <Divider />
+              <VStack align="start" spacing={4} w="100%">
+                <HStack spacing={2}>
+                  <Icon as={IoQuoteOutline} color="orange.400" />
+                  <Heading as="h2" size="sm" color={mutedText} textTransform="uppercase" letterSpacing="wider">
+                    Notable quotes
+                  </Heading>
+                </HStack>
+                <VStack spacing={3} w="100%" align="start">
+                  {book.quotes.map((quote, i) => (
+                    <Box
+                      key={i}
+                      w="100%"
+                      borderLeftWidth="2px"
+                      borderLeftColor={quoteBorder}
+                      pl={4}
+                      py={1}
+                      bg={quoteBg}
+                      borderRadius="sm"
+                    >
+                      <Text fontSize="sm" fontStyle="italic" color={bodyColor} lineHeight="1.7">
+                        {quote}
+                      </Text>
+                    </Box>
+                  ))}
+                </VStack>
+              </VStack>
+            </>
+          )}
+
+          {/* Fallback: raw notes for books without structured sections */}
+          {!hasPersonalSections && !hasDeepDive && book.notes && (
+            <Box
+              w="100%"
+              p={{ base: 4, md: 6 }}
+              borderWidth="1px"
+              borderColor={proseBorder}
+              borderRadius="xl"
+              bg={proseBg}
+              className="article-prose"
+            >
+              <ReactMarkdown>{book.notes}</ReactMarkdown>
+            </Box>
+          )}
+
+          {/* Empty state */}
+          {!hasPersonalSections && !hasDeepDive && !book.notes && (
+            <Box
+              w="100%"
+              p={{ base: 4, md: 6 }}
+              borderWidth="1px"
+              borderColor={proseBorder}
+              borderRadius="xl"
+              bg={quoteBg}
+            >
+              <Text color={mutedText} fontSize="sm">
+                Full reading notes for this book have not been published yet.
+              </Text>
+              {book.url && (
+                <Link href={book.url} color="orange.500" fontWeight="semibold" isExternal fontSize="sm" mt={2} display="block">
+                  Open original link
+                </Link>
+              )}
+            </Box>
+          )}
+
         </VStack>
       </Container>
     </Layout>
@@ -209,10 +386,7 @@ export async function getStaticProps({ params }) {
 
     const books = await response.json();
     const book = Array.isArray(books)
-      ? books.find(
-          (entry) =>
-            getBookSlug(entry) === params?.slug,
-        )
+      ? books.find((entry) => getBookSlug(entry) === params?.slug)
       : null;
 
     if (!book) return { notFound: true, revalidate: 60 };
@@ -231,6 +405,17 @@ export async function getStaticProps({ params }) {
           tags: Array.isArray(book.tags) ? book.tags.filter(Boolean) : [],
           cover: resolvePortfolioAssetUrl(book.cover),
           url: String(book.url || ""),
+          // Structured personal sections
+          problem: String(book.problem || ""),
+          concept: String(book.concept || ""),
+          decision: String(book.decision || ""),
+          implementation: String(book.implementation || ""),
+          effect: String(book.effect || ""),
+          trade_off: String(book.trade_off || ""),
+          // Deep dive from 08 Summaries
+          tldr: String(book.tldr || ""),
+          deep_dive: String(book.deep_dive || ""),
+          quotes: Array.isArray(book.quotes) ? book.quotes.filter(Boolean) : [],
         },
       },
       revalidate: 60,
