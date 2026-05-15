@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import Head from "next/head";
 import NextLink from "next/link";
-import ReactMarkdown from "react-markdown";
+import MarkdownProse from "../../components/markdown-prose";
 import {
   IoArrowBackOutline,
   IoBookOutline,
@@ -277,9 +277,8 @@ export default function BookDetailPage({ book }) {
                   borderRadius="xl"
                   p={{ base: 4, md: 6 }}
                   bg={proseBg}
-                  className="article-prose"
                 >
-                  <ReactMarkdown>{book.deep_dive}</ReactMarkdown>
+                  <MarkdownProse>{book.deep_dive}</MarkdownProse>
                 </Box>
               </VStack>
             </>
@@ -327,9 +326,8 @@ export default function BookDetailPage({ book }) {
               borderColor={proseBorder}
               borderRadius="xl"
               bg={proseBg}
-              className="article-prose"
             >
-              <ReactMarkdown>{book.notes}</ReactMarkdown>
+              <MarkdownProse>{book.notes}</MarkdownProse>
             </Box>
           )}
 
