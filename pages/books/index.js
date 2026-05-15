@@ -259,7 +259,7 @@ const BooksPage = ({ books, error }) => {
                   Reading library
                 </Badge>
                 <Box>
-                  <Heading as="h1" fontSize={{ base: "3xl", md: "4xl" }} lineHeight="1" mb={3}>
+                  <Heading as="h1" fontSize={{ base: "2xl", md: "3xl" }} lineHeight="1.1" mb={3}>
                     Reading notes, highlighted lessons, and books worth revisiting.
                   </Heading>
                   <Text fontSize={{ base: "md", md: "lg" }} color={mutedText}>
