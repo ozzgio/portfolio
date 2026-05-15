@@ -81,25 +81,25 @@ export default function MarkdownProse({ children }) {
       <ListItem lineHeight="1.75">{children}</ListItem>
     ),
     hr: () => <Divider my={6} />,
-    code: ({ inline, children }) =>
-      inline ? (
-        <Code bg={codeBg} px={1} borderRadius="sm" fontSize="xs">
-          {children}
-        </Code>
-      ) : (
-        <Box
-          as="pre"
-          bg={codeBg}
-          p={4}
-          borderRadius="md"
-          overflowX="auto"
-          mb={4}
-          fontSize="xs"
-          lineHeight="1.6"
-        >
-          <Code bg="transparent">{children}</Code>
-        </Box>
-      ),
+    pre: ({ children }) => (
+      <Box
+        as="pre"
+        bg={codeBg}
+        p={4}
+        borderRadius="md"
+        overflowX="auto"
+        mb={4}
+        fontSize="xs"
+        lineHeight="1.6"
+      >
+        {children}
+      </Box>
+    ),
+    code: ({ children }) => (
+      <Code bg={codeBg} px={1} borderRadius="sm" fontSize="xs">
+        {children}
+      </Code>
+    ),
   };
 
   return <ReactMarkdown components={components}>{children}</ReactMarkdown>;

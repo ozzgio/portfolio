@@ -16,24 +16,11 @@ import MarkdownProse from "../../components/markdown-prose";
 import { IoArrowBackOutline, IoCalendarOutline } from "react-icons/io5";
 import Layout from "../../components/layouts/layout";
 import {
+  formatAbsoluteDate,
   getArticleBody,
   isInternalArticle,
   resolvePortfolioAssetUrl,
 } from "../../libs/contentUtils";
-
-const formatAbsoluteDate = (dateStr) => {
-  if (!dateStr) return "";
-
-  try {
-    return new Intl.DateTimeFormat("en", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    }).format(new Date(dateStr));
-  } catch {
-    return dateStr;
-  }
-};
 
 export default function ArticleDetailPage({ article }) {
   const mutedText = useColorModeValue("gray.600", "gray.400");

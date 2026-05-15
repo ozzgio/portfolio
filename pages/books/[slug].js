@@ -30,24 +30,12 @@ import {
 import RatingStar from "../../components/ratingstar";
 import Layout from "../../components/layouts/layout";
 import {
+  formatAbsoluteDate,
   getBookSlug,
   getBookNotes,
   hasBookNotes,
   resolvePortfolioAssetUrl,
 } from "../../libs/contentUtils";
-
-const formatAbsoluteDate = (dateStr) => {
-  if (!dateStr) return "";
-  try {
-    return new Intl.DateTimeFormat("en", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    }).format(new Date(dateStr));
-  } catch {
-    return dateStr;
-  }
-};
 
 function SectionBlock({ icon, label, color, children, bg }) {
   const defaultBg = useColorModeValue("gray.50", "whiteAlpha.50");
@@ -90,7 +78,6 @@ export default function BookDetailPage({ book }) {
 
   const canonicalUrl = `https://ozzo.blog/books/${book.slug}`;
   const hasPersonalSections = book.problem || book.decision || book.effect || book.trade_off;
-  const hasDeepDive = Boolean(book.deep_dive);
   const hasQuotes = book.quotes?.length > 0;
 
   return (
@@ -287,7 +274,7 @@ export default function BookDetailPage({ book }) {
           )}
 
           {/* Fallback: raw notes for books without structured sections */}
-          {!hasPersonalSections && !hasDeepDive && book.notes && (
+          {!hasPersonalSections && book.notes && (
             <Box
               w="100%"
               p={{ base: 4, md: 6 }}
@@ -301,7 +288,7 @@ export default function BookDetailPage({ book }) {
           )}
 
           {/* Empty state */}
-          {!hasPersonalSections && !hasDeepDive && !book.notes && (
+          {!hasPersonalSections && !book.notes && (
             <Box
               w="100%"
               p={{ base: 4, md: 6 }}

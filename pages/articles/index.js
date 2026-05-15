@@ -32,6 +32,7 @@ import {
 import Layout from "../../components/layouts/layout";
 import ArticleCard from "../../components/cards/articlecard";
 import {
+  formatAbsoluteDate,
   getArticleBody,
   getArticleSummary,
   isInternalArticle,
@@ -68,20 +69,6 @@ const formatDate = (dateStr) => {
       default:
         return `${diffDays} days ago`;
     }
-  } catch (error) {
-    return dateStr;
-  }
-};
-
-const formatAbsoluteDate = (dateStr) => {
-  if (!dateStr) return "";
-
-  try {
-    return new Intl.DateTimeFormat("en", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    }).format(new Date(dateStr));
   } catch (error) {
     return dateStr;
   }

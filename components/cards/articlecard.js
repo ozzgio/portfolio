@@ -11,19 +11,7 @@ import {
 import NextLink from "next/link";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { IoCalendarOutline } from "react-icons/io5";
-
-const formatAbsoluteDate = (dateStr) => {
-  if (!dateStr) return "";
-  try {
-    return new Intl.DateTimeFormat("en", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    }).format(new Date(dateStr));
-  } catch {
-    return dateStr;
-  }
-};
+import { formatAbsoluteDate } from "../../libs/contentUtils";
 
 const ArticleCard = ({
   title,
@@ -44,13 +32,25 @@ const ArticleCard = ({
   const bodyColor = useColorModeValue("gray.600", "gray.400");
   const mutedColor = useColorModeValue("gray.500", "gray.500");
 
-  const href = source === "internal" ? `/articles/${slug}` : url;
+  const isInternal = source === "internal";
+  const href = isInternal ? `/articles/${slug}` : url;
   const displayDate = absoluteDate || formatAbsoluteDate(date);
   const leadText = description || summary || "";
 
-  if (!href || !title) return null;
+  const sourceLabel = (() => {
+    if (isInternal) return "ozzo.blog";
+    try {
+      const hostname = new URL(url).hostname.replace("www.", "");
+      if (hostname.includes("linkedin.com")) return "LinkedIn";
+      if (hostname.includes("medium.com")) return "Medium";
+      if (hostname.includes("dev.to")) return "dev.to";
+      return hostname;
+    } catch {
+      return "External";
+    }
+  })();
 
-  const isInternal = source === "internal";
+  if (!href || !title) return null;
 
   return (
     <Box
@@ -89,7 +89,7 @@ const ArticleCard = ({
             <HStack spacing={1}>
               {!isInternal && <ExternalLinkIcon boxSize={3} color={mutedColor} />}
               <Text fontSize="xs" color={mutedColor}>
-                {isInternal ? "ozzo.blog" : "LinkedIn"}
+                {sourceLabel}
               </Text>
             </HStack>
           </HStack>
