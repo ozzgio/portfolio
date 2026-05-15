@@ -2,6 +2,7 @@ import {
   Box,
   HStack,
   Icon,
+  Image,
   Tag,
   Text,
   VStack,
@@ -34,6 +35,7 @@ const ArticleCard = ({
   slug,
   source = "external",
   tags,
+  thumbnail,
 }) => {
   const border = useColorModeValue("blackAlpha.100", "whiteAlpha.100");
   const bg = useColorModeValue("white", "whiteAlpha.50");
@@ -62,12 +64,23 @@ const ArticleCard = ({
         borderWidth="1px"
         borderColor={border}
         borderRadius="xl"
-        p={{ base: 4, md: 5 }}
+        overflow="hidden"
         bg={bg}
         _hover={{ borderColor: hoverBorder }}
         transition="border-color 0.15s"
       >
-        <VStack align="start" spacing={2}>
+        {thumbnail && (
+          <Box h="140px" overflow="hidden">
+            <Image
+              src={thumbnail}
+              alt={title}
+              w="100%"
+              h="100%"
+              objectFit="cover"
+            />
+          </Box>
+        )}
+        <VStack align="start" spacing={2} p={{ base: 4, md: 5 }}>
           <HStack spacing={3} w="100%" justify="space-between">
             <HStack spacing={1} color={mutedColor} fontSize="xs">
               <Icon as={IoCalendarOutline} boxSize={3} />
