@@ -78,3 +78,16 @@ export const getBookSummary = (book, maxLength = 220) => {
 
   return createExcerpt(book?.lesson || book?.description, maxLength);
 };
+
+export const formatAbsoluteDate = (dateStr) => {
+  if (!dateStr) return "";
+  try {
+    return new Intl.DateTimeFormat("en", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    }).format(new Date(dateStr));
+  } catch {
+    return dateStr;
+  }
+};

@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { ChevronRightIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import NextLink from "next/link";
-import { IoDocumentText, IoLaptopOutline, IoRocketOutline } from "react-icons/io5";
+import { IoBookOutline, IoDocumentText, IoLaptopOutline, IoRocketOutline } from "react-icons/io5";
 
 import Section from "../components/section";
 import Paragraph from "../components/paragraph";
@@ -66,7 +66,7 @@ const normalizeArticle = (article) => {
   };
 };
 
-const Home = ({ latestArticles = [], articlesError = false }) => {
+const Home = ({ latestArticles = [], articlesError = false, currentBook = null }) => {
   const homepageSchema = {
     "@context": "https://schema.org",
     "@graph": [
@@ -242,12 +242,12 @@ const Home = ({ latestArticles = [], articlesError = false }) => {
               <HStack spacing={3} mb={2}>
                 <Icon as={IoDocumentText} color="orange.500" boxSize={5} />
                 <Heading as="h3" fontSize="md" fontWeight="semibold">
-                  Hermes
+                  Agentic system
                 </Heading>
               </HStack>
               <Text fontSize="sm" color="gray.700" _dark={{ color: "gray.300" }}>
-                A Telegram-based capture and drafting system I&apos;m building for myself. Vault is
-                truth, Telegram is transport, and nvim is cockpit.
+                A personal operating system built on AI agents. Vault is truth, Telegram is
+                transport, nvim is cockpit. Hermes is the routing agent at the centre of it.
               </Text>
             </Box>
             <Box
@@ -309,23 +309,10 @@ const Home = ({ latestArticles = [], articlesError = false }) => {
           <Box display="flex" justifyContent="center" gap={4} my={6} flexWrap="wrap">
             <Button
               as={NextLink}
-              href="/projects"
-              scroll={false}
-              rightIcon={<ChevronRightIcon />}
-              colorScheme="orange"
-              size="lg"
-              _hover={{ transform: "translateY(-2px)", boxShadow: "xl" }}
-              transition="all 0.2s"
-            >
-              See My Work
-            </Button>
-            <Button
-              as={NextLink}
               href="/articles"
               scroll={false}
               rightIcon={<ChevronRightIcon />}
               colorScheme="orange"
-              variant="outline"
               size="lg"
               _hover={{ transform: "translateY(-2px)", boxShadow: "xl" }}
               transition="all 0.2s"
@@ -338,7 +325,7 @@ const Home = ({ latestArticles = [], articlesError = false }) => {
               scroll={false}
               rightIcon={<ChevronRightIcon />}
               colorScheme="orange"
-              variant="ghost"
+              variant="outline"
               size="lg"
               _hover={{ transform: "translateY(-2px)", boxShadow: "xl" }}
               transition="all 0.2s"
@@ -388,6 +375,36 @@ const Home = ({ latestArticles = [], articlesError = false }) => {
                 </BaseCard>
               ))}
             </SimpleGrid>
+          )}
+          {currentBook && (
+            <Link as={NextLink} href="/books" _hover={{ textDecoration: "none" }}>
+              <HStack
+                spacing={4}
+                p={4}
+                borderRadius="lg"
+                borderWidth="1px"
+                borderColor="orange.200"
+                bg="orange.50"
+                _dark={{ borderColor: "orange.700", bg: "whiteAlpha.50" }}
+                _hover={{ borderColor: "orange.400" }}
+                transition="border-color 0.2s"
+                mt={6}
+              >
+                <Icon as={IoBookOutline} color="orange.500" boxSize={5} flexShrink={0} />
+                <Box flex={1} minW={0}>
+                  <Text fontSize="xs" fontWeight="bold" textTransform="uppercase" letterSpacing="wider" color="orange.500" mb={0.5}>
+                    Currently reading
+                  </Text>
+                  <Text fontSize="sm" fontWeight="semibold" noOfLines={1}>
+                    {currentBook.title}
+                  </Text>
+                  <Text fontSize="xs" color="gray.500" _dark={{ color: "gray.400" }}>
+                    {currentBook.author}
+                  </Text>
+                </Box>
+                <ChevronRightIcon color="orange.400" />
+              </HStack>
+            </Link>
           )}
         </Section>
         <Section delay={0.4}>
@@ -451,46 +468,54 @@ const Home = ({ latestArticles = [], articlesError = false }) => {
 };
 
 export async function getStaticProps() {
+  const [articlesRes, booksRes] = await Promise.allSettled([
+    fetch("https://raw.githubusercontent.com/ozzgio/portfolio-data/main/articles.json"),
+    fetch("https://raw.githubusercontent.com/ozzgio/portfolio-data/main/books.json"),
+  ]);
+
+  let latestArticles = [];
+  let articlesError = false;
+  let currentBook = null;
+
   try {
-    const response = await fetch(
-      "https://raw.githubusercontent.com/ozzgio/portfolio-data/main/articles.json",
-    );
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch articles: ${response.status} ${response.statusText}`);
+    if (articlesRes.status === "fulfilled" && articlesRes.value.ok) {
+      const articlesData = await articlesRes.value.json();
+      if (Array.isArray(articlesData)) {
+        latestArticles = articlesData
+          .filter((article) => article && article.title && article.date)
+          .map(normalizeArticle)
+          .filter((article) => article.url)
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
+          .slice(0, 2);
+      }
+    } else {
+      articlesError = true;
     }
-
-    const articlesData = await response.json();
-
-    if (!Array.isArray(articlesData)) {
-      throw new Error("Articles data is not an array");
-    }
-
-    const latestArticles = articlesData
-      .filter((article) => article && article.title && article.date)
-      .map(normalizeArticle)
-      .filter((article) => article.url)
-      .sort((a, b) => new Date(b.date) - new Date(a.date))
-      .slice(0, 3);
-
-    return {
-      props: {
-        latestArticles,
-        articlesError: false,
-      },
-      revalidate: 3600,
-    };
-  } catch (error) {
-    console.error("Failed to fetch homepage articles:", error);
-
-    return {
-      props: {
-        latestArticles: [],
-        articlesError: true,
-      },
-      revalidate: 300,
-    };
+  } catch {
+    articlesError = true;
   }
+
+  try {
+    if (booksRes.status === "fulfilled" && booksRes.value.ok) {
+      const booksData = await booksRes.value.json();
+      if (Array.isArray(booksData)) {
+        const reading = booksData.find((b) => b.status === "reading" && b.title && b.author);
+        if (reading) {
+          currentBook = {
+            title: String(reading.title),
+            author: String(reading.author),
+          };
+        }
+      }
+    }
+  } catch {
+    // no current book is fine
+  }
+
+  return {
+    props: { latestArticles, articlesError, currentBook },
+    revalidate: 3600,
+  };
 }
 
 export default Home;

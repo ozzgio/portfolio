@@ -2,7 +2,6 @@ import {
   Badge,
   Box,
   Button,
-  Flex,
   Heading,
   HStack,
   Icon,
@@ -33,6 +32,7 @@ import {
 import Layout from "../../components/layouts/layout";
 import ArticleCard from "../../components/cards/articlecard";
 import {
+  formatAbsoluteDate,
   getArticleBody,
   getArticleSummary,
   isInternalArticle,
@@ -69,20 +69,6 @@ const formatDate = (dateStr) => {
       default:
         return `${diffDays} days ago`;
     }
-  } catch (error) {
-    return dateStr;
-  }
-};
-
-const formatAbsoluteDate = (dateStr) => {
-  if (!dateStr) return "";
-
-  try {
-    return new Intl.DateTimeFormat("en", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    }).format(new Date(dateStr));
   } catch (error) {
     return dateStr;
   }
@@ -174,8 +160,6 @@ const ArticlesPage = ({ articles, error }) => {
     });
   }, [searchQuery, selectedTag, sortedArticles]);
 
-  const featuredArticle = filteredArticles[0] || null;
-  const articleGrid = featuredArticle ? filteredArticles.slice(1) : [];
   const latestArticle = sortedArticles[0] || null;
 
   const uniqueYears = useMemo(
@@ -244,15 +228,14 @@ const ArticlesPage = ({ articles, error }) => {
                   <Heading
                     as="h1"
                     id="articles-heading"
-                    fontSize={{ base: "3xl", md: "4xl" }}
-                    lineHeight="1"
-                    mb={3}
+                    fontSize={{ base: "xl", md: "2xl" }}
+                    lineHeight="1.2"
+                    mb={2}
                   >
-                    Weekly shipping notes, architecture calls, and product lessons.
+                    What I&apos;m shipping
                   </Heading>
-                  <Text fontSize={{ base: "md", md: "lg" }} color={mutedText}>
-                    A running archive of what changed, why it changed, and what broke while
-                    shipping.
+                  <Text fontSize="sm" color={mutedText}>
+                    Architecture calls, decisions, and things that broke on the way.
                   </Text>
                 </Box>
                 <HStack spacing={3} flexWrap="wrap">
@@ -425,7 +408,7 @@ const ArticlesPage = ({ articles, error }) => {
                   borderWidth="1px"
                   borderStyle="dashed"
                   borderColor={heroBorder}
-                  borderRadius="3xl"
+                  borderRadius="xl"
                   p={8}
                   textAlign="center"
                   bg={accentSubtle}
@@ -439,39 +422,11 @@ const ArticlesPage = ({ articles, error }) => {
                   </Text>
                 </Box>
               ) : (
-                <VStack spacing={8} align="stretch">
-                  {featuredArticle && (
-                    <Box>
-                      <HStack spacing={3} mb={4} align="center" flexWrap="wrap">
-                        <Badge colorScheme="orange" px={3} py={1} borderRadius="full">
-                          Featured result
-                        </Badge>
-                        <Text fontSize="sm" color={mutedText}>
-                          Top result from your current selection
-                        </Text>
-                      </HStack>
-                      <ArticleCard {...featuredArticle} featured />
-                    </Box>
-                  )}
-
-                  {articleGrid.length > 0 && (
-                    <Box>
-                      <Flex justify="space-between" mb={4} gap={3} wrap="wrap" align="center">
-                        <Heading as="h2" size="md">
-                          Explore more
-                        </Heading>
-                        <Text fontSize="sm" color={mutedText}>
-                          {articleGrid.length} remaining articles
-                        </Text>
-                      </Flex>
-                      <SimpleGrid columns={{ base: 1, md: 2, xl: 3 }} spacing={6}>
-                        {articleGrid.map((article) => (
-                          <ArticleCard key={article.slug || article.url} {...article} />
-                        ))}
-                      </SimpleGrid>
-                    </Box>
-                  )}
-                </VStack>
+                <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+                  {filteredArticles.map((article) => (
+                    <ArticleCard key={article.slug || article.url} {...article} />
+                  ))}
+                </SimpleGrid>
               )}
             </VStack>
           )}
