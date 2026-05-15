@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import Head from "next/head";
 import NextLink from "next/link";
-import ReactMarkdown from "react-markdown";
+import MarkdownProse from "../../components/markdown-prose";
 import { IoArrowBackOutline, IoCalendarOutline } from "react-icons/io5";
 import Layout from "../../components/layouts/layout";
 import {
@@ -61,7 +61,7 @@ export default function ArticleDetailPage({ article }) {
           </Link>
 
           <VStack align="start" spacing={3}>
-            <Heading as="h1" size="2xl" lineHeight="1.1">
+            <Heading as="h1" size="lg" lineHeight="1.2">
               {article.title}
             </Heading>
             <HStack spacing={3} flexWrap="wrap" color={mutedText}>
@@ -80,15 +80,13 @@ export default function ArticleDetailPage({ article }) {
 
           <Box
             w="100%"
-            p={{ base: 5, md: 8 }}
+            p={{ base: 4, md: 6 }}
             borderWidth="1px"
             borderColor={proseBorder}
-            borderRadius="2xl"
+            borderRadius="xl"
             bg={proseBg}
           >
-            <Box className="article-prose">
-              <ReactMarkdown>{article.content}</ReactMarkdown>
-            </Box>
+            <MarkdownProse>{article.content}</MarkdownProse>
           </Box>
         </VStack>
       </Container>
