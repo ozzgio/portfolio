@@ -487,7 +487,7 @@ export async function getStaticProps() {
           .map(normalizeArticle)
           .filter((article) => article.url)
           .sort((a, b) => new Date(b.date) - new Date(a.date))
-          .slice(0, 3);
+          .slice(0, 2);
       }
     } else {
       articlesError = true;

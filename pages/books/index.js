@@ -514,7 +514,7 @@ export const getStaticProps = async () => {
     }
 
     const books = booksData
-      .filter((book) => book && book.title)
+      .filter((book) => book && book.title && book.status !== "reading")
       .map((book) => {
         const slug = getBookSlug(book);
         const hasNotes = hasBookNotes(book);
