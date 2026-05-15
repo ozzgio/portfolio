@@ -242,12 +242,12 @@ const Home = ({ latestArticles = [], articlesError = false, currentBook = null }
               <HStack spacing={3} mb={2}>
                 <Icon as={IoDocumentText} color="orange.500" boxSize={5} />
                 <Heading as="h3" fontSize="md" fontWeight="semibold">
-                  Hermes
+                  Agentic system
                 </Heading>
               </HStack>
               <Text fontSize="sm" color="gray.700" _dark={{ color: "gray.300" }}>
-                A Telegram-based capture and drafting system I&apos;m building for myself. Vault is
-                truth, Telegram is transport, and nvim is cockpit.
+                A personal operating system built on AI agents. Vault is truth, Telegram is
+                transport, nvim is cockpit. Hermes is the routing agent at the centre of it.
               </Text>
             </Box>
             <Box
